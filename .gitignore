@@ -30,3 +30,6 @@ go.work.sum
 
 # data
 data/
+
+# binary directories
+bin/
