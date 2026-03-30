@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `service_alias`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT = '服务别名';
 
-CREATE TABLE IF NOT EXISTS `loadbalance`
+CREATE TABLE IF NOT EXISTS `policy_loadbalance`
 (
     `id`                 varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT 'ID',
     `name`               varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
@@ -786,77 +786,6 @@ CREATE TABLE IF NOT EXISTS `k8s_cluster`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT = '集群';
-
-CREATE TABLE IF NOT EXISTS `component_version`
-(
-    `id`               varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT 'ID',
-    `name`             varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '组件名称',
-    `chart_name`       varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '组件Chart名称',
-    `type`             varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '组件类型',
-    `arch`             varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '架构类型',
-    `version`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '组件版本',
-    `app_version`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '应用版本，对应Chart的appVersion',
-    `repository`       varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '组件仓库地址',
-    `username`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '组件用户名',
-    `password`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '组件密码',
-    `description`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '备注',
-    `images`           json                                                            DEFAULT NULL COMMENT '组件镜像列表',
-    `cluster_versions` json                                                   NULL COMMENT '所支持的k8s版本列表',
-    `primary`          tinyint unsigned                                       NOT NULL DEFAULT 0 COMMENT '默认版本：1-是, 0-否',
-    `status`           varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin           DEFAULT NULL COMMENT '启用状态：enabled-启用, disabled-禁用',
-    `created_at`       timestamp                                              NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`       timestamp                                                       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`          varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT '0' COMMENT '逻辑删除标识',
-    `deleted_at`       timestamp                                              NULL     DEFAULT NULL COMMENT '删除时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uniq_component_version_biz_index` (`name`, `type`, `arch`, `version`, `deleted`) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT = '组件版本';
-
-CREATE TABLE IF NOT EXISTS `syncer`
-(
-    `id`          varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT 'ID',
-    `name`        varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'name',
-    `space_code`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'default' COMMENT '微服务空间编码',
-    `region`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'default' COMMENT '地域',
-    `cluster_id`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '集群ID',
-    `standard`    varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '默认规格: 1C2G,2C4G,4C8G,8C16G;',
-    `replicas`    int                                                    NOT NULL DEFAULT '1' COMMENT '副本数',
-    `version_id`  varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '组件版本ID',
-    `message`     varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin         DEFAULT NULL COMMENT '安装结果信息',
-    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '备注',
-    `created_at`  timestamp                                              NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`  timestamp                                                       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`     varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT '0' COMMENT '逻辑删除标识',
-    `deleted_at`  timestamp                                              NULL     DEFAULT NULL COMMENT '删除时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uniq_syncer_biz_index` (`space_code`, `cluster_id`, `deleted`) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT = '服务同步组件';
-
-CREATE TABLE IF NOT EXISTS `component_agent`
-(
-    `id`              varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT 'ID',
-    `region`          varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'default' COMMENT '地域',
-    `cluster_id`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '集群ID',
-    `cluster_version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '集群版本',
-    `cluster_arch`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '集群架构',
-    `cluster_os`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '集群系统',
-    `version_id`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '组件版本ID',
-    `primary`         int                                                    NOT NULL DEFAULT 0 COMMENT '默认版本：1-是, 0-否',
-    `enabled`         int                                                    NOT NULL DEFAULT 0 COMMENT '启用',
-    `description`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '备注',
-    `created_at`      timestamp                                              NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`      timestamp                                                       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`         varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT '0' COMMENT '逻辑删除标识',
-    `deleted_at`      timestamp                                              NULL     DEFAULT NULL COMMENT '删除时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uniq_agent_biz_index` (`cluster_id`, `version_id`, `deleted`) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT = 'JavaAgent组件';
 
 CREATE TABLE IF NOT EXISTS `setting`
 (

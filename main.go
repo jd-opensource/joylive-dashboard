@@ -10,7 +10,7 @@ import (
 // Usage: go build -ldflags "-X main.VERSION=x.x.x"
 var VERSION = "v1.0.0"
 
-// @title joylivedashboard
+// @title joylive-dashboard
 // @version v1.0.0
 // @description A dashboard for joylive-agent.
 // @securityDefinitions.apikey ApiKeyAuth
@@ -20,7 +20,7 @@ var VERSION = "v1.0.0"
 // @basePath /
 func main() {
 	app := cli.NewApp()
-	app.Name = "joylivedashboard"
+	app.Name = "joylive-dashboard"
 	app.Version = VERSION
 	app.Usage = "A dashboard for joylive-agent."
 	app.Commands = []*cli.Command{
