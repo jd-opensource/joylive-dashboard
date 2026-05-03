@@ -10,6 +10,7 @@ type AuthConfig struct {
 	AllowedPathPrefixes []string
 	SkippedPathPrefixes []string
 	RootID              string
+	RootUsername        string
 	Skipper             func(c *gin.Context) bool
 	ParseUserID         func(c *gin.Context) (string, error)
 }
@@ -33,6 +34,9 @@ func AuthWithConfig(config AuthConfig) gin.HandlerFunc {
 		ctx = logging.NewUserID(ctx, userID)
 		if userID == config.RootID {
 			ctx = util.NewIsRootUser(ctx)
+			if config.RootUsername != "" {
+				ctx = util.NewUsername(ctx, config.RootUsername)
+			}
 		}
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()

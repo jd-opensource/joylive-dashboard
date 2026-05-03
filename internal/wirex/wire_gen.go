@@ -13,6 +13,10 @@ import (
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/api"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/biz"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/dal"
+	"github.com/jd-opensource/joylive-dashboard/internal/mods/space"
+	api2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/api"
+	biz2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/biz"
+	dal2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/dal"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 )
 
@@ -119,8 +123,23 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		LoggerAPI: apiLogger,
 		Casbinx:   casbinx,
 	}
+	dalSpace := &dal2.Space{
+		DB: db,
+	}
+	bizSpace := &biz2.Space{
+		Trans:    trans,
+		SpaceDAL: dalSpace,
+	}
+	apiSpace := &api2.Space{
+		SpaceBIZ: bizSpace,
+	}
+	spaceSpace := &space.Space{
+		DB:       db,
+		SpaceAPI: apiSpace,
+	}
 	modsMods := &mods.Mods{
-		RBAC: rbacRBAC,
+		RBAC:  rbacRBAC,
+		Space: spaceSpace,
 	}
 	injector := &Injector{
 		DB:    db,

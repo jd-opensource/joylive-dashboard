@@ -33,3 +33,7 @@ data/
 
 # binary directories
 bin/
+
+# ai
+.claude/
+Agents.md

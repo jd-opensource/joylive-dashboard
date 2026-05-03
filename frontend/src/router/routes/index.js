@@ -6,6 +6,7 @@ import result from './result'
 import exception from './exception'
 import admin from './admin'
 import system from './system'
+import space from './space'
 import link from './link'
 import iframe from './iframe'
 import other from './other'
@@ -19,6 +20,7 @@ export default [
     ...exception,
     ...admin,
     ...system,
+    ...space,
     ...link,
     ...iframe,
     ...other,

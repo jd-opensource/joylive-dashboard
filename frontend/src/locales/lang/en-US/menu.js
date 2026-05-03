@@ -7,6 +7,8 @@ export default {
     setting: 'InfoSetting',
     role: 'Role',
     logger: 'Logger',
+    space: 'Service Space',
+    spaceList: 'Space List',
     add: 'add',
     edit: 'edit',
     search: 'search',

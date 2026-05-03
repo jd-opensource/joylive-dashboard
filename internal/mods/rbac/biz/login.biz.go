@@ -67,13 +67,15 @@ func (a *Login) ParseUserID(c *gin.Context) (string, error) {
 
 	// Check user status, if not activated, force to logout
 	user, err := a.UserDAL.Get(ctx, userID, schema.UserQueryOptions{
-		QueryOptions: util.QueryOptions{SelectFields: []string{"status"}},
+		QueryOptions: util.QueryOptions{SelectFields: []string{"username", "status"}},
 	})
 	if err != nil {
 		return "", err
 	} else if user == nil || user.Status != schema.UserStatusActivated {
 		return "", invalidToken
 	}
+
+	ctx = util.NewUsername(ctx, user.Username)
 
 	roleIDs, err := a.UserBIZ.GetRoleIDs(ctx, userID)
 	if err != nil {

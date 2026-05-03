@@ -236,5 +236,81 @@
                 ]
             }
         ]
+    },
+    {
+        "code": "space",
+        "name": "Space",
+        "sequence": 20,
+        "type": "page",
+        "path": "/space",
+        "status": "enabled",
+        "children": [
+            {
+                "code": "spaceList",
+                "name": "SpaceList",
+                "sequence": 90,
+                "type": "page",
+                "path": "/space/list",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/spaces"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/spaces/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/spaces/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/spaces"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/spaces/{id}"
+                    }
+                ]
+            }
+        ]
     }
 ]

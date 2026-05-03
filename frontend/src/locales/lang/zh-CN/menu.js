@@ -7,6 +7,8 @@ export default {
     setting: '信息设置',
     role: '角色管理',
     logger: '日志管理',
+    space: '服务空间',
+    spaceList: '空间列表',
     'menu.account.settings': '个人设置',
     add: '添加',
     edit: '修改',

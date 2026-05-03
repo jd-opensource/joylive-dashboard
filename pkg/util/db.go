@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -121,4 +122,17 @@ func Exists(ctx context.Context, db *gorm.DB) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+// SoftDelete performs a logical delete by setting deleted to the record's id
+// and deleted_at to the current time. The db parameter should already include
+// the model scope (e.g., from GetXxxDB) with the deleted='0' filter applied.
+// This ensures consistency across all tables that follow the deleted/deleted_at convention.
+func SoftDelete(ctx context.Context, db *gorm.DB, id string) error {
+	now := time.Now()
+	result := db.Where("id=?", id).UpdateColumns(map[string]interface{}{
+		"deleted":    id,
+		"deleted_at": &now,
+	})
+	return result.Error
 }
