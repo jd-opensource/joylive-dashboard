@@ -162,7 +162,7 @@ async function getPageList() {
         const { success, data, total } = await apis.system
             .getLoggers({
                 pageSize,
-                page: current,
+                current,
                 ...searchFormData.value,
                 startTime: startTime.value,
                 endTime: endTime.value,

@@ -312,5 +312,151 @@
                 ]
             }
         ]
+    },
+    {
+        "code": "resource",
+        "name": "Resource",
+        "sequence": 30,
+        "type": "page",
+        "path": "/resource",
+        "status": "enabled",
+        "children": [
+            {
+                "code": "applicationList",
+                "name": "ApplicationList",
+                "sequence": 90,
+                "type": "page",
+                "path": "/resource/application",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/applications"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/applications/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/applications/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/applications"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/applications/{id}"
+                    }
+                ]
+            },
+            {
+                "code": "serviceList",
+                "name": "ServiceList",
+                "sequence": 80,
+                "type": "page",
+                "path": "/resource/service",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/services"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/services/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/services/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/services"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/services/{id}"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/spaces"
+                    }
+                ]
+            }
+        ]
     }
 ]

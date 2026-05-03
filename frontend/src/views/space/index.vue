@@ -135,7 +135,7 @@ async function getPageList() {
         const { success, data, total } = await apis.space
             .getSpaceList({
                 pageSize,
-                page: current,
+                current,
                 ...searchFormData.value,
             })
             .catch(() => {

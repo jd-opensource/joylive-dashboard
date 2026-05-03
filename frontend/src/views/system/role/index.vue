@@ -158,7 +158,7 @@ async function getPageList() {
         const { success, data, total } = await apis.role
             .getRoleList({
                 pageSize,
-                page: current,
+                current,
                 ...searchFormData.value,
             })
             .catch(() => {

@@ -57,6 +57,8 @@ func InitWithConfig(ctx context.Context, cfg *LoggerConfig, hookHandle ...HookHa
 	if cfg.Debug {
 		cfg.Level = "debug"
 		zconfig = zap.NewDevelopmentConfig()
+		zconfig.OutputPaths = []string{"stdout"}
+		zconfig.ErrorOutputPaths = []string{"stdout"}
 	} else {
 		zconfig = zap.NewProductionConfig()
 	}

@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	_ "net/http/pprof" //nolint:gosec
 	"os"
@@ -28,9 +27,7 @@ type RunConfig struct {
 // cleanup upon exit.
 func Run(ctx context.Context, runCfg RunConfig) error {
 	defer func() {
-		if err := zap.L().Sync(); err != nil {
-			fmt.Printf("failed to sync zap logger: %s \n", err.Error())
-		}
+		_ = zap.L().Sync()
 	}()
 
 	// Load configuration.

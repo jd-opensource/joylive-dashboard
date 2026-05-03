@@ -8,24 +8,30 @@
                 <a-row :gutter="gutter">
                     <a-col v-bind="colSpan">
                         <a-form-item
-                            :label="$t('pages.system.user.form.username')"
-                            name="username">
-                            <a-input
-                                :placeholder="$t('pages.system.user.form.username.placeholder')"
-                                v-model:value="searchFormData.username"></a-input>
+                            :label="$t('pages.service.form.space_code')"
+                            name="space_code">
+                            <a-select
+                                :placeholder="$t('pages.service.form.space_code.placeholder')"
+                                v-model:value="searchFormData.space_code"
+                                show-search
+                                :filter-option="filterSpaceOption"
+                                @change="onSpaceChange">
+                                <a-select-option
+                                    v-for="item in spaceOptions"
+                                    :key="item.code"
+                                    :value="item.code">
+                                    {{ item.name }} ({{ item.code }})
+                                </a-select-option>
+                            </a-select>
                         </a-form-item>
                     </a-col>
 
                     <a-col v-bind="colSpan">
-                        <a-form-item name="name">
-                            <template #label>
-                                {{ $t('pages.system.user.form.name') }}
-                                <a-tooltip :title="$t('pages.system.user.form.name')">
-                                    <question-circle-outlined class="ml-4-1 color-placeholder" />
-                                </a-tooltip>
-                            </template>
+                        <a-form-item
+                            :label="$t('pages.service.form.name')"
+                            name="name">
                             <a-input
-                                :placeholder="$t('pages.system.user.form.name.placeholder')"
+                                :placeholder="$t('pages.service.form.name.placeholder')"
                                 v-model:value="searchFormData.name"></a-input>
                         </a-form-item>
                     </a-col>
@@ -54,12 +60,13 @@
             <a-card type="flex">
                 <x-action-bar class="mb-8-2">
                     <a-button
+                        v-action="'add'"
                         type="primary"
                         @click="$refs.editDialogRef.handleCreate()">
                         <template #icon>
                             <plus-outlined></plus-outlined>
                         </template>
-                        {{ $t('pages.system.user.add') }}
+                        {{ $t('pages.service.add') }}
                     </a-button>
                 </x-action-bar>
                 <a-table
@@ -67,38 +74,26 @@
                     :data-source="listData"
                     :loading="loading"
                     :pagination="paginationState"
-                    :scroll="{ x: 1000 }"
+                    :scroll="{ x: 1200 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
-                        <template v-if="'statusType' === column.key">
-                            <!--状态-->
-                            <a-tag
-                                v-if="statusUserTypeEnum.is('activated', record.status)"
-                                color="processing">
-                                {{ statusUserTypeEnum.getDesc(record.status) }}
-                            </a-tag>
-                            <!--状态-->
-                            <a-tag
-                                v-if="statusUserTypeEnum.is('freezed', record.status)"
-                                color="processing">
-                                {{ statusUserTypeEnum.getDesc(record.status) }}
-                            </a-tag>
-                        </template>
-
                         <template v-if="'createAt' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
+
                         <template v-if="'action' === column.key">
                             <x-action-button @click="$refs.editDialogRef.handleEdit(record)">
                                 <a-tooltip>
-                                    <template #title> {{ $t('pages.system.user.edit') }}</template>
-                                    <edit-outlined /> </a-tooltip
-                            ></x-action-button>
-                            <x-action-button @click="handleDelete(record)">
+                                    <template #title> {{ $t('pages.service.edit') }}</template>
+                                    <edit-outlined />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button @click="handleRemove(record)">
                                 <a-tooltip>
-                                    <template #title>{{ $t('pages.system.delete') }}</template>
-                                    <delete-outlined style="color: #ff4d4f" /> </a-tooltip
-                            ></x-action-button>
+                                    <template #title> {{ $t('pages.system.delete') }}</template>
+                                    <delete-outlined style="color: #ff4d4f" />
+                                </a-tooltip>
+                            </x-action-button>
                         </template>
                     </template>
                 </a-table>
@@ -108,6 +103,7 @@
 
     <edit-dialog
         ref="editDialogRef"
+        :space-options="spaceOptions"
         @ok="onOk"></edit-dialog>
 </template>
 
@@ -117,41 +113,74 @@ import { ref } from 'vue'
 import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
-import { statusUserTypeEnum } from '@/enums/system'
-import { usePagination } from '@/hooks'
-
-import EditDialog from './components/EditDialog.vue'
+import { usePagination, useForm } from '@/hooks'
+import EditDialog from './ServiceEditDialog.vue'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
+
 defineOptions({
-    name: 'systemUser',
+    name: 'serviceList',
 })
-const { t } = useI18n() // 解构出t方法
+const { t } = useI18n()
 const columns = [
-    { title: t('pages.system.user.form.username'), dataIndex: 'username', width: 120 },
-    { title: t('pages.system.user.form.name'), dataIndex: 'name', key: 'name', width: 100 },
-    { title: t('pages.system.user.form.phone'), dataIndex: 'phone', width: 120 },
-    { title: t('pages.system.user.form.email'), dataIndex: 'email', width: 100 },
-    { title: t('pages.system.user.form.status'), dataIndex: 'status', key: 'statusType', width: 60 },
-    { title: t('pages.system.user.form.created_at'), key: 'createAt', fixed: 'right', width: 120 },
-    { title: t('button.action'), key: 'action', fixed: 'right', width: 100 },
+    { title: t('pages.service.form.name'), dataIndex: 'name', width: 200 },
+    { title: t('pages.service.form.space_code'), dataIndex: 'space_code', width: 150 },
+    { title: t('pages.service.form.registration_type'), dataIndex: 'registration_type', width: 120 },
+    { title: t('pages.service.form.source'), dataIndex: 'source', width: 100 },
+    { title: t('pages.service.form.creator'), dataIndex: 'creator', width: 120 },
+    { title: t('pages.service.form.version'), dataIndex: 'version', width: 80 },
+    { title: t('pages.service.form.description'), dataIndex: 'description', ellipsis: true },
+    { title: t('pages.service.form.created_at'), key: 'createAt', fixed: 'right', width: 120 },
+    { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 
-const { listData, loading, showLoading, hideLoading, paginationState, resetPagination, searchFormData } =
+const { listData, loading, showLoading, hideLoading, paginationState, searchFormData, resetPagination } =
     usePagination()
-
+const { resetForm } = useForm()
 const editDialogRef = ref()
-getPageList()
-/**
- * 获取用户列表
- * @returns {Promise<void>}
- */
+const spaceOptions = ref([])
+
+const SPACE_CODE_KEY = 'service_space_code'
+
+loadSpaceOptions()
+
+async function loadSpaceOptions() {
+    try {
+        const { success, data } = await apis.space.getSpaceList({ pageSize: 99, current: 1 }).catch(() => {
+            throw new Error()
+        })
+        if (config('http.code.success') === success) {
+            spaceOptions.value = data || []
+            if (spaceOptions.value.length > 0) {
+                const saved = localStorage.getItem(SPACE_CODE_KEY)
+                const found = saved && spaceOptions.value.some((item) => item.code === saved)
+                searchFormData.value.space_code = found ? saved : spaceOptions.value[0].code
+                localStorage.setItem(SPACE_CODE_KEY, searchFormData.value.space_code)
+                getPageList()
+            }
+        }
+    } catch (error) {
+        // ignore
+    }
+}
+
+function onSpaceChange(value) {
+    localStorage.setItem(SPACE_CODE_KEY, value)
+    resetPagination()
+    getPageList()
+}
+
+function filterSpaceOption(input, option) {
+    const label = option.children?.[0]?.children || ''
+    return option.value.toLowerCase().includes(input.toLowerCase()) || label.toLowerCase().includes(input.toLowerCase())
+}
+
 async function getPageList() {
     try {
         showLoading()
         const { pageSize, current } = paginationState
-        const { success, data, total } = await apis.users
-            .getUsersList({
+        const { success, data, total } = await apis.service
+            .getServiceList({
                 pageSize,
                 current,
                 ...searchFormData.value,
@@ -169,19 +198,16 @@ async function getPageList() {
     }
 }
 
-/**
- * 删除
- */
-function handleDelete({ id }) {
+function handleRemove({ id }) {
     Modal.confirm({
-        title: t('pages.system.user.delTip'),
+        title: t('pages.service.delTip'),
         content: t('button.confirm'),
         okText: t('button.confirm'),
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {
                     try {
-                        const { success } = await apis.users.delUsers(id).catch(() => {
+                        const { success } = await apis.service.delService(id).catch(() => {
                             throw new Error()
                         })
                         if (config('http.code.success') === success) {
@@ -198,35 +224,26 @@ function handleDelete({ id }) {
     })
 }
 
-/**
- * 分页
- */
 function onTableChange({ current, pageSize }) {
     paginationState.current = current
     paginationState.pageSize = pageSize
     getPageList()
 }
 
-/**
- * 搜索
- */
-function handleSearch() {
-    resetPagination()
-    getPageList()
-}
-/**
- * 重置
- */
 function handleResetSearch() {
-    searchFormData.value = {}
+    const spaceCode = searchFormData.value.space_code
+    searchFormData.value = { space_code: spaceCode }
     resetPagination()
     getPageList()
 }
-/**
- * 编辑完成
- */
+
+function handleSearch() {
+    resetForm()
+    resetPagination()
+    getPageList()
+}
+
 async function onOk() {
-    message.success(t('component.message.success.delete'))
     await getPageList()
 }
 </script>

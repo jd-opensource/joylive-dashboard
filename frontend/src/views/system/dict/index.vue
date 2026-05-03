@@ -107,7 +107,7 @@ async function getPageList() {
         const { code, data } = await apis.common
             .getPageList({
                 pageSize,
-                page: current,
+                current,
             })
             .catch(() => {
                 throw new Error()

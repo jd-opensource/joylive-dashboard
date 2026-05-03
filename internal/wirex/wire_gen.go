@@ -13,6 +13,10 @@ import (
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/api"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/biz"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/dal"
+	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource"
+	api3 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/api"
+	biz3 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/biz"
+	dal3 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/space"
 	api2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/api"
 	biz2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/biz"
@@ -137,9 +141,35 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		DB:       db,
 		SpaceAPI: apiSpace,
 	}
+	dalApplication := &dal3.Application{
+		DB: db,
+	}
+	bizApplication := &biz3.Application{
+		Trans:         trans,
+		ApplicationDAL: dalApplication,
+	}
+	apiApplication := &api3.Application{
+		ApplicationBIZ: bizApplication,
+	}
+	dalService := &dal3.Service{
+		DB: db,
+	}
+	bizService := &biz3.Service{
+		Trans:      trans,
+		ServiceDAL: dalService,
+	}
+	apiService := &api3.Service{
+		ServiceBIZ: bizService,
+	}
+	resourceResource := &resource.Resource{
+		DB:             db,
+		ApplicationAPI: apiApplication,
+		ServiceAPI:     apiService,
+	}
 	modsMods := &mods.Mods{
-		RBAC:  rbacRBAC,
-		Space: spaceSpace,
+		RBAC:     rbacRBAC,
+		Resource: resourceResource,
+		Space:    spaceSpace,
 	}
 	injector := &Injector{
 		DB:    db,
