@@ -1,1 +1,2 @@
-./ginadmin stop
+#!/bin/bash
+./joylivedashboard stop

@@ -1,1 +1,2 @@
-./ginadmin start -d configs -c dev -s dist --daemon
+#!/bin/bash
+./joylivedashboard start -d configs -c dev -s frontend/dist --daemon
