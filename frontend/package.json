@@ -10,7 +10,7 @@
         "preview": "npm run build:prod && vite preview --mode prod",
         "report": "vite build --mode prod",
         "lint": "eslint --ext .js,.vue --ignore-path .eslintignore --fix src",
-        "prepare": "husky install",
+        "prepare": "husky install || true",
         "prettier": "prettier --config .prettierrc --write ./src/**/*.{js,vue}",
         "docs:dev": "vitepress dev docs",
         "docs:build": "vitepress build docs",
