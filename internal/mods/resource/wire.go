@@ -1,10 +1,10 @@
 package resource
 
 import (
+	"github.com/google/wire"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/api"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/biz"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
-	"github.com/google/wire"
 )
 
 // Collection of wire providers
@@ -16,4 +16,7 @@ var Set = wire.NewSet(
 	wire.Struct(new(dal.Service), "*"),
 	wire.Struct(new(biz.Service), "*"),
 	wire.Struct(new(api.Service), "*"),
+	wire.Struct(new(dal.ApplicationService), "*"),
+	wire.Struct(new(biz.ApplicationService), "*"),
+	wire.Struct(new(api.ApplicationService), "*"),
 )

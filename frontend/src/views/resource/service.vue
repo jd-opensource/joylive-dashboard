@@ -104,6 +104,7 @@
     <edit-dialog
         ref="editDialogRef"
         :space-options="spaceOptions"
+        :application-options="applicationOptions"
         @ok="onOk"></edit-dialog>
 </template>
 
@@ -139,10 +140,12 @@ const { listData, loading, showLoading, hideLoading, paginationState, searchForm
 const { resetForm } = useForm()
 const editDialogRef = ref()
 const spaceOptions = ref([])
+const applicationOptions = ref([])
 
 const SPACE_CODE_KEY = 'service_space_code'
 
 loadSpaceOptions()
+loadApplicationOptions()
 
 async function loadSpaceOptions() {
     try {
@@ -158,6 +161,19 @@ async function loadSpaceOptions() {
                 localStorage.setItem(SPACE_CODE_KEY, searchFormData.value.space_code)
                 getPageList()
             }
+        }
+    } catch (error) {
+        // ignore
+    }
+}
+
+async function loadApplicationOptions() {
+    try {
+        const { success, data } = await apis.application.getApplicationList({ pageSize: 99, current: 1 }).catch(() => {
+            throw new Error()
+        })
+        if (config('http.code.success') === success) {
+            applicationOptions.value = data || []
         }
     } catch (error) {
         // ignore

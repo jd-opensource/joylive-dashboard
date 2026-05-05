@@ -14,13 +14,13 @@ import (
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/biz"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/dal"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource"
-	api3 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/api"
-	biz3 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/biz"
-	dal3 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
+	api2 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/api"
+	biz2 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/biz"
+	dal2 "github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/space"
-	api2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/api"
-	biz2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/biz"
-	dal2 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/dal"
+	api3 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/api"
+	biz3 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/biz"
+	dal3 "github.com/jd-opensource/joylive-dashboard/internal/mods/space/dal"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 )
 
@@ -127,44 +127,56 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		LoggerAPI: apiLogger,
 		Casbinx:   casbinx,
 	}
-	dalSpace := &dal2.Space{
+	application := &dal2.Application{
 		DB: db,
 	}
-	bizSpace := &biz2.Space{
+	bizApplication := &biz2.Application{
+		Trans:          trans,
+		ApplicationDAL: application,
+	}
+	apiApplication := &api2.Application{
+		ApplicationBIZ: bizApplication,
+	}
+	service := &dal2.Service{
+		DB: db,
+	}
+	applicationService := &dal2.ApplicationService{
+		DB: db,
+	}
+	bizApplicationService := &biz2.ApplicationService{
+		Trans:                 trans,
+		ApplicationServiceDAL: applicationService,
+	}
+	bizService := &biz2.Service{
+		Trans:                 trans,
+		ServiceDAL:            service,
+		ApplicationServiceBIZ: bizApplicationService,
+	}
+	apiService := &api2.Service{
+		ServiceBIZ: bizService,
+	}
+	apiApplicationService := &api2.ApplicationService{
+		ApplicationServiceBIZ: bizApplicationService,
+	}
+	resourceResource := &resource.Resource{
+		DB:                    db,
+		ApplicationAPI:        apiApplication,
+		ServiceAPI:            apiService,
+		ApplicationServiceAPI: apiApplicationService,
+	}
+	dalSpace := &dal3.Space{
+		DB: db,
+	}
+	bizSpace := &biz3.Space{
 		Trans:    trans,
 		SpaceDAL: dalSpace,
 	}
-	apiSpace := &api2.Space{
+	apiSpace := &api3.Space{
 		SpaceBIZ: bizSpace,
 	}
 	spaceSpace := &space.Space{
 		DB:       db,
 		SpaceAPI: apiSpace,
-	}
-	dalApplication := &dal3.Application{
-		DB: db,
-	}
-	bizApplication := &biz3.Application{
-		Trans:         trans,
-		ApplicationDAL: dalApplication,
-	}
-	apiApplication := &api3.Application{
-		ApplicationBIZ: bizApplication,
-	}
-	dalService := &dal3.Service{
-		DB: db,
-	}
-	bizService := &biz3.Service{
-		Trans:      trans,
-		ServiceDAL: dalService,
-	}
-	apiService := &api3.Service{
-		ServiceBIZ: bizService,
-	}
-	resourceResource := &resource.Resource{
-		DB:             db,
-		ApplicationAPI: apiApplication,
-		ServiceAPI:     apiService,
 	}
 	modsMods := &mods.Mods{
 		RBAC:     rbacRBAC,

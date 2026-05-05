@@ -1,27 +1,25 @@
 package schema
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
-	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 )
 
 // Space management for microservice spaces
 type Space struct {
-	ID          string          `json:"id" gorm:"size:20;primarykey;"`              // Unique ID
-	Code        string          `json:"code" gorm:"size:255;uniqueIndex:uniq_code"` // Code (unique)
-	Name        string          `json:"name" gorm:"size:255"`                       // Name
-	Tenant      string          `json:"tenant" gorm:"size:255"`                     // Tenant
-	Creator     string          `json:"creator" gorm:"size:255"`                    // Creator
-	Description string          `json:"description" gorm:"size:255"`                // Description
-	Metadata    json.RawMessage `json:"metadata" gorm:"type:json"`                  // Metadata (JSON)
-	CreatedAt   time.Time       `json:"created_at" gorm:"index;"`                   // Create time
-	UpdatedAt   time.Time       `json:"updated_at" gorm:"index;"`                   // Update time
-	Deleted     string          `json:"-" gorm:"size:20;default:0"`                 // Logical delete flag
-	DeletedAt   *time.Time      `json:"-"`                                          // Delete time
+	ID          string     `json:"id" gorm:"size:20;primarykey;"`              // Unique ID
+	Code        string     `json:"code" gorm:"size:255;uniqueIndex:uniq_code"` // Code (unique)
+	Name        string     `json:"name" gorm:"size:255"`                       // Name
+	Tenant      string     `json:"tenant" gorm:"size:255"`                     // Tenant
+	Creator     string     `json:"creator" gorm:"size:255"`                    // Creator
+	Description string     `json:"description" gorm:"size:255"`                // Description
+	Metadata    string     `json:"metadata" gorm:"type:json"`                  // Metadata (JSON)
+	CreatedAt   time.Time  `json:"created_at" gorm:"index;"`                   // Create time
+	UpdatedAt   time.Time  `json:"updated_at" gorm:"index;"`                   // Update time
+	Deleted     string     `json:"-" gorm:"size:20;default:0"`                 // Logical delete flag
+	DeletedAt   *time.Time `json:"-"`                                          // Delete time
 }
 
 func (a *Space) TableName() string {
@@ -52,18 +50,13 @@ type Spaces []*Space
 
 // SpaceForm defines the form for creating/updating a Space.
 type SpaceForm struct {
-	Code        string          `json:"code" binding:"required,max=255"` // Code (unique)
-	Name        string          `json:"name" binding:"required,max=255"` // Name
-	Description string          `json:"description"`                     // Description
-	Metadata    json.RawMessage `json:"metadata"`                        // Metadata (JSON)
+	Code        string `json:"code" binding:"required,max=255"` // Code (unique)
+	Name        string `json:"name" binding:"required,max=255"` // Name
+	Description string `json:"description"`                     // Description
+	Metadata    string `json:"metadata"`                        // Metadata (JSON)
 }
 
 func (a *SpaceForm) Validate() error {
-	if v := a.Metadata; v != nil && len(v) > 0 {
-		if !json.Valid(v) {
-			return errors.BadRequest("", "invalid metadata")
-		}
-	}
 	return nil
 }
 

@@ -12,8 +12,9 @@ import (
 
 // Service business logic layer
 type Service struct {
-	Trans      *util.Trans
-	ServiceDAL *dal.Service
+	Trans                 *util.Trans
+	ServiceDAL            *dal.Service
+	ApplicationServiceBIZ *ApplicationService
 }
 
 // Query services.
@@ -63,7 +64,17 @@ func (a *Service) Create(ctx context.Context, formItem *schema.ServiceForm) (*sc
 	}
 
 	err := a.Trans.Exec(ctx, func(ctx context.Context) error {
-		return a.ServiceDAL.Create(ctx, svc)
+		if err := a.ServiceDAL.Create(ctx, svc); err != nil {
+			return err
+		}
+		// Create application_service relationship with role=provider
+		appSvcForm := &schema.ApplicationServiceForm{
+			ApplicationId: formItem.ApplicationId,
+			ServiceId:     svc.ID,
+			Role:          "provider",
+		}
+		_, err := a.ApplicationServiceBIZ.Create(ctx, appSvcForm)
+		return err
 	})
 	if err != nil {
 		return nil, err

@@ -46,12 +46,33 @@
                 <a-row :gutter="12">
                     <a-col :span="12">
                         <a-form-item
+                            :label="$t('pages.service.form.application_id')"
+                            name="application_id">
+                            <a-select
+                                v-model:value="formData.application_id"
+                                show-search
+                                :placeholder="$t('pages.service.form.application_id.placeholder')"
+                                :filter-option="filterApplicationOption">
+                                <a-select-option
+                                    v-for="item in props.applicationOptions"
+                                    :key="item.id"
+                                    :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </a-form-item>
+                    </a-col>
+
+                    <a-col :span="12">
+                        <a-form-item
                             :label="$t('pages.service.form.registration_type')"
                             name="registration_type">
                             <a-input v-model:value="formData.registration_type"></a-input>
                         </a-form-item>
                     </a-col>
+                </a-row>
 
+                <a-row :gutter="12">
                     <a-col :span="12">
                         <a-form-item
                             :label="$t('pages.service.form.source')"
@@ -89,6 +110,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    applicationOptions: {
+        type: Array,
+        default: () => [],
+    },
 })
 const emit = defineEmits(['ok'])
 const { modal, showModal, hideModal, showLoading, hideLoading } = useModal()
@@ -103,9 +128,15 @@ function filterSpaceOption(input, option) {
     const label = option.children?.[0]?.children || ''
     return option.value.toLowerCase().includes(input.toLowerCase()) || label.toLowerCase().includes(input.toLowerCase())
 }
+
+function filterApplicationOption(input, option) {
+    const label = option.children?.[0]?.children || ''
+    return option.value.toLowerCase().includes(input.toLowerCase()) || label.toLowerCase().includes(input.toLowerCase())
+}
 formRules.value = {
     name: { required: true, message: t('pages.service.form.name.placeholder') },
     space_code: { required: true, message: t('pages.service.form.space_code.placeholder') },
+    application_id: { required: true, message: t('pages.service.form.application_id.placeholder') },
     registration_type: { required: true, message: t('pages.service.form.registration_type.placeholder') },
     source: { required: true, message: t('pages.service.form.source.placeholder') },
 }

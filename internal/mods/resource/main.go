@@ -3,23 +3,25 @@ package resource
 import (
 	"context"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/api"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/schema"
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type Resource struct {
-	DB            *gorm.DB
-	ApplicationAPI *api.Application
-	ServiceAPI     *api.Service
+	DB                    *gorm.DB
+	ApplicationAPI        *api.Application
+	ServiceAPI            *api.Service
+	ApplicationServiceAPI *api.ApplicationService
 }
 
 func (a *Resource) AutoMigrate(ctx context.Context) error {
 	return a.DB.AutoMigrate(
 		new(schema.Application),
 		new(schema.Service),
+		new(schema.ApplicationService),
 	)
 }
 
@@ -49,6 +51,14 @@ func (a *Resource) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) e
 		svc.POST("", a.ServiceAPI.Create)
 		svc.PUT(":id", a.ServiceAPI.Update)
 		svc.DELETE(":id", a.ServiceAPI.Delete)
+	}
+	applicationService := v1.Group("application-services")
+	{
+		applicationService.GET("", a.ApplicationServiceAPI.Query)
+		applicationService.GET(":id", a.ApplicationServiceAPI.Get)
+		applicationService.POST("", a.ApplicationServiceAPI.Create)
+		applicationService.PUT(":id", a.ApplicationServiceAPI.Update)
+		applicationService.DELETE(":id", a.ApplicationServiceAPI.Delete)
 	}
 
 	return nil

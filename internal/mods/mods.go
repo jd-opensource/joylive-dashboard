@@ -3,11 +3,11 @@ package mods
 import (
 	"context"
 
+	"github.com/gin-gonic/gin"
+	"github.com/google/wire"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/space"
-	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 )
 
 const (
