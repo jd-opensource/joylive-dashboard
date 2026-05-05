@@ -33,6 +33,7 @@ data/
 
 # binary directories
 bin/
+joylivedashboard
 
 # ai
 .claude/
