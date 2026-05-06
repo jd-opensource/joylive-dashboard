@@ -10,6 +10,123 @@ definitions:
       status:
         type: string
     type: object
+  schema.Application:
+    properties:
+      alias:
+        description: Application Chinese name
+        type: string
+      created_at:
+        description: Create time
+        type: string
+      creator:
+        description: Creator
+        type: string
+      description:
+        description: Description
+        type: string
+      enhance:
+        description: 'Enhance method: Agent, Sidecar'
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      language:
+        description: 'Language: Java, Python, Golang'
+        type: string
+      name:
+        description: Application name
+        type: string
+      source:
+        description: 'Data source: Local, JSF, JDAP'
+        type: string
+      tenant:
+        description: Tenant
+        type: string
+      updated_at:
+        description: Update time
+        type: string
+    type: object
+  schema.ApplicationForm:
+    properties:
+      alias:
+        description: Application Chinese name
+        type: string
+      description:
+        description: Description
+        type: string
+      enhance:
+        description: 'Enhance method: Agent, Sidecar'
+        maxLength: 20
+        type: string
+      language:
+        description: 'Language: Java, Python, Golang'
+        type: string
+      name:
+        description: Application name
+        maxLength: 255
+        type: string
+      source:
+        description: 'Data source: Local, JSF, JDAP'
+        maxLength: 255
+        type: string
+    required:
+    - enhance
+    - name
+    - source
+    type: object
+  schema.ApplicationService:
+    properties:
+      applicationId:
+        description: ApplicationId
+        type: string
+      createdAt:
+        description: Create timestamp
+        type: string
+      description:
+        description: Details
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      role:
+        description: App role such as provider or consumer
+        type: string
+      serviceId:
+        description: ServiceId
+        type: string
+      status:
+        description: '消费状态: approved, rejected, pending'
+        type: string
+      updatedAt:
+        description: Update timestamp
+        type: string
+    type: object
+  schema.ApplicationServiceForm:
+    properties:
+      application_id:
+        description: ApplicationId
+        maxLength: 20
+        type: string
+      description:
+        description: Details
+        type: string
+      role:
+        description: App role such as provider or consumer
+        maxLength: 20
+        type: string
+      service_id:
+        description: ServiceId
+        maxLength: 20
+        type: string
+      status:
+        description: 'Status: approved, rejected, pending'
+        maxLength: 20
+        type: string
+    required:
+    - application_id
+    - role
+    - service_id
+    type: object
   schema.Captcha:
     properties:
       captcha_id:
@@ -287,6 +404,136 @@ definitions:
         description: Update time
         type: string
     type: object
+  schema.Service:
+    properties:
+      collaborator:
+        description: Collaborator list
+        type: string
+      created_at:
+        description: Create time
+        type: string
+      creator:
+        description: Creator
+        type: string
+      description:
+        description: Description
+        type: string
+      extra:
+        description: Extra info
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      name:
+        description: Name
+        type: string
+      registration_type:
+        description: 'Registration type: HTTP, RPC_APP, RPC_INTERFACE'
+        type: string
+      source:
+        description: 'Data source: Local, JSF, JDAP'
+        type: string
+      space_code:
+        description: Space code
+        type: string
+      tenant:
+        description: Tenant
+        type: string
+      updated_at:
+        description: Update time
+        type: string
+      version:
+        description: Version
+        type: integer
+    type: object
+  schema.ServiceForm:
+    properties:
+      application_id:
+        description: Application ID
+        maxLength: 20
+        type: string
+      collaborator:
+        description: Collaborator list
+        type: string
+      description:
+        description: Description
+        type: string
+      extra:
+        description: Extra info
+        type: string
+      name:
+        description: Name
+        maxLength: 255
+        type: string
+      registration_type:
+        description: Registration type
+        maxLength: 20
+        type: string
+      source:
+        description: Data source
+        maxLength: 255
+        type: string
+      space_code:
+        description: Space code
+        maxLength: 255
+        type: string
+    required:
+    - application_id
+    - name
+    - registration_type
+    - source
+    - space_code
+    type: object
+  schema.Space:
+    properties:
+      code:
+        description: Code (unique)
+        type: string
+      created_at:
+        description: Create time
+        type: string
+      creator:
+        description: Creator
+        type: string
+      description:
+        description: Description
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      metadata:
+        description: Metadata (JSON)
+        type: string
+      name:
+        description: Name
+        type: string
+      tenant:
+        description: Tenant
+        type: string
+      updated_at:
+        description: Update time
+        type: string
+    type: object
+  schema.SpaceForm:
+    properties:
+      code:
+        description: Code (unique)
+        maxLength: 255
+        type: string
+      description:
+        description: Description
+        type: string
+      metadata:
+        description: Metadata (JSON)
+        type: string
+      name:
+        description: Name
+        maxLength: 255
+        type: string
+    required:
+    - code
+    - name
+    type: object
   schema.UpdateCurrentUser:
     properties:
       email:
@@ -432,9 +679,179 @@ definitions:
 info:
   contact: {}
   description: A dashboard for joylive-agent.
-  title: joylivedashboard
+  title: joylive-dashboard
   version: v1.0.0
 paths:
+  /api/v1/applications:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: Name of application
+        in: query
+        name: name
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.Application'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query application list
+      tags:
+      - ApplicationAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ApplicationForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Application'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create application record
+      tags:
+      - ApplicationAPI
+  /api/v1/applications/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete application record by ID
+      tags:
+      - ApplicationAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Application'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get application record by ID
+      tags:
+      - ApplicationAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ApplicationForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update application record by ID
+      tags:
+      - ApplicationAPI
   /api/v1/captcha/id:
     get:
       responses:
@@ -892,6 +1309,159 @@ paths:
       summary: Update menu record by ID
       tags:
       - MenuAPI
+  /api/v1/resource/application-services:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.ApplicationService'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query application service list
+      tags:
+      - ApplicationServiceAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ApplicationServiceForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ApplicationService'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create application service record
+      tags:
+      - ApplicationServiceAPI
+  /api/v1/resource/application-services/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete application service record by ID
+      tags:
+      - ApplicationServiceAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ApplicationService'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get application service record by ID
+      tags:
+      - ApplicationServiceAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ApplicationServiceForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update application service record by ID
+      tags:
+      - ApplicationServiceAPI
   /api/v1/roles:
     get:
       parameters:
@@ -1066,6 +1636,358 @@ paths:
       summary: Update role record by ID
       tags:
       - RoleAPI
+  /api/v1/services:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: Name of service
+        in: query
+        name: name
+        type: string
+      - description: Space code
+        in: query
+        name: space_code
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.Service'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query service list
+      tags:
+      - ServiceAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ServiceForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Service'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create service record
+      tags:
+      - ServiceAPI
+  /api/v1/services/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete service record by ID
+      tags:
+      - ServiceAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Service'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get service record by ID
+      tags:
+      - ServiceAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ServiceForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update service record by ID
+      tags:
+      - ServiceAPI
+  /api/v1/spaces:
+    get:
+      parameters:
+      - default: 1
+        description: pagination index
+        in: query
+        name: current
+        required: true
+        type: integer
+      - default: 10
+        description: pagination size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: Name of space
+        in: query
+        name: name
+        type: string
+      - description: Code of space
+        in: query
+        name: code
+        type: string
+      - description: Tenant
+        in: query
+        name: tenant
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.Space'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query space list
+      tags:
+      - SpaceAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.SpaceForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Space'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create space record
+      tags:
+      - SpaceAPI
+  /api/v1/spaces/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete space record by ID
+      tags:
+      - SpaceAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.Space'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get space record by ID
+      tags:
+      - SpaceAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.SpaceForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update space record by ID
+      tags:
+      - SpaceAPI
   /api/v1/users:
     get:
       parameters:
