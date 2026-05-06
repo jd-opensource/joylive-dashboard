@@ -627,55 +627,6 @@ CREATE TABLE IF NOT EXISTS `casbin_rule`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT = '鉴权引擎规则';
 
-CREATE TABLE IF NOT EXISTS `job`
-(
-    `id`            bigint auto_increment                                  NOT NULL COMMENT 'ID',
-    `uid`           varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT 'UID',
-    `name`          varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'job name',
-    `namespace_id`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'default' COMMENT '微服务空间编码',
-    `source_id`     varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '源注册中心ID',
-    `target_id`     varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL COMMENT '目标注册中心ID',
-    `range`         varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT 'SOURCE' COMMENT '数据范围',
-    `executor`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'registry' COMMENT '执行者',
-    `sync_type`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'SYNC_FULL_INC' COMMENT '同步类型',
-    `plan_type`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '计划任务类型',
-    `plan_interval` bigint COMMENT '任务执行间隔',
-    `plan_cron`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin COMMENT '计划执行表达式',
-    `version`       bigint                                                 NOT NULL DEFAULT '1' COMMENT '版本号',
-    `next_time`     datetime                                               NULL     DEFAULT NULL COMMENT '下次时间',
-    `state`         varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT 'INITIAL' COMMENT '状态',
-    `creator_type`  varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT 'user' COMMENT '创建者类型（user, system）',
-    `description`   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin          DEFAULT NULL COMMENT '备注',
-    `created_at`    timestamp                                              NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`    timestamp                                                       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`       varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL DEFAULT '0' COMMENT '逻辑删除标识',
-    `deleted_at`    timestamp                                              NULL     DEFAULT NULL COMMENT '删除时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uniq_uid` (`uid`) USING BTREE,
-    UNIQUE KEY `uniq_name` (`name`, `deleted`) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT = '服务同步任务';
-
-CREATE TABLE IF NOT EXISTS `job_config`
-(
-    `id`          bigint auto_increment                                 NOT NULL COMMENT 'ID',
-    `job_id`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Job UID',
-    `type`        varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '同步级别类型',
-    `version`     bigint                                                NOT NULL DEFAULT '1' COMMENT '版本号',
-    `source`      json                                                           DEFAULT NULL COMMENT '源配置',
-    `target`      json                                                           DEFAULT NULL COMMENT '目标配置',
-    `stop_action` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '停止操作',
-    `created_at`  timestamp                                             NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`  timestamp                                                      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`     varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0' COMMENT '逻辑删除标识',
-    `deleted_at`  timestamp                                             NULL     DEFAULT NULL COMMENT '删除时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uniq_jobid` (`job_id`) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT = '服务同步任务配置';
-
 CREATE TABLE IF NOT EXISTS `data_permission`
 (
     `id`         varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'ID',

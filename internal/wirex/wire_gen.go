@@ -158,11 +158,22 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiApplicationService := &api2.ApplicationService{
 		ApplicationServiceBIZ: bizApplicationService,
 	}
+	serviceGroup := &dal2.ServiceGroup{
+		DB: db,
+	}
+	bizServiceGroup := &biz2.ServiceGroup{
+		Trans:           trans,
+		ServiceGroupDAL: serviceGroup,
+	}
+	apiServiceGroup := &api2.ServiceGroup{
+		ServiceGroupBIZ: bizServiceGroup,
+	}
 	resourceResource := &resource.Resource{
 		DB:                    db,
 		ApplicationAPI:        apiApplication,
 		ServiceAPI:            apiService,
 		ApplicationServiceAPI: apiApplicationService,
+		ServiceGroupAPI:       apiServiceGroup,
 	}
 	dalSpace := &dal3.Space{
 		DB: db,
