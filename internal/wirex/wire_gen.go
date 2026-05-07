@@ -234,11 +234,77 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiPolicyRouteDetail := &api4.PolicyRouteDetail{
 		PolicyRouteDetailBIZ: bizPolicyRouteDetail,
 	}
+	policyLimit := &dal4.PolicyLimit{
+		DB: db,
+	}
+	bizPolicyLimit := &biz4.PolicyLimit{
+		Trans:          trans,
+		PolicyLimitDAL: policyLimit,
+	}
+	apiPolicyLimit := &api4.PolicyLimit{
+		PolicyLimitBIZ: bizPolicyLimit,
+	}
+	policyCircuitBreak := &dal4.PolicyCircuitBreak{
+		DB: db,
+	}
+	bizPolicyCircuitBreak := &biz4.PolicyCircuitBreak{
+		Trans:                 trans,
+		PolicyCircuitBreakDAL: policyCircuitBreak,
+	}
+	apiPolicyCircuitBreak := &api4.PolicyCircuitBreak{
+		PolicyCircuitBreakBIZ: bizPolicyCircuitBreak,
+	}
+	policyPermission := &dal4.PolicyPermission{
+		DB: db,
+	}
+	bizPolicyPermission := &biz4.PolicyPermission{
+		Trans:               trans,
+		PolicyPermissionDAL: policyPermission,
+	}
+	apiPolicyPermission := &api4.PolicyPermission{
+		PolicyPermissionBIZ: bizPolicyPermission,
+	}
+	policyAuth := &dal4.PolicyAuth{
+		DB: db,
+	}
+	bizPolicyAuth := &biz4.PolicyAuth{
+		Trans:         trans,
+		PolicyAuthDAL: policyAuth,
+	}
+	apiPolicyAuth := &api4.PolicyAuth{
+		PolicyAuthBIZ: bizPolicyAuth,
+	}
+	policyFault := &dal4.PolicyFault{
+		DB: db,
+	}
+	bizPolicyFault := &biz4.PolicyFault{
+		Trans:          trans,
+		PolicyFaultDAL: policyFault,
+	}
+	apiPolicyFault := &api4.PolicyFault{
+		PolicyFaultBIZ: bizPolicyFault,
+	}
+	policyInvocation := &dal4.PolicyInvocation{
+		DB: db,
+	}
+	bizPolicyInvocation := &biz4.PolicyInvocation{
+		Trans:               trans,
+		PolicyInvocationDAL: policyInvocation,
+	}
+	apiPolicyInvocation := &api4.PolicyInvocation{
+		PolicyInvocationBIZ: bizPolicyInvocation,
+	}
 	policyPolicy := &policy.Policy{
-		DB:                   db,
-		PolicyLoadbalanceAPI: apiPolicyLoadbalance,
-		PolicyRouteAPI:       apiPolicyRoute,
-		PolicyRouteDetailAPI: apiPolicyRouteDetail,
+		DB:                    db,
+		PolicyLoadbalanceAPI:  apiPolicyLoadbalance,
+		PolicyRouteAPI:        apiPolicyRoute,
+		PolicyRouteDetailAPI:  apiPolicyRouteDetail,
+		PolicyLimitAPI:        apiPolicyLimit,
+		PolicyCircuitBreakAPI: apiPolicyCircuitBreak,
+		PolicyPermissionAPI:   apiPolicyPermission,
+		PolicyAuthAPI:         apiPolicyAuth,
+		PolicyFaultAPI:        apiPolicyFault,
+		PolicyInvocationAPI:   apiPolicyInvocation,
 	}
 	modsMods := &mods.Mods{
 		RBAC:     rbacRBAC,

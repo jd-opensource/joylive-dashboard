@@ -1060,6 +1060,1291 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/policy/policy-auths": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyAuthAPI"
+                ],
+                "summary": "Query policy auth list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.PolicyAuth"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyAuthAPI"
+                ],
+                "summary": "Create policy auth record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyAuthForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyAuth"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-auths/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyAuthAPI"
+                ],
+                "summary": "Get policy auth record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyAuth"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyAuthAPI"
+                ],
+                "summary": "Update policy auth record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyAuthForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyAuthAPI"
+                ],
+                "summary": "Delete policy auth record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-circuit-breaks": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyCircuitBreakAPI"
+                ],
+                "summary": "Query policy circuit break list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.PolicyCircuitBreak"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyCircuitBreakAPI"
+                ],
+                "summary": "Create policy circuit break record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyCircuitBreakForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyCircuitBreak"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-circuit-breaks/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyCircuitBreakAPI"
+                ],
+                "summary": "Get policy circuit break record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyCircuitBreak"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyCircuitBreakAPI"
+                ],
+                "summary": "Update policy circuit break record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyCircuitBreakForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyCircuitBreakAPI"
+                ],
+                "summary": "Delete policy circuit break record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-faults": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyFaultAPI"
+                ],
+                "summary": "Query policy fault list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.PolicyFault"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyFaultAPI"
+                ],
+                "summary": "Create policy fault record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyFaultForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyFault"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-faults/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyFaultAPI"
+                ],
+                "summary": "Get policy fault record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyFault"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyFaultAPI"
+                ],
+                "summary": "Update policy fault record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyFaultForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyFaultAPI"
+                ],
+                "summary": "Delete policy fault record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-invocations": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyInvocationAPI"
+                ],
+                "summary": "Query policy invocation list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.PolicyInvocation"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyInvocationAPI"
+                ],
+                "summary": "Create policy invocation record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyInvocationForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyInvocation"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-invocations/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyInvocationAPI"
+                ],
+                "summary": "Get policy invocation record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyInvocation"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyInvocationAPI"
+                ],
+                "summary": "Update policy invocation record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyInvocationForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyInvocationAPI"
+                ],
+                "summary": "Delete policy invocation record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-limits": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyLimitAPI"
+                ],
+                "summary": "Query policy limit list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.PolicyLimit"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyLimitAPI"
+                ],
+                "summary": "Create policy limit record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyLimitForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyLimit"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-limits/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyLimitAPI"
+                ],
+                "summary": "Get policy limit record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyLimit"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyLimitAPI"
+                ],
+                "summary": "Update policy limit record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyLimitForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyLimitAPI"
+                ],
+                "summary": "Delete policy limit record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/policy/policy-loadbalances": {
             "get": {
                 "security": [
@@ -1286,6 +2571,263 @@ const docTemplate = `{
                     "PolicyLoadbalanceAPI"
                 ],
                 "summary": "Delete policy loadbalance record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-permissions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyPermissionAPI"
+                ],
+                "summary": "Query policy permission list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.PolicyPermission"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyPermissionAPI"
+                ],
+                "summary": "Create policy permission record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyPermissionForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyPermission"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/policy/policy-permissions/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyPermissionAPI"
+                ],
+                "summary": "Get policy permission record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.PolicyPermission"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyPermissionAPI"
+                ],
+                "summary": "Update policy permission record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.PolicyPermissionForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PolicyPermissionAPI"
+                ],
+                "summary": "Delete policy permission record by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -4246,6 +5788,936 @@ const docTemplate = `{
                 }
             }
         },
+        "schema.PolicyAuth": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
+                },
+                "params": {
+                    "description": "Parameters (JSON)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string"
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Auth type",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyAuthForm": {
+            "type": "object",
+            "required": [
+                "spaceCode",
+                "targetServiceId",
+                "type"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "params": {
+                    "description": "Parameters (JSON)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "type": {
+                    "description": "Auth type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyCircuitBreak": {
+            "type": "object",
+            "properties": {
+                "allowedCallsInHalfOpenState": {
+                    "description": "Allowed calls in half open state",
+                    "type": "integer"
+                },
+                "codePolicy": {
+                    "description": "Code policy (JSON)",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "degradeConfig": {
+                    "description": "Degrade config (JSON)",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "errorCodes": {
+                    "description": "Error codes (JSON)",
+                    "type": "string"
+                },
+                "errorMessages": {
+                    "description": "Error messages (JSON)",
+                    "type": "string"
+                },
+                "exceptions": {
+                    "description": "Exceptions (JSON)",
+                    "type": "string"
+                },
+                "failureRateThreshold": {
+                    "description": "Failure rate threshold",
+                    "type": "integer"
+                },
+                "forceOpen": {
+                    "description": "Force open",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "level": {
+                    "description": "Policy level",
+                    "type": "string"
+                },
+                "messagePolicy": {
+                    "description": "Message policy (JSON)",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "minCallsThreshold": {
+                    "description": "Min calls threshold",
+                    "type": "integer"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string"
+                },
+                "outlierMaxPercent": {
+                    "description": "Outlier max percent",
+                    "type": "integer"
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "realizeType": {
+                    "description": "Realize type",
+                    "type": "string"
+                },
+                "recoveryDuration": {
+                    "description": "Recovery duration (ms)",
+                    "type": "integer"
+                },
+                "recoveryEnabled": {
+                    "description": "Recovery enabled",
+                    "type": "integer"
+                },
+                "recoveryPhase": {
+                    "description": "Recovery phase",
+                    "type": "integer"
+                },
+                "slidingWindowSize": {
+                    "description": "Sliding window size",
+                    "type": "integer"
+                },
+                "slidingWindowType": {
+                    "description": "Sliding window type",
+                    "type": "string"
+                },
+                "slowCallDurationThreshold": {
+                    "description": "Slow call duration threshold",
+                    "type": "integer"
+                },
+                "slowCallRateThreshold": {
+                    "description": "Slow call rate threshold",
+                    "type": "integer"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string"
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                },
+                "waitDurationInOpenState": {
+                    "description": "Wait duration in open state",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyCircuitBreakForm": {
+            "type": "object",
+            "required": [
+                "group",
+                "level",
+                "name",
+                "realizeType",
+                "slidingWindowType",
+                "spaceCode",
+                "targetServiceId"
+            ],
+            "properties": {
+                "allowedCallsInHalfOpenState": {
+                    "description": "Allowed calls in half open state",
+                    "type": "integer"
+                },
+                "codePolicy": {
+                    "description": "Code policy (JSON)",
+                    "type": "string"
+                },
+                "degradeConfig": {
+                    "description": "Degrade config (JSON)",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "errorCodes": {
+                    "description": "Error codes (JSON)",
+                    "type": "string"
+                },
+                "errorMessages": {
+                    "description": "Error messages (JSON)",
+                    "type": "string"
+                },
+                "exceptions": {
+                    "description": "Exceptions (JSON)",
+                    "type": "string"
+                },
+                "failureRateThreshold": {
+                    "description": "Failure rate threshold",
+                    "type": "integer"
+                },
+                "forceOpen": {
+                    "description": "Force open",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "level": {
+                    "description": "Policy level",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "messagePolicy": {
+                    "description": "Message policy (JSON)",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "minCallsThreshold": {
+                    "description": "Min calls threshold",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "outlierMaxPercent": {
+                    "description": "Outlier max percent",
+                    "type": "integer"
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "realizeType": {
+                    "description": "Realize type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "recoveryDuration": {
+                    "description": "Recovery duration (ms)",
+                    "type": "integer"
+                },
+                "recoveryEnabled": {
+                    "description": "Recovery enabled",
+                    "type": "integer"
+                },
+                "recoveryPhase": {
+                    "description": "Recovery phase",
+                    "type": "integer"
+                },
+                "slidingWindowSize": {
+                    "description": "Sliding window size",
+                    "type": "integer"
+                },
+                "slidingWindowType": {
+                    "description": "Sliding window type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "slowCallDurationThreshold": {
+                    "description": "Slow call duration threshold",
+                    "type": "integer"
+                },
+                "slowCallRateThreshold": {
+                    "description": "Slow call rate threshold",
+                    "type": "integer"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                },
+                "waitDurationInOpenState": {
+                    "description": "Wait duration in open state",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyFault": {
+            "type": "object",
+            "properties": {
+                "conditions": {
+                    "description": "Match conditions (JSON)",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "delayTimeMs": {
+                    "description": "Delay time (ms)",
+                    "type": "integer"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "errorCode": {
+                    "description": "Error code",
+                    "type": "integer"
+                },
+                "errorMsg": {
+                    "description": "Error message",
+                    "type": "string"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "percent": {
+                    "description": "Fault injection percent",
+                    "type": "integer"
+                },
+                "relationType": {
+                    "description": "Relation type",
+                    "type": "string"
+                },
+                "scope": {
+                    "description": "Injection scope (inbound | outbound)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string"
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Fault injection type (error | delay)",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyFaultForm": {
+            "type": "object",
+            "required": [
+                "group",
+                "name",
+                "relationType",
+                "scope",
+                "spaceCode",
+                "targetServiceId",
+                "type"
+            ],
+            "properties": {
+                "conditions": {
+                    "description": "Match conditions (JSON)",
+                    "type": "string"
+                },
+                "delayTimeMs": {
+                    "description": "Delay time (ms)",
+                    "type": "integer"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "errorCode": {
+                    "description": "Error code",
+                    "type": "integer"
+                },
+                "errorMsg": {
+                    "description": "Error message",
+                    "type": "string"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "percent": {
+                    "description": "Fault injection percent",
+                    "type": "integer"
+                },
+                "relationType": {
+                    "description": "Relation type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "scope": {
+                    "description": "Injection scope (inbound | outbound)",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "type": {
+                    "description": "Fault injection type (error | delay)",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyInvocation": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "retryPolicy": {
+                    "description": "Retry policy (JSON)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string"
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Invocation type (failfast | failover | failsafe)",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyInvocationForm": {
+            "type": "object",
+            "required": [
+                "group",
+                "name",
+                "spaceCode",
+                "targetServiceId",
+                "type"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "retryPolicy": {
+                    "description": "Retry policy (JSON)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "type": {
+                    "description": "Invocation type (failfast | failover | failsafe)",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyLimit": {
+            "type": "object",
+            "properties": {
+                "actionParameters": {
+                    "description": "Action parameters (JSON)",
+                    "type": "string"
+                },
+                "conditions": {
+                    "description": "Match conditions (JSON)",
+                    "type": "string"
+                },
+                "cpuUsage": {
+                    "description": "Max CPU usage",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "loadUsage": {
+                    "description": "Max system load",
+                    "type": "integer"
+                },
+                "maxConcurrency": {
+                    "description": "Max concurrency",
+                    "type": "integer"
+                },
+                "maxWaitMs": {
+                    "description": "Max wait time (ms)",
+                    "type": "integer"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "realizeType": {
+                    "description": "Realize type",
+                    "type": "string"
+                },
+                "relationType": {
+                    "description": "Relation type",
+                    "type": "string"
+                },
+                "slidingWindows": {
+                    "description": "Sliding windows (JSON)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string"
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Limit policy type (Rate, Concurrency, Load)",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyLimitForm": {
+            "type": "object",
+            "required": [
+                "group",
+                "name",
+                "realizeType",
+                "relationType",
+                "spaceCode",
+                "targetServiceId",
+                "type"
+            ],
+            "properties": {
+                "actionParameters": {
+                    "description": "Action parameters (JSON)",
+                    "type": "string"
+                },
+                "conditions": {
+                    "description": "Match conditions (JSON)",
+                    "type": "string"
+                },
+                "cpuUsage": {
+                    "description": "Max CPU usage",
+                    "type": "integer"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "loadUsage": {
+                    "description": "Max system load",
+                    "type": "integer"
+                },
+                "maxConcurrency": {
+                    "description": "Max concurrency",
+                    "type": "integer"
+                },
+                "maxWaitMs": {
+                    "description": "Max wait time (ms)",
+                    "type": "integer"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "realizeType": {
+                    "description": "Realize type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "relationType": {
+                    "description": "Relation type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "slidingWindows": {
+                    "description": "Sliding windows (JSON)",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "type": {
+                    "description": "Limit policy type (Rate, Concurrency, Load)",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
         "schema.PolicyLoadbalance": {
             "type": "object",
             "properties": {
@@ -4373,6 +6845,154 @@ const docTemplate = `{
                 },
                 "targetServiceId": {
                     "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyPermission": {
+            "type": "object",
+            "properties": {
+                "conditions": {
+                    "description": "Match conditions (JSON)",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "relationType": {
+                    "description": "Relation type",
+                    "type": "string"
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string"
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Permission type",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.PolicyPermissionForm": {
+            "type": "object",
+            "required": [
+                "group",
+                "name",
+                "relationType",
+                "spaceCode",
+                "targetServiceId",
+                "type"
+            ],
+            "properties": {
+                "conditions": {
+                    "description": "Match conditions (JSON)",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "enabled": {
+                    "description": "Enabled",
+                    "type": "integer"
+                },
+                "group": {
+                    "description": "Group",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "method": {
+                    "description": "Method",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Policy name",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "path": {
+                    "description": "Path or interface",
+                    "type": "string"
+                },
+                "relationType": {
+                    "description": "Relation type",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "sourceApplicationId": {
+                    "description": "Source application ID",
+                    "type": "string"
+                },
+                "spaceCode": {
+                    "description": "Microservice space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "targetServiceId": {
+                    "description": "Target service ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "type": {
+                    "description": "Permission type",
                     "type": "string",
                     "maxLength": 20
                 },
