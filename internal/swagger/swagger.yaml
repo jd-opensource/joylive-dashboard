@@ -446,6 +446,52 @@ definitions:
         description: Version
         type: integer
     type: object
+  schema.ServiceAlias:
+    properties:
+      alias:
+        description: Service alias
+        type: string
+      createdAt:
+        description: Create timestamp
+        type: string
+      description:
+        description: Details
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      serviceId:
+        description: Service ID this alias belongs to
+        type: string
+      spaceCode:
+        description: Microservice space code
+        type: string
+      updatedAt:
+        description: Update timestamp
+        type: string
+    type: object
+  schema.ServiceAliasForm:
+    properties:
+      alias:
+        description: Service alias
+        maxLength: 255
+        type: string
+      description:
+        description: Details
+        type: string
+      serviceId:
+        description: Service ID this alias belongs to
+        maxLength: 20
+        type: string
+      spaceCode:
+        description: Microservice space code
+        maxLength: 255
+        type: string
+    required:
+    - alias
+    - serviceId
+    - spaceCode
+    type: object
   schema.ServiceForm:
     properties:
       application_id:
@@ -483,6 +529,67 @@ definitions:
     - registration_type
     - source
     - space_code
+    type: object
+  schema.ServiceGroup:
+    properties:
+      code:
+        description: Group code
+        type: string
+      createdAt:
+        description: Create timestamp
+        type: string
+      description:
+        description: Details
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      isolationCode:
+        description: Isolation code
+        type: string
+      labels:
+        description: Labels
+        type: string
+      name:
+        description: Group name
+        type: string
+      serviceId:
+        description: Service ID this group belongs to
+        type: string
+      updatedAt:
+        description: Update timestamp
+        type: string
+    type: object
+  schema.ServiceGroupForm:
+    properties:
+      code:
+        description: Group code
+        maxLength: 255
+        type: string
+      description:
+        description: Details
+        maxLength: 255
+        type: string
+      isolation_code:
+        description: Isolation code
+        maxLength: 255
+        type: string
+      labels:
+        description: Labels
+        maxLength: 1024
+        type: string
+      name:
+        description: Group name
+        maxLength: 255
+        type: string
+      service_id:
+        description: Service ID this group belongs to
+        maxLength: 20
+        type: string
+    required:
+    - code
+    - name
+    - service_id
     type: object
   schema.Space:
     properties:
@@ -1462,6 +1569,312 @@ paths:
       summary: Update application service record by ID
       tags:
       - ApplicationServiceAPI
+  /api/v1/resource/service-aliases:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.ServiceAlias'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query service alias list
+      tags:
+      - ServiceAliasAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ServiceAliasForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ServiceAlias'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create service alias record
+      tags:
+      - ServiceAliasAPI
+  /api/v1/resource/service-aliases/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete service alias record by ID
+      tags:
+      - ServiceAliasAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ServiceAlias'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get service alias record by ID
+      tags:
+      - ServiceAliasAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ServiceAliasForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update service alias record by ID
+      tags:
+      - ServiceAliasAPI
+  /api/v1/resource/service-groups:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.ServiceGroup'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query service group list
+      tags:
+      - ServiceGroupAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ServiceGroupForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ServiceGroup'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create service group record
+      tags:
+      - ServiceGroupAPI
+  /api/v1/resource/service-groups/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete service group record by ID
+      tags:
+      - ServiceGroupAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.ServiceGroup'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get service group record by ID
+      tags:
+      - ServiceGroupAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ServiceGroupForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update service group record by ID
+      tags:
+      - ServiceGroupAPI
   /api/v1/roles:
     get:
       parameters:

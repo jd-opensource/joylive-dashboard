@@ -168,12 +168,23 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiServiceGroup := &api2.ServiceGroup{
 		ServiceGroupBIZ: bizServiceGroup,
 	}
+	serviceAlias := &dal2.ServiceAlias{
+		DB: db,
+	}
+	bizServiceAlias := &biz2.ServiceAlias{
+		Trans:           trans,
+		ServiceAliasDAL: serviceAlias,
+	}
+	apiServiceAlias := &api2.ServiceAlias{
+		ServiceAliasBIZ: bizServiceAlias,
+	}
 	resourceResource := &resource.Resource{
 		DB:                    db,
 		ApplicationAPI:        apiApplication,
 		ServiceAPI:            apiService,
 		ApplicationServiceAPI: apiApplicationService,
 		ServiceGroupAPI:       apiServiceGroup,
+		ServiceAliasAPI:       apiServiceAlias,
 	}
 	dalSpace := &dal3.Space{
 		DB: db,

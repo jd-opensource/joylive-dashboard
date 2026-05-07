@@ -16,6 +16,7 @@ type Resource struct {
 	ServiceAPI            *api.Service
 	ApplicationServiceAPI *api.ApplicationService
 	ServiceGroupAPI       *api.ServiceGroup
+	ServiceAliasAPI       *api.ServiceAlias
 }
 
 func (a *Resource) AutoMigrate(ctx context.Context) error {
@@ -24,6 +25,7 @@ func (a *Resource) AutoMigrate(ctx context.Context) error {
 		new(schema.Service),
 		new(schema.ApplicationService),
 		new(schema.ServiceGroup),
+		new(schema.ServiceAlias),
 	)
 }
 
@@ -69,6 +71,14 @@ func (a *Resource) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) e
 		serviceGroup.POST("", a.ServiceGroupAPI.Create)
 		serviceGroup.PUT(":id", a.ServiceGroupAPI.Update)
 		serviceGroup.DELETE(":id", a.ServiceGroupAPI.Delete)
+	}
+	serviceAlias := v1.Group("service-aliases")
+	{
+		serviceAlias.GET("", a.ServiceAliasAPI.Query)
+		serviceAlias.GET(":id", a.ServiceAliasAPI.Get)
+		serviceAlias.POST("", a.ServiceAliasAPI.Create)
+		serviceAlias.PUT(":id", a.ServiceAliasAPI.Update)
+		serviceAlias.DELETE(":id", a.ServiceAliasAPI.Delete)
 	}
 
 	return nil

@@ -22,4 +22,7 @@ var Set = wire.NewSet(
 	wire.Struct(new(dal.ServiceGroup), "*"),
 	wire.Struct(new(biz.ServiceGroup), "*"),
 	wire.Struct(new(api.ServiceGroup), "*"),
+	wire.Struct(new(dal.ServiceAlias), "*"),
+	wire.Struct(new(biz.ServiceAlias), "*"),
+	wire.Struct(new(api.ServiceAlias), "*"),
 )
