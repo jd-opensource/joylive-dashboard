@@ -9,6 +9,10 @@ package wirex
 import (
 	"context"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods"
+	"github.com/jd-opensource/joylive-dashboard/internal/mods/policy"
+	api4 "github.com/jd-opensource/joylive-dashboard/internal/mods/policy/api"
+	biz4 "github.com/jd-opensource/joylive-dashboard/internal/mods/policy/biz"
+	dal4 "github.com/jd-opensource/joylive-dashboard/internal/mods/policy/dal"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/api"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/biz"
@@ -200,10 +204,47 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		DB:       db,
 		SpaceAPI: apiSpace,
 	}
+	policyLoadbalance := &dal4.PolicyLoadbalance{
+		DB: db,
+	}
+	bizPolicyLoadbalance := &biz4.PolicyLoadbalance{
+		Trans:                trans,
+		PolicyLoadbalanceDAL: policyLoadbalance,
+	}
+	apiPolicyLoadbalance := &api4.PolicyLoadbalance{
+		PolicyLoadbalanceBIZ: bizPolicyLoadbalance,
+	}
+	policyRoute := &dal4.PolicyRoute{
+		DB: db,
+	}
+	bizPolicyRoute := &biz4.PolicyRoute{
+		Trans:          trans,
+		PolicyRouteDAL: policyRoute,
+	}
+	apiPolicyRoute := &api4.PolicyRoute{
+		PolicyRouteBIZ: bizPolicyRoute,
+	}
+	policyRouteDetail := &dal4.PolicyRouteDetail{
+		DB: db,
+	}
+	bizPolicyRouteDetail := &biz4.PolicyRouteDetail{
+		Trans:                trans,
+		PolicyRouteDetailDAL: policyRouteDetail,
+	}
+	apiPolicyRouteDetail := &api4.PolicyRouteDetail{
+		PolicyRouteDetailBIZ: bizPolicyRouteDetail,
+	}
+	policyPolicy := &policy.Policy{
+		DB:                   db,
+		PolicyLoadbalanceAPI: apiPolicyLoadbalance,
+		PolicyRouteAPI:       apiPolicyRoute,
+		PolicyRouteDetailAPI: apiPolicyRouteDetail,
+	}
 	modsMods := &mods.Mods{
 		RBAC:     rbacRBAC,
 		Resource: resourceResource,
 		Space:    spaceSpace,
+		Policy:   policyPolicy,
 	}
 	injector := &Injector{
 		DB:    db,

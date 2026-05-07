@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"github.com/jd-opensource/joylive-dashboard/internal/mods/policy"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/space"
@@ -20,12 +21,14 @@ var Set = wire.NewSet(
 	rbac.Set,
 	resource.Set,
 	space.Set,
+	policy.Set,
 )
 
 type Mods struct {
 	RBAC     *rbac.RBAC
 	Resource *resource.Resource
 	Space    *space.Space
+	Policy   *policy.Policy
 }
 
 func (a *Mods) Init(ctx context.Context) error {
@@ -36,6 +39,10 @@ func (a *Mods) Init(ctx context.Context) error {
 		return err
 	}
 	if err := a.Space.Init(ctx); err != nil {
+		return err
+	}
+	if err := a.Policy.Init(
+		ctx); err != nil {
 		return err
 	}
 
@@ -61,6 +68,9 @@ func (a *Mods) RegisterRouters(ctx context.Context, e *gin.Engine) error {
 	if err := a.Space.RegisterV1Routers(ctx, v1); err != nil {
 		return err
 	}
+	if err := a.Policy.RegisterV1Routers(ctx, v1); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -73,6 +83,9 @@ func (a *Mods) Release(ctx context.Context) error {
 		return err
 	}
 	if err := a.Space.Release(ctx); err != nil {
+		return err
+	}
+	if err := a.Policy.Release(ctx); err != nil {
 		return err
 	}
 
