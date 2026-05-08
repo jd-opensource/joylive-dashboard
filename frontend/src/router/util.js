@@ -40,7 +40,7 @@ export function formatApiData(data, parent = {}) {
         } else if (item.type === 'page') {
             objItem = {
                 meta: {
-                    title: i18n.global.t(item.code) || item.code,
+                    title: i18n.global.t(item.code) || item.name || item.code,
                     isMenu: true,
                     keepAlive: true,
                     permission: '*',

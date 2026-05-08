@@ -8,10 +8,10 @@
                 <a-row :gutter="gutter">
                     <a-col v-bind="colSpan">
                         <a-form-item
-                            :label="$t('pages.service.form.space_code')"
+                            :label="$t('pages.loadbalance.form.spaceCode')"
                             name="space_code">
                             <a-select
-                                :placeholder="$t('pages.service.form.space_code.placeholder')"
+                                :placeholder="$t('pages.loadbalance.form.spaceCode.placeholder')"
                                 v-model:value="searchFormData.space_code"
                                 show-search
                                 :filter-option="filterSpaceOption"
@@ -28,10 +28,10 @@
 
                     <a-col v-bind="colSpan">
                         <a-form-item
-                            :label="$t('pages.service.form.name')"
+                            :label="$t('pages.loadbalance.form.name')"
                             name="name">
                             <a-input
-                                :placeholder="$t('pages.service.form.name.placeholder')"
+                                :placeholder="$t('pages.loadbalance.form.name.placeholder')"
                                 v-model:value="searchFormData.name"></a-input>
                         </a-form-item>
                     </a-col>
@@ -66,7 +66,7 @@
                         <template #icon>
                             <plus-outlined></plus-outlined>
                         </template>
-                        {{ $t('pages.service.add') }}
+                        {{ $t('pages.loadbalance.add') }}
                     </a-button>
                 </x-action-bar>
                 <a-table
@@ -74,17 +74,27 @@
                     :data-source="listData"
                     :loading="loading"
                     :pagination="paginationState"
-                    :scroll="{ x: 1200 }"
+                    :scroll="{ x: 1400 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
+                        <template v-if="'enabled' === column.key">
+                            <a-tag :color="record.enabled === 1 ? 'green' : 'default'">
+                                {{
+                                    record.enabled === 1
+                                        ? $t('pages.loadbalance.form.enabled.active')
+                                        : $t('pages.loadbalance.form.enabled.inactive')
+                                }}
+                            </a-tag>
+                        </template>
+
                         <template v-if="'createAt' === column.key">
-                            {{ formatUtcDateTime(record.created_at) }}
+                            {{ formatUtcDateTime(record.createdAt) }}
                         </template>
 
                         <template v-if="'action' === column.key">
                             <x-action-button @click="$refs.editDialogRef.handleEdit(record)">
                                 <a-tooltip>
-                                    <template #title> {{ $t('pages.service.edit') }}</template>
+                                    <template #title> {{ $t('pages.loadbalance.edit') }}</template>
                                     <edit-outlined />
                                 </a-tooltip>
                             </x-action-button>
@@ -104,6 +114,7 @@
     <edit-dialog
         ref="editDialogRef"
         :space-options="spaceOptions"
+        :service-options="serviceOptions"
         :application-options="applicationOptions"
         @ok="onOk"></edit-dialog>
 </template>
@@ -115,23 +126,24 @@ import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
 import { usePagination, useForm } from '@/hooks'
-import EditDialog from './ServiceEditDialog.vue'
+import EditDialog from './LoadbalanceEditDialog.vue'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
-    name: 'serviceList',
+    name: 'loadbalanceList',
 })
 const { t } = useI18n()
 const columns = [
-    { title: t('pages.service.form.name'), dataIndex: 'name', width: 200 },
-    { title: t('pages.service.form.space_code'), dataIndex: 'space_code', width: 150 },
-    { title: t('pages.service.form.registration_type'), dataIndex: 'registration_type', width: 120 },
-    { title: t('pages.service.form.source'), dataIndex: 'source', width: 100 },
-    { title: t('pages.service.form.creator'), dataIndex: 'creator', width: 120 },
-    { title: t('pages.service.form.version'), dataIndex: 'version', width: 80 },
-    { title: t('pages.service.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.service.form.created_at'), key: 'createAt', fixed: 'right', width: 180 },
+    { title: t('pages.loadbalance.form.name'), dataIndex: 'name', width: 180 },
+    { title: t('pages.loadbalance.form.spaceCode'), dataIndex: 'spaceCode', width: 120 },
+    { title: t('pages.loadbalance.form.targetServiceId'), dataIndex: 'targetServiceId', width: 120 },
+    { title: t('pages.loadbalance.form.group'), dataIndex: 'group', width: 100 },
+    { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policyType', width: 120 },
+    { title: t('pages.loadbalance.form.enabled'), key: 'enabled', width: 80 },
+    { title: t('pages.loadbalance.form.creator'), dataIndex: 'creator', width: 100 },
+    { title: t('pages.loadbalance.form.description'), dataIndex: 'description', ellipsis: true },
+    { title: t('pages.loadbalance.form.createdAt'), key: 'createAt', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 
@@ -140,11 +152,13 @@ const { listData, loading, showLoading, hideLoading, paginationState, searchForm
 const { resetForm } = useForm()
 const editDialogRef = ref()
 const spaceOptions = ref([])
+const serviceOptions = ref([])
 const applicationOptions = ref([])
 
-const SPACE_CODE_KEY = 'service_space_code'
+const SPACE_CODE_KEY = 'loadbalance_space_code'
 
 loadSpaceOptions()
+loadServiceOptions()
 loadApplicationOptions()
 
 async function loadSpaceOptions() {
@@ -161,6 +175,19 @@ async function loadSpaceOptions() {
                 localStorage.setItem(SPACE_CODE_KEY, searchFormData.value.space_code)
                 getPageList()
             }
+        }
+    } catch (error) {
+        // ignore
+    }
+}
+
+async function loadServiceOptions() {
+    try {
+        const { success, data } = await apis.service.getServiceList({ pageSize: 99, current: 1 }).catch(() => {
+            throw new Error()
+        })
+        if (config('http.code.success') === success) {
+            serviceOptions.value = data || []
         }
     } catch (error) {
         // ignore
@@ -195,8 +222,8 @@ async function getPageList() {
     try {
         showLoading()
         const { pageSize, current } = paginationState
-        const { success, data, total } = await apis.service
-            .getServiceList({
+        const { success, data, total } = await apis.policy
+            .getLoadbalanceList({
                 pageSize,
                 current,
                 ...searchFormData.value,
@@ -216,14 +243,14 @@ async function getPageList() {
 
 function handleRemove({ id }) {
     Modal.confirm({
-        title: t('pages.service.delTip'),
+        title: t('pages.loadbalance.delTip'),
         content: t('button.confirm'),
         okText: t('button.confirm'),
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {
                     try {
-                        const { success } = await apis.service.delService(id).catch(() => {
+                        const { success } = await apis.policy.delLoadbalance(id).catch(() => {
                             throw new Error()
                         })
                         if (config('http.code.success') === success) {

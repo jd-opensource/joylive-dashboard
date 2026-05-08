@@ -8,6 +8,7 @@ import admin from './admin'
 import system from './system'
 import resource from './resource'
 import space from './space'
+import policy from './policy'
 import link from './link'
 import iframe from './iframe'
 import other from './other'
@@ -23,6 +24,7 @@ export default [
     ...system,
     ...resource,
     ...space,
+    ...policy,
     ...link,
     ...iframe,
     ...other,

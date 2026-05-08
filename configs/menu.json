@@ -8,9 +8,85 @@
         "status": "enabled"
     },
     {
+        "code": "policy",
+        "name": "Governance Policy",
+        "sequence": 60,
+        "type": "page",
+        "path": "/policy",
+        "status": "enabled",
+        "children": [
+            {
+                "code": "loadbalanceList",
+                "name": "Load Balance",
+                "sequence": 90,
+                "type": "page",
+                "path": "/policy/loadbalance",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-loadbalances"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-loadbalances/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-loadbalances/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-loadbalances"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-loadbalances/{id}"
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "code": "system",
         "name": "System",
-        "sequence": 10,
+        "sequence": 50,
         "type": "page",
         "path": "/system",
         "status": "enabled",
@@ -240,7 +316,7 @@
     {
         "code": "space",
         "name": "Space",
-        "sequence": 20,
+        "sequence": 80,
         "type": "page",
         "path": "/space",
         "status": "enabled",
@@ -316,7 +392,7 @@
     {
         "code": "resource",
         "name": "Resource",
-        "sequence": 30,
+        "sequence": 70,
         "type": "page",
         "path": "/resource",
         "status": "enabled",

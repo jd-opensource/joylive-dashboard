@@ -12,6 +12,8 @@ export default {
     resource: 'Resources',
     applicationList: 'Application',
     serviceList: 'Service',
+    policy: 'Governance Policy',
+    loadbalanceList: 'Load Balance',
     add: 'add',
     edit: 'edit',
     search: 'search',

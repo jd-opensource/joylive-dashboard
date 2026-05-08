@@ -109,7 +109,7 @@ const columns = [
     { title: t('pages.application.form.source'), dataIndex: 'source', width: 100 },
     { title: t('pages.application.form.creator'), dataIndex: 'creator', width: 120 },
     { title: t('pages.application.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.application.form.created_at'), key: 'createAt', fixed: 'right', width: 120 },
+    { title: t('pages.application.form.created_at'), key: 'createAt', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 

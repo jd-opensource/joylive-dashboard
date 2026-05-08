@@ -15,7 +15,7 @@ type Space struct {
 	Tenant      string     `json:"tenant" gorm:"size:255"`                     // Tenant
 	Creator     string     `json:"creator" gorm:"size:255"`                    // Creator
 	Description string     `json:"description" gorm:"size:255"`                // Description
-	Metadata    string     `json:"metadata" gorm:"type:json"`                  // Metadata (JSON)
+	Metadata    *string    `json:"metadata,omitempty" gorm:"type:json"`        // Metadata (JSON)
 	CreatedAt   time.Time  `json:"created_at" gorm:"index;"`                   // Create time
 	UpdatedAt   time.Time  `json:"updated_at" gorm:"index;"`                   // Update time
 	Deleted     string     `json:"-" gorm:"size:20;default:0"`                 // Logical delete flag
@@ -50,10 +50,10 @@ type Spaces []*Space
 
 // SpaceForm defines the form for creating/updating a Space.
 type SpaceForm struct {
-	Code        string `json:"code" binding:"required,max=255"` // Code (unique)
-	Name        string `json:"name" binding:"required,max=255"` // Name
-	Description string `json:"description"`                     // Description
-	Metadata    string `json:"metadata"`                        // Metadata (JSON)
+	Code        string  `json:"code" binding:"required,max=255"` // Code (unique)
+	Name        string  `json:"name" binding:"required,max=255"` // Name
+	Description string  `json:"description"`                     // Description
+	Metadata    *string `json:"metadata"`                        // Metadata (JSON)
 }
 
 func (a *SpaceForm) Validate() error {
@@ -64,6 +64,10 @@ func (a *SpaceForm) FillTo(space *Space) error {
 	space.Code = a.Code
 	space.Name = a.Name
 	space.Description = a.Description
-	space.Metadata = a.Metadata
+	if a.Metadata != nil && *a.Metadata == "" {
+		space.Metadata = nil
+	} else {
+		space.Metadata = a.Metadata
+	}
 	return nil
 }

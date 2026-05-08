@@ -12,6 +12,8 @@ export default {
     resource: '基础资源',
     applicationList: '应用管理',
     serviceList: '服务管理',
+    policy: '治理策略',
+    loadbalanceList: '负载均衡',
     'menu.account.settings': '个人设置',
     add: '添加',
     edit: '修改',

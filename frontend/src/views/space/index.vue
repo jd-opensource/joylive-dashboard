@@ -117,7 +117,7 @@ const columns = [
     { title: t('pages.space.form.tenant'), dataIndex: 'tenant', width: 150 },
     { title: t('pages.space.form.creator'), dataIndex: 'creator', width: 120 },
     { title: t('pages.space.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.space.form.created_at'), key: 'createAt', fixed: 'right', width: 120 },
+    { title: t('pages.space.form.created_at'), key: 'createAt', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 
