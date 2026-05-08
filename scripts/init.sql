@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS `application` (
   `id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'ID',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '应用名称',
   `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '应用中文名称',
-  `language` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '服务语言: Java，Python，Golang',
+  `language` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '服务语言: Java,Python,Golang',
   `enhance` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '增强方式: Agent, Sidecar',
-  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '数据来源：Local, JSF, JDAP',
+  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '数据来源: Local, JSF, JDAP',
   `tenant` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '租户',
   `creator` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
@@ -59,10 +59,9 @@ CREATE TABLE IF NOT EXISTS `service` (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
   `space_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '微服务空间编码',
   `registration_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '服务注册粒度: HTTP应用级(HTTP), RPC应用级(RPC_APP), RPC接口级(RPC_INTERFACE)',
-  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '数据来源：Local, JSF, JDAP',
+  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '数据来源: Local, JSF, JDAP',
   `tenant` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '租户',
   `creator` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-  `collaborator` json NULL COMMENT '参与者列表',
   `extra` json NULL COMMENT '其他信息',
   `version` bigint NOT NULL DEFAULT '1' COMMENT '版本号',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
@@ -403,7 +402,7 @@ CREATE TABLE IF NOT EXISTS `config_version` (
   `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否使用中',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '配置信息',
   `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'release' COMMENT '正式发布: release、灰度发布: beta',
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态：enabled-启用, disabled-禁用',
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态: enabled-启用, disabled-禁用',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
   `tenant` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '租户信息',
   `creator` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
@@ -506,8 +505,8 @@ CREATE TABLE IF NOT EXISTS `menu_resource_group` (
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '权限描述',
   `content` json DEFAULT NULL COMMENT '资源列表[menu_id]',
   `order_num` int DEFAULT NULL COMMENT '前端展示排序',
-  `depends_on` json DEFAULT NULL COMMENT '授权依赖其他权限编码，数组结构',
-  `base_auth` tinyint(1) DEFAULT '0' COMMENT '是否基础默认权限，前端默认勾选',
+  `depends_on` json DEFAULT NULL COMMENT '授权依赖其他权限编码,数组结构',
+  `base_auth` tinyint(1) DEFAULT '0' COMMENT '是否基础默认权限,前端默认勾选',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -641,7 +640,7 @@ CREATE TABLE IF NOT EXISTS `lane` (
   `fallback_type` VARCHAR(255) COLLATE utf8mb4_bin NOT NULL COMMENT '容错类型, REJECT:不容错, DEFAULT:基线容错, CUSTOM:指定泳道容错',
   `fallback_lane_id` VARCHAR(255) COLLATE utf8mb4_bin NULL COMMENT '容错泳道id',
   `fallback_lane_code` VARCHAR(255) COLLATE utf8mb4_bin NULL COMMENT '容错泳道code',
-  `context_propagation_type` varchar(255) COLLATE utf8mb4_bin NULL COMMENT '上下文透传类型，TraceID: 调用链；CustomHeader：自定义请求头',
+  `context_propagation_type` varchar(255) COLLATE utf8mb4_bin NULL COMMENT '上下文透传类型,TraceID: 调用链；CustomHeader: 自定义请求头',
   `context_propagation_header` varchar(255) COLLATE utf8mb4_bin NULL COMMENT '上下文透传Header名称',
   `decorator` varchar(64) COLLATE utf8mb4_bin NULL COMMENT '域名装饰',
   `description` VARCHAR(1024) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
@@ -742,16 +741,16 @@ CREATE TABLE IF NOT EXISTS `setting_scope` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '配置域';
 
 -- ============================================================
--- API版本表：api_version
+-- API版本表: api_version
 -- ============================================================
 CREATE TABLE IF NOT EXISTS api_version (
   id VARCHAR(20) PRIMARY KEY COMMENT '主键ID',
-  name VARCHAR(100) NOT NULL COMMENT '服务名称，如 user-service',
+  name VARCHAR(100) NOT NULL COMMENT '服务名称,如 user-service',
   service_id VARCHAR(20) NOT NULL COMMENT '服务ID',
   description TEXT COMMENT '服务描述',
-  version VARCHAR(50) NOT NULL COMMENT '版本号，如 1.0.0',
+  version VARCHAR(50) NOT NULL COMMENT '版本号,如 1.0.0',
   source_url VARCHAR(1024) DEFAULT NULL COMMENT 'Swagger JSON URL',
-  base_path VARCHAR(1024) DEFAULT NULL COMMENT 'API 基础路径，如 /api/v1',
+  base_path VARCHAR(1024) DEFAULT NULL COMMENT 'API 基础路径,如 /api/v1',
   raw_json LONGTEXT COMMENT '原始 Swagger JSON（可选）',
   common_json LONGTEXT COMMENT '原始 Swagger JSON（除paths）',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -762,13 +761,13 @@ CREATE TABLE IF NOT EXISTS api_version (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = 'Swagger API版本表';
 
 -- ============================================================
--- API接口表：api_endpoint
+-- API接口表: api_endpoint
 -- ============================================================
 CREATE TABLE IF NOT EXISTS api_endpoint (
   id VARCHAR(20) PRIMARY KEY COMMENT '主键ID',
   api_version_id VARCHAR(20) NOT NULL COMMENT '关联API版本ID',
-  method VARCHAR(255) NOT NULL COMMENT '请求方法，如 GET/POST (缩短以适应索引)',
-  path VARCHAR(512) NOT NULL COMMENT '请求路径，如 /user/{id} (缩短以适应索引)',
+  method VARCHAR(255) NOT NULL COMMENT '请求方法,如 GET/POST (缩短以适应索引)',
+  path VARCHAR(512) NOT NULL COMMENT '请求路径,如 /user/{id} (缩短以适应索引)',
   summary VARCHAR(1024) DEFAULT NULL COMMENT '接口简要描述',
   description TEXT COMMENT '接口详细描述',
   deprecated TINYINT(1) DEFAULT 0 COMMENT '是否废弃',

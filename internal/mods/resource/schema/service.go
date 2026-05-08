@@ -16,8 +16,7 @@ type Service struct {
 	Source           string     `json:"source" gorm:"size:255"`                               // Data source: Local, JSF, JDAP
 	Tenant           string     `json:"tenant" gorm:"size:255"`                               // Tenant
 	Creator          string     `json:"creator" gorm:"size:255"`                              // Creator
-	Collaborator     string     `json:"collaborator" gorm:"type:json"`                        // Collaborator list
-	Extra            string     `json:"extra" gorm:"type:json"`                               // Extra info
+	Extra            *string    `json:"extra,omitempty" gorm:"type:json"`                     // Extra info
 	Version          int64      `json:"version" gorm:"not null;default:1"`                    // Version
 	Description      string     `json:"description" gorm:"size:255"`                          // Description
 	CreatedAt        time.Time  `json:"created_at" gorm:"index;"`                             // Create time
@@ -58,8 +57,7 @@ type ServiceForm struct {
 	ApplicationId    string `json:"application_id" binding:"required,max=20"`    // Application ID
 	RegistrationType string `json:"registration_type" binding:"required,max=20"` // Registration type
 	Source           string `json:"source" binding:"required,max=255"`           // Data source
-	Collaborator     string `json:"collaborator"`                                // Collaborator list
-	Extra            string `json:"extra"`                                       // Extra info
+	Extra            *string `json:"extra"`                                       // Extra info
 	Description      string `json:"description"`                                 // Description
 }
 
@@ -72,8 +70,14 @@ func (a *ServiceForm) FillTo(svc *Service) error {
 	svc.SpaceCode = a.SpaceCode
 	svc.RegistrationType = a.RegistrationType
 	svc.Source = a.Source
-	svc.Collaborator = a.Collaborator
-	svc.Extra = a.Extra
+	svc.Extra = toNilIfEmpty(a.Extra)
 	svc.Description = a.Description
 	return nil
+}
+
+func toNilIfEmpty(s *string) *string {
+	if s != nil && *s == "" {
+		return nil
+	}
+	return s
 }
