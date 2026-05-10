@@ -69,10 +69,15 @@ definitions:
         description: 'Data source: Local, JSF, JDAP'
         maxLength: 255
         type: string
+      tenant:
+        description: Tenant
+        maxLength: 255
+        type: string
     required:
     - enhance
     - name
     - source
+    - tenant
     type: object
   schema.ApplicationService:
     properties:
@@ -132,6 +137,71 @@ definitions:
       captcha_id:
         description: Captcha ID
         type: string
+    type: object
+  schema.DataPermission:
+    properties:
+      createdAt:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
+        type: string
+      dataId:
+        description: Data ID
+        type: string
+      id:
+        description: Unique ID
+        type: string
+      permission:
+        description: Data permission bits - format(read,write,delete)
+        type: integer
+      role:
+        description: Role code
+        type: string
+      tenant:
+        description: Tenant
+        type: string
+      type:
+        description: Data type (table name)
+        type: string
+      updatedAt:
+        description: Update timestamp
+        type: string
+      user:
+        description: User
+        type: string
+    type: object
+  schema.DataPermissionForm:
+    properties:
+      dataId:
+        description: Data ID
+        maxLength: 20
+        type: string
+      permission:
+        description: Data permission bits - format(read,write,delete)
+        type: integer
+      role:
+        description: Role code
+        maxLength: 20
+        type: string
+      tenant:
+        description: Tenant
+        maxLength: 50
+        type: string
+      type:
+        description: Data type (table name)
+        maxLength: 50
+        type: string
+      user:
+        description: User
+        maxLength: 50
+        type: string
+    required:
+    - dataId
+    - role
+    - tenant
+    - type
+    - user
     type: object
   schema.Logger:
     properties:
@@ -1480,9 +1550,6 @@ definitions:
     type: object
   schema.Service:
     properties:
-      collaborator:
-        description: Collaborator list
-        type: string
       created_at:
         description: Create time
         type: string
@@ -1572,9 +1639,6 @@ definitions:
         description: Application ID
         maxLength: 20
         type: string
-      collaborator:
-        description: Collaborator list
-        type: string
       description:
         description: Description
         type: string
@@ -1597,12 +1661,17 @@ definitions:
         description: Space code
         maxLength: 255
         type: string
+      tenant:
+        description: Tenant
+        maxLength: 255
+        type: string
     required:
     - application_id
     - name
     - registration_type
     - source
     - space_code
+    - tenant
     type: object
   schema.ServiceGroup:
     properties:
@@ -4020,6 +4089,159 @@ paths:
       summary: Update application service record by ID
       tags:
       - ApplicationServiceAPI
+  /api/v1/resource/data-permissions:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/schema.DataPermission'
+                  type: array
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Query data permission list
+      tags:
+      - DataPermissionAPI
+    post:
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.DataPermissionForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.DataPermission'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create data permission record
+      tags:
+      - DataPermissionAPI
+  /api/v1/resource/data-permissions/{id}:
+    delete:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete data permission record by ID
+      tags:
+      - DataPermissionAPI
+    get:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.ResponseResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.DataPermission'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get data permission record by ID
+      tags:
+      - DataPermissionAPI
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.DataPermissionForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update data permission record by ID
+      tags:
+      - DataPermissionAPI
   /api/v1/resource/service-aliases:
     get:
       responses:

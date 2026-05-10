@@ -15,11 +15,17 @@ type Service struct {
 	Trans                 *util.Trans
 	ServiceDAL            *dal.Service
 	ApplicationServiceBIZ *ApplicationService
+	DataPermissionBIZ     *DataPermission
 }
 
 // Query services.
 func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam) (*schema.ServiceQueryResult, error) {
 	params.Pagination = true
+
+	if !util.FromIsRootUser(ctx) {
+		params.UserID = util.FromUsername(ctx)
+		params.Tenant = util.FromTenant(ctx)
+	}
 
 	result, err := a.ServiceDAL.Query(ctx, params, schema.ServiceQueryOptions{
 		QueryOptions: util.QueryOptions{
@@ -42,6 +48,16 @@ func (a *Service) Get(ctx context.Context, id string) (*schema.Service, error) {
 	} else if svc == nil {
 		return nil, errors.NotFound("", "Service not found")
 	}
+
+	if !util.FromIsRootUser(ctx) {
+		ok, err := a.DataPermissionBIZ.HasReadPermission(ctx, schema.DataPermissionTypeService, id)
+		if err != nil {
+			return nil, err
+		} else if !ok {
+			return nil, errors.NotFound("", "Service not found")
+		}
+	}
+
 	return svc, nil
 }
 
@@ -55,6 +71,7 @@ func (a *Service) Create(ctx context.Context, formItem *schema.ServiceForm) (*sc
 
 	svc := &schema.Service{
 		ID:        util.NewXID(),
+		Tenant:    util.FromTenant(ctx),
 		Creator:   util.FromUsername(ctx),
 		Version:   1,
 		CreatedAt: time.Now(),
@@ -73,8 +90,10 @@ func (a *Service) Create(ctx context.Context, formItem *schema.ServiceForm) (*sc
 			ServiceId:     svc.ID,
 			Role:          "provider",
 		}
-		_, err := a.ApplicationServiceBIZ.Create(ctx, appSvcForm)
-		return err
+		if _, err := a.ApplicationServiceBIZ.Create(ctx, appSvcForm); err != nil {
+			return err
+		}
+		return a.DataPermissionBIZ.CreateByOwner(ctx, schema.DataPermissionTypeService, svc.ID, svc.Tenant)
 	})
 	if err != nil {
 		return nil, err
@@ -117,6 +136,9 @@ func (a *Service) Delete(ctx context.Context, id string) error {
 	}
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
-		return a.ServiceDAL.Delete(ctx, id)
+		if err := a.ServiceDAL.Delete(ctx, id); err != nil {
+			return err
+		}
+		return a.DataPermissionBIZ.DeleteByTypeAndDataId(ctx, schema.DataPermissionTypeService, id)
 	})
 }

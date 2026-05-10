@@ -5,23 +5,24 @@ import (
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
+	"gorm.io/gorm"
 )
 
 // Application management
 type Application struct {
-	ID          string     `json:"id" gorm:"size:20;primarykey;"`                        // Unique ID
-	Name        string     `json:"name" gorm:"size:255;uniqueIndex:uniq_app_name"`       // Application name
-	Alias       string     `json:"alias" gorm:"size:255"`                                // Application Chinese name
-	Language    string     `json:"language" gorm:"size:20"`                              // Language: Java, Python, Golang
-	Enhance     string     `json:"enhance" gorm:"size:20"`                               // Enhance method: Agent, Sidecar
-	Source      string     `json:"source" gorm:"size:255"`                               // Data source: Local, JSF, JDAP
-	Tenant      string     `json:"tenant" gorm:"size:255"`                               // Tenant
-	Creator     string     `json:"creator" gorm:"size:255"`                              // Creator
-	Description string     `json:"description" gorm:"size:255"`                          // Description
-	CreatedAt   time.Time  `json:"created_at" gorm:"index;"`                             // Create time
-	UpdatedAt   time.Time  `json:"updated_at" gorm:"index;"`                             // Update time
-	Deleted     string     `json:"-" gorm:"size:20;uniqueIndex:uniq_app_name;default:0"` // Logical delete flag
-	DeletedAt   *time.Time `json:"-"`                                                    // Delete time
+	ID          string          `json:"id" gorm:"size:20;primarykey;"`                        // Unique ID
+	Name        string          `json:"name" gorm:"size:255;uniqueIndex:uniq_app_name"`       // Application name
+	Alias       string          `json:"alias" gorm:"size:255"`                                // Application Chinese name
+	Language    string          `json:"language" gorm:"size:20"`                              // Language: Java, Python, Golang
+	Enhance     string          `json:"enhance" gorm:"size:20"`                               // Enhance method: Agent, Sidecar
+	Source      string          `json:"source" gorm:"size:255"`                               // Data source: Local, JSF, JDAP
+	Tenant      string          `json:"tenant" gorm:"size:255"`                               // Tenant
+	Creator     string          `json:"creator" gorm:"size:255"`                              // Creator
+	Description string          `json:"description" gorm:"size:255"`                          // Description
+	CreatedAt   time.Time       `json:"created_at" gorm:"index;"`                             // Create time
+	UpdatedAt   time.Time       `json:"updated_at" gorm:"index;"`                             // Update time
+	Deleted     string          `json:"-" gorm:"size:20;uniqueIndex:uniq_app_name;default:0"` // Logical delete flag
+	DeletedAt   *gorm.DeletedAt `json:"-" gorm:"comment:Delete time;"`                        // Delete time
 }
 
 func (a *Application) TableName() string {
@@ -31,7 +32,9 @@ func (a *Application) TableName() string {
 // ApplicationQueryParam defines the query parameters for Application.
 type ApplicationQueryParam struct {
 	util.PaginationParam
-	LikeName string `form:"name"` // Name (like)
+	LikeName string `form:"name"`    // Name (like)
+	UserID   string `form:"-"`       // User ID (set programmatically for permission filter)
+	Tenant   string `form:"-"`       // Tenant (set programmatically for permission filter)
 }
 
 // ApplicationQueryOptions defines the query options for Application.
@@ -50,12 +53,12 @@ type Applications []*Application
 
 // ApplicationForm defines the form for creating/updating an Application.
 type ApplicationForm struct {
-	Name        string `json:"name" binding:"required,max=255"`   // Application name
-	Alias       string `json:"alias"`                             // Application Chinese name
-	Language    string `json:"language"`                          // Language: Java, Python, Golang
-	Enhance     string `json:"enhance" binding:"required,max=20"` // Enhance method: Agent, Sidecar
-	Source      string `json:"source" binding:"required,max=255"` // Data source: Local, JSF, JDAP
-	Description string `json:"description"`                       // Description
+	Name        string `json:"name" binding:"required,max=255"` // Application name
+	Alias       string `json:"alias"`                           // Application Chinese name
+	Language    string `json:"language"`                        // Language: Java, Python, Golang
+	Enhance     string `json:"enhance"`                         // Enhance method: Agent, Sidecar
+	Source      string `json:"source"`                          // Data source: Local, JSF, JDAP
+	Description string `json:"description"`                     // Description
 }
 
 func (a *ApplicationForm) Validate() error {

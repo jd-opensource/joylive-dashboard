@@ -13,6 +13,7 @@ type (
 	rowLockCtx    struct{}
 	userIDCtx     struct{}
 	usernameCtx   struct{}
+	tenantCtx     struct{}
 	userTokenCtx  struct{}
 	isRootUserCtx struct{}
 	userCacheCtx  struct{}
@@ -73,6 +74,18 @@ func FromUsername(ctx context.Context) string {
 		return v.(string)
 	}
 	return ""
+}
+
+func NewTenant(ctx context.Context, tenant string) context.Context {
+	return context.WithValue(ctx, tenantCtx{}, tenant)
+}
+
+func FromTenant(ctx context.Context) string {
+	v := ctx.Value(tenantCtx{})
+	if v != nil {
+		return v.(string)
+	}
+	return "admin"
 }
 
 func NewUserToken(ctx context.Context, userToken string) context.Context {

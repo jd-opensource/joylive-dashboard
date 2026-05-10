@@ -33,6 +33,12 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 	if v := params.SpaceCode; len(v) > 0 {
 		db = db.Where("space_code = ?", v)
 	}
+	if v := params.UserID; len(v) > 0 {
+		permQuery := GetDataPermissionDB(ctx, a.DB).
+			Where("type = ? AND user = ? AND tenant = ? AND permission & 1 = 1", schema.DataPermissionTypeService, v, params.Tenant).
+			Select("data_id")
+		db = db.Where("id IN (?)", permQuery)
+	}
 
 	var list schema.Services
 	pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)

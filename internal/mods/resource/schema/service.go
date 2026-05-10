@@ -5,24 +5,25 @@ import (
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
+	"gorm.io/gorm"
 )
 
 // Service management for microservices
 type Service struct {
-	ID               string     `json:"id" gorm:"size:20;primarykey;"`                        // Unique ID
-	Name             string     `json:"name" gorm:"size:255;uniqueIndex:uniq_svc_name"`       // Name
-	SpaceCode        string     `json:"space_code" gorm:"size:255;uniqueIndex:uniq_svc_name"` // Space code
-	RegistrationType string     `json:"registration_type" gorm:"size:20"`                     // Registration type: HTTP, RPC_APP, RPC_INTERFACE
-	Source           string     `json:"source" gorm:"size:255"`                               // Data source: Local, JSF, JDAP
-	Tenant           string     `json:"tenant" gorm:"size:255"`                               // Tenant
-	Creator          string     `json:"creator" gorm:"size:255"`                              // Creator
-	Extra            *string    `json:"extra,omitempty" gorm:"type:json"`                     // Extra info
-	Version          int64      `json:"version" gorm:"not null;default:1"`                    // Version
-	Description      string     `json:"description" gorm:"size:255"`                          // Description
-	CreatedAt        time.Time  `json:"created_at" gorm:"index;"`                             // Create time
-	UpdatedAt        time.Time  `json:"updated_at" gorm:"index;"`                             // Update time
-	Deleted          string     `json:"-" gorm:"size:20;uniqueIndex:uniq_svc_name;default:0"` // Logical delete flag
-	DeletedAt        *time.Time `json:"-"`                                                    // Delete time
+	ID               string          `json:"id" gorm:"size:20;primarykey;"`                        // Unique ID
+	Name             string          `json:"name" gorm:"size:255;uniqueIndex:uniq_svc_name"`       // Name
+	SpaceCode        string          `json:"space_code" gorm:"size:255;uniqueIndex:uniq_svc_name"` // Space code
+	RegistrationType string          `json:"registration_type" gorm:"size:20"`                     // Registration type: HTTP, RPC_APP, RPC_INTERFACE
+	Source           string          `json:"source" gorm:"size:255"`                               // Data source: Local, JSF, JDAP
+	Tenant           string          `json:"tenant" gorm:"size:255"`                               // Tenant
+	Creator          string          `json:"creator" gorm:"size:255"`                              // Creator
+	Extra            *string         `json:"extra,omitempty" gorm:"type:json"`                     // Extra info
+	Version          int64           `json:"version" gorm:"not null;default:1"`                    // Version
+	Description      string          `json:"description" gorm:"size:255"`                          // Description
+	CreatedAt        time.Time       `json:"created_at" gorm:"index;"`                             // Create time
+	UpdatedAt        time.Time       `json:"updated_at" gorm:"index;"`                             // Update time
+	Deleted          string          `json:"-" gorm:"size:20;uniqueIndex:uniq_svc_name;default:0"` // Logical delete flag
+	DeletedAt        *gorm.DeletedAt `json:"-" gorm:"comment:Delete time;"`                        // Delete time
 }
 
 func (a *Service) TableName() string {
@@ -34,6 +35,8 @@ type ServiceQueryParam struct {
 	util.PaginationParam
 	LikeName  string `form:"name"`       // Name (like)
 	SpaceCode string `form:"space_code"` // Space code
+	UserID    string `form:"-"`          // User ID (set programmatically for permission filter)
+	Tenant    string `form:"-"`          // Tenant (set programmatically for permission filter)
 }
 
 // ServiceQueryOptions defines the query options for Service.
@@ -52,13 +55,13 @@ type Services []*Service
 
 // ServiceForm defines the form for creating/updating a Service.
 type ServiceForm struct {
-	Name             string `json:"name" binding:"required,max=255"`             // Name
-	SpaceCode        string `json:"space_code" binding:"required,max=255"`       // Space code
-	ApplicationId    string `json:"application_id" binding:"required,max=20"`    // Application ID
-	RegistrationType string `json:"registration_type" binding:"required,max=20"` // Registration type
-	Source           string `json:"source" binding:"required,max=255"`           // Data source
+	Name             string  `json:"name" binding:"required,max=255"`             // Name
+	SpaceCode        string  `json:"space_code" binding:"required,max=255"`       // Space code
+	ApplicationId    string  `json:"application_id" binding:"required,max=20"`    // Application ID
+	RegistrationType string  `json:"registration_type" binding:"required,max=20"` // Registration type
+	Source           string  `json:"source"`                                       // Data source
 	Extra            *string `json:"extra"`                                       // Extra info
-	Description      string `json:"description"`                                 // Description
+	Description      string  `json:"description"`                                 // Description
 }
 
 func (a *ServiceForm) Validate() error {

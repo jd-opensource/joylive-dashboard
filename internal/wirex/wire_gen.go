@@ -134,9 +134,17 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	application := &dal2.Application{
 		DB: db,
 	}
+	dataPermission := &dal2.DataPermission{
+		DB: db,
+	}
+	bizDataPermission := &biz2.DataPermission{
+		Trans:             trans,
+		DataPermissionDAL: dataPermission,
+	}
 	bizApplication := &biz2.Application{
-		Trans:          trans,
-		ApplicationDAL: application,
+		Trans:             trans,
+		ApplicationDAL:    application,
+		DataPermissionBIZ: bizDataPermission,
 	}
 	apiApplication := &api2.Application{
 		ApplicationBIZ: bizApplication,
@@ -155,6 +163,7 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		Trans:                 trans,
 		ServiceDAL:            service,
 		ApplicationServiceBIZ: bizApplicationService,
+		DataPermissionBIZ:     bizDataPermission,
 	}
 	apiService := &api2.Service{
 		ServiceBIZ: bizService,
@@ -182,6 +191,9 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	apiServiceAlias := &api2.ServiceAlias{
 		ServiceAliasBIZ: bizServiceAlias,
 	}
+	apiDataPermission := &api2.DataPermission{
+		DataPermissionBIZ: bizDataPermission,
+	}
 	resourceResource := &resource.Resource{
 		DB:                    db,
 		ApplicationAPI:        apiApplication,
@@ -189,6 +201,7 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		ApplicationServiceAPI: apiApplicationService,
 		ServiceGroupAPI:       apiServiceGroup,
 		ServiceAliasAPI:       apiServiceAlias,
+		DataPermissionAPI:     apiDataPermission,
 	}
 	dalSpace := &dal3.Space{
 		DB: db,

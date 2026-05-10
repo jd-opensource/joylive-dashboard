@@ -3630,6 +3630,263 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/resource/data-permissions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "DataPermissionAPI"
+                ],
+                "summary": "Query data permission list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/schema.DataPermission"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "DataPermissionAPI"
+                ],
+                "summary": "Create data permission record",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.DataPermissionForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.DataPermission"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/resource/data-permissions/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "DataPermissionAPI"
+                ],
+                "summary": "Get data permission record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.ResponseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.DataPermission"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "DataPermissionAPI"
+                ],
+                "summary": "Update data permission record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.DataPermissionForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "DataPermissionAPI"
+                ],
+                "summary": "Delete data permission record by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/resource/service-aliases": {
             "get": {
                 "security": [
@@ -5419,7 +5676,8 @@ const docTemplate = `{
             "required": [
                 "enhance",
                 "name",
-                "source"
+                "source",
+                "tenant"
             ],
             "properties": {
                 "alias": {
@@ -5446,6 +5704,11 @@ const docTemplate = `{
                 },
                 "source": {
                     "description": "Data source: Local, JSF, JDAP",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "tenant": {
+                    "description": "Tenant",
                     "type": "string",
                     "maxLength": 255
                 }
@@ -5528,6 +5791,92 @@ const docTemplate = `{
                 "captcha_id": {
                     "description": "Captcha ID",
                     "type": "string"
+                }
+            }
+        },
+        "schema.DataPermission": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "dataId": {
+                    "description": "Data ID",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
+                "permission": {
+                    "description": "Data permission bits - format(read,write,delete)",
+                    "type": "integer"
+                },
+                "role": {
+                    "description": "Role code",
+                    "type": "string"
+                },
+                "tenant": {
+                    "description": "Tenant",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Data type (table name)",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
+                "user": {
+                    "description": "User",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.DataPermissionForm": {
+            "type": "object",
+            "required": [
+                "dataId",
+                "role",
+                "tenant",
+                "type",
+                "user"
+            ],
+            "properties": {
+                "dataId": {
+                    "description": "Data ID",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "permission": {
+                    "description": "Data permission bits - format(read,write,delete)",
+                    "type": "integer"
+                },
+                "role": {
+                    "description": "Role code",
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "tenant": {
+                    "description": "Tenant",
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "type": {
+                    "description": "Data type (table name)",
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "user": {
+                    "description": "User",
+                    "type": "string",
+                    "maxLength": 50
                 }
             }
         },
@@ -7329,10 +7678,6 @@ const docTemplate = `{
         "schema.Service": {
             "type": "object",
             "properties": {
-                "collaborator": {
-                    "description": "Collaborator list",
-                    "type": "string"
-                },
                 "created_at": {
                     "description": "Create time",
                     "type": "string"
@@ -7452,17 +7797,14 @@ const docTemplate = `{
                 "name",
                 "registration_type",
                 "source",
-                "space_code"
+                "space_code",
+                "tenant"
             ],
             "properties": {
                 "application_id": {
                     "description": "Application ID",
                     "type": "string",
                     "maxLength": 20
-                },
-                "collaborator": {
-                    "description": "Collaborator list",
-                    "type": "string"
                 },
                 "description": {
                     "description": "Description",
@@ -7489,6 +7831,11 @@ const docTemplate = `{
                 },
                 "space_code": {
                     "description": "Space code",
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "tenant": {
+                    "description": "Tenant",
                     "type": "string",
                     "maxLength": 255
                 }

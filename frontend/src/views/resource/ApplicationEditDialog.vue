@@ -41,24 +41,6 @@
                             <a-input v-model:value="formData.language"></a-input>
                         </a-form-item>
                     </a-col>
-
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.application.form.enhance')"
-                            name="enhance">
-                            <a-input v-model:value="formData.enhance"></a-input>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-
-                <a-row :gutter="12">
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.application.form.source')"
-                            name="source">
-                            <a-input v-model:value="formData.source"></a-input>
-                        </a-form-item>
-                    </a-col>
                 </a-row>
 
                 <a-row :gutter="24">
@@ -92,8 +74,6 @@ const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 formRules.value = {
     name: { required: true, message: t('pages.application.form.name.placeholder') },
-    enhance: { required: true, message: t('pages.application.form.enhance.placeholder') },
-    source: { required: true, message: t('pages.application.form.source.placeholder') },
 }
 
 function handleCreate() {
@@ -101,6 +81,7 @@ function handleCreate() {
         type: 'create',
         title: t('pages.application.add'),
     })
+    formData.value.enhance = 'Agent'
 }
 
 async function handleEdit(record = {}) {
@@ -127,6 +108,7 @@ function handleOk() {
                 showLoading()
                 const params = {
                     ...values,
+                    enhance: formData.value.enhance || 'Agent',
                 }
                 let result = null
                 switch (modal.value.type) {

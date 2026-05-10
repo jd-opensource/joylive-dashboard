@@ -1,12 +1,18 @@
 <template>
     <x-search-bar class="mb-8-2">
-        <template #default="{ gutter, colSpan }">
+        <template #default="{ gutter }">
             <a-form
-                :label-col="{ style: { width: '100px' } }"
+                :label-col="{ style: { width: '80px' } }"
                 :model="searchFormData"
                 layout="inline">
-                <a-row :gutter="gutter">
-                    <a-col v-bind="colSpan">
+                <a-row
+                    :gutter="gutter"
+                    style="width: 100%">
+                    <a-col
+                        :xs="24"
+                        :sm="12"
+                        :md="8"
+                        :xl="6">
                         <a-form-item
                             :label="$t('pages.loadbalance.form.spaceCode')"
                             name="space_code">
@@ -26,7 +32,35 @@
                         </a-form-item>
                     </a-col>
 
-                    <a-col v-bind="colSpan">
+                    <a-col
+                        :xs="24"
+                        :sm="12"
+                        :md="8"
+                        :xl="6">
+                        <a-form-item
+                            :label="$t('pages.loadbalance.form.targetServiceId')"
+                            name="target_service_id">
+                            <a-select
+                                :placeholder="$t('pages.loadbalance.form.targetServiceId.placeholder')"
+                                v-model:value="searchFormData.target_service_id"
+                                show-search
+                                :filter-option="filterServiceOption"
+                                allow-clear>
+                                <a-select-option
+                                    v-for="item in serviceOptions"
+                                    :key="item.id"
+                                    :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </a-form-item>
+                    </a-col>
+
+                    <a-col
+                        :xs="24"
+                        :sm="12"
+                        :md="8"
+                        :xl="6">
                         <a-form-item
                             :label="$t('pages.loadbalance.form.name')"
                             name="name">
@@ -37,17 +71,21 @@
                     </a-col>
 
                     <a-col
-                        class="align-right"
-                        v-bind="colSpan">
-                        <a-space>
-                            <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
-                            <a-button
-                                ghost
-                                type="primary"
-                                @click="handleSearch">
-                                {{ $t('button.search') }}
-                            </a-button>
-                        </a-space>
+                        :xs="24"
+                        :sm="12"
+                        :md="8"
+                        :xl="6">
+                        <a-form-item>
+                            <a-space>
+                                <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
+                                <a-button
+                                    ghost
+                                    type="primary"
+                                    @click="handleSearch">
+                                    {{ $t('button.search') }}
+                                </a-button>
+                            </a-space>
+                        </a-form-item>
                     </a-col>
                 </a-row>
             </a-form>
@@ -216,6 +254,14 @@ function onSpaceChange(value) {
 function filterSpaceOption(input, option) {
     const label = option.children?.[0]?.children || ''
     return option.value.toLowerCase().includes(input.toLowerCase()) || label.toLowerCase().includes(input.toLowerCase())
+}
+
+function filterServiceOption(input, option) {
+    const label = option.children?.[0]?.children || ''
+    return (
+        String(option.value).toLowerCase().includes(input.toLowerCase()) ||
+        String(label).toLowerCase().includes(input.toLowerCase())
+    )
 }
 
 async function getPageList() {

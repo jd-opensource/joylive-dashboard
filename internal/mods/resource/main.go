@@ -17,6 +17,7 @@ type Resource struct {
 	ApplicationServiceAPI *api.ApplicationService
 	ServiceGroupAPI       *api.ServiceGroup
 	ServiceAliasAPI       *api.ServiceAlias
+	DataPermissionAPI     *api.DataPermission
 }
 
 func (a *Resource) AutoMigrate(ctx context.Context) error {
@@ -26,6 +27,7 @@ func (a *Resource) AutoMigrate(ctx context.Context) error {
 		new(schema.ApplicationService),
 		new(schema.ServiceGroup),
 		new(schema.ServiceAlias),
+		new(schema.DataPermission),
 	)
 }
 
@@ -79,6 +81,14 @@ func (a *Resource) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) e
 		serviceAlias.POST("", a.ServiceAliasAPI.Create)
 		serviceAlias.PUT(":id", a.ServiceAliasAPI.Update)
 		serviceAlias.DELETE(":id", a.ServiceAliasAPI.Delete)
+	}
+	dataPermission := v1.Group("data-permissions")
+	{
+		dataPermission.GET("", a.DataPermissionAPI.Query)
+		dataPermission.GET(":id", a.DataPermissionAPI.Get)
+		dataPermission.POST("", a.DataPermissionAPI.Create)
+		dataPermission.PUT(":id", a.DataPermissionAPI.Update)
+		dataPermission.DELETE(":id", a.DataPermissionAPI.Delete)
 	}
 
 	return nil

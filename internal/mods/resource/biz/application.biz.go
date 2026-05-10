@@ -12,13 +12,19 @@ import (
 
 // Application business logic layer
 type Application struct {
-	Trans         *util.Trans
-	ApplicationDAL *dal.Application
+	Trans             *util.Trans
+	ApplicationDAL    *dal.Application
+	DataPermissionBIZ *DataPermission
 }
 
 // Query applications.
 func (a *Application) Query(ctx context.Context, params schema.ApplicationQueryParam) (*schema.ApplicationQueryResult, error) {
 	params.Pagination = true
+
+	if !util.FromIsRootUser(ctx) {
+		params.UserID = util.FromUsername(ctx)
+		params.Tenant = util.FromTenant(ctx)
+	}
 
 	result, err := a.ApplicationDAL.Query(ctx, params, schema.ApplicationQueryOptions{
 		QueryOptions: util.QueryOptions{
@@ -41,6 +47,16 @@ func (a *Application) Get(ctx context.Context, id string) (*schema.Application, 
 	} else if app == nil {
 		return nil, errors.NotFound("", "Application not found")
 	}
+
+	if !util.FromIsRootUser(ctx) {
+		ok, err := a.DataPermissionBIZ.HasReadPermission(ctx, schema.DataPermissionTypeApplication, id)
+		if err != nil {
+			return nil, err
+		} else if !ok {
+			return nil, errors.NotFound("", "Application not found")
+		}
+	}
+
 	return app, nil
 }
 
@@ -54,6 +70,7 @@ func (a *Application) Create(ctx context.Context, formItem *schema.ApplicationFo
 
 	app := &schema.Application{
 		ID:        util.NewXID(),
+		Tenant:    util.FromTenant(ctx),
 		Creator:   util.FromUsername(ctx),
 		CreatedAt: time.Now(),
 	}
@@ -62,7 +79,10 @@ func (a *Application) Create(ctx context.Context, formItem *schema.ApplicationFo
 	}
 
 	err := a.Trans.Exec(ctx, func(ctx context.Context) error {
-		return a.ApplicationDAL.Create(ctx, app)
+		if err := a.ApplicationDAL.Create(ctx, app); err != nil {
+			return err
+		}
+		return a.DataPermissionBIZ.CreateByOwner(ctx, schema.DataPermissionTypeApplication, app.ID, app.Tenant)
 	})
 	if err != nil {
 		return nil, err
@@ -105,6 +125,9 @@ func (a *Application) Delete(ctx context.Context, id string) error {
 	}
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
-		return a.ApplicationDAL.Delete(ctx, id)
+		if err := a.ApplicationDAL.Delete(ctx, id); err != nil {
+			return err
+		}
+		return a.DataPermissionBIZ.DeleteByTypeAndDataId(ctx, schema.DataPermissionTypeApplication, id)
 	})
 }
