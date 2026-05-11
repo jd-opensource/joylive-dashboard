@@ -39,6 +39,17 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 			Select("data_id")
 		db = db.Where("id IN (?)", permQuery)
 	}
+	// Filter services by role of current login user's applications (provider/consumer).
+	if role := params.Role; role != "" && params.Creator != "" {
+		appQuery := GetApplicationDB(ctx, a.DB).
+			Where("creator = ?", params.Creator).
+			Select("id")
+		relQuery := GetApplicationServiceDB(ctx, a.DB).
+			Where("role = ?", role).
+			Where("application_id IN (?)", appQuery).
+			Select("service_id")
+		db = db.Where("id IN (?)", relQuery)
+	}
 
 	var list schema.Services
 	pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)

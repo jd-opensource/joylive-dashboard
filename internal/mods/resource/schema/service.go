@@ -35,6 +35,8 @@ type ServiceQueryParam struct {
 	util.PaginationParam
 	LikeName  string `form:"name"`       // Name (like)
 	SpaceCode string `form:"space_code"` // Space code
+	Role      string `form:"role"`       // Filter by role of current user's applications: provider, consumer
+	Creator   string `form:"-"`          // Current login username (set programmatically; used together with Role)
 	UserID    string `form:"-"`          // User ID (set programmatically for permission filter)
 	Tenant    string `form:"-"`          // Tenant (set programmatically for permission filter)
 }
@@ -59,7 +61,7 @@ type ServiceForm struct {
 	SpaceCode        string  `json:"space_code" binding:"required,max=255"`       // Space code
 	ApplicationId    string  `json:"application_id" binding:"required,max=20"`    // Application ID
 	RegistrationType string  `json:"registration_type" binding:"required,max=20"` // Registration type
-	Source           string  `json:"source"`                                       // Data source
+	Source           string  `json:"source"`                                      // Data source
 	Extra            *string `json:"extra"`                                       // Extra info
 	Description      string  `json:"description"`                                 // Description
 }

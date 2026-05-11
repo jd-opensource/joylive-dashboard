@@ -22,6 +22,9 @@ type Service struct {
 func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam) (*schema.ServiceQueryResult, error) {
 	params.Pagination = true
 
+	// Always carry current login username so DAL can filter by role of user's applications.
+	params.Creator = util.FromUsername(ctx)
+
 	if !util.FromIsRootUser(ctx) {
 		params.UserID = util.FromUsername(ctx)
 		params.Tenant = util.FromTenant(ctx)

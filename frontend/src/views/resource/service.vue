@@ -1,4 +1,18 @@
 <template>
+    <a-tabs
+        v-model:activeKey="activeTab"
+        class="mb-8-2"
+        @change="onTabChange">
+        <a-tab-pane
+            key="provider"
+            :tab="$t('pages.service.tab.provider')"></a-tab-pane>
+        <a-tab-pane
+            key="consumer"
+            :tab="$t('pages.service.tab.consumer')"></a-tab-pane>
+        <a-tab-pane
+            key="all"
+            :tab="$t('pages.service.tab.all')"></a-tab-pane>
+    </a-tabs>
     <x-search-bar class="mb-8-2">
         <template #default="{ gutter, colSpan }">
             <a-form
@@ -141,8 +155,18 @@ const { resetForm } = useForm()
 const editDialogRef = ref()
 const spaceOptions = ref([])
 const applicationOptions = ref([])
+const activeTab = ref('provider')
 
 const SPACE_CODE_KEY = 'service_space_code'
+
+function currentRole() {
+    return activeTab.value === 'all' ? '' : activeTab.value
+}
+
+function onTabChange() {
+    resetPagination()
+    getPageList()
+}
 
 loadSpaceOptions()
 loadApplicationOptions()
@@ -199,6 +223,7 @@ async function getPageList() {
             .getServiceList({
                 pageSize,
                 current,
+                role: currentRole(),
                 ...searchFormData.value,
             })
             .catch(() => {

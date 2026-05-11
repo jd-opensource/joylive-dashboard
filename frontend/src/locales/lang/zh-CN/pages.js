@@ -1,6 +1,5 @@
 export default {
-    'pages.layouts.userLayout.title':
-        '基于 GIN + GORM 2.0 + Casbin 2.0 + Wire DI 的轻量级、灵活、优雅且功能齐全的 RBAC 脚手架。',
+    'pages.layouts.userLayout.title': '基于字节码增强的微服务治理平台',
     'pages.login.accountLogin.tab': '账户密码登录',
     'pages.login.failure': '登录失败，请重试！',
     'pages.login.success': '登录成功！',
@@ -148,6 +147,9 @@ export default {
     'pages.service.add': '添加服务',
     'pages.service.edit': '编辑服务',
     'pages.service.delTip': '确定删除该服务吗？',
+    'pages.service.tab.provider': '我提供的',
+    'pages.service.tab.consumer': '我消费的',
+    'pages.service.tab.all': '全部服务',
     'pages.service.form.name': '名称',
     'pages.service.form.name.placeholder': '请输入名称',
     'pages.service.form.name.required': '名称是必填项！',

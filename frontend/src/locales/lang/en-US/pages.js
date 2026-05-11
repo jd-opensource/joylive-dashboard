@@ -1,6 +1,5 @@
 export default {
-    'pages.layouts.userLayout.title':
-        'A lightweight, flexible, elegant and full-featured RBAC scaffolding based on GIN + GORM 2.0 + Casbin 2.0 + Wire DI.',
+    'pages.layouts.userLayout.title': 'Microservice Governance Platform Based on Bytecode Enhancement',
     'pages.login.accountLogin.tab': 'Account Login',
     'pages.login.failure': 'Login failed, please try again!',
     'pages.login.success': 'Login successful!',
@@ -146,6 +145,9 @@ export default {
     'pages.service.add': 'Add Service',
     'pages.service.edit': 'Edit Service',
     'pages.service.delTip': 'Are you sure you want to delete this service?',
+    'pages.service.tab.provider': 'Provided by Me',
+    'pages.service.tab.consumer': 'Consumed by Me',
+    'pages.service.tab.all': 'All Services',
     'pages.service.form.name': 'Name',
     'pages.service.form.name.placeholder': 'Please enter the name',
     'pages.service.form.name.required': 'Name is required!',

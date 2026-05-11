@@ -11,15 +11,15 @@ import (
 
 // Service alias management
 type ServiceAlias struct {
-	ID          string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                 // Unique ID
-	SpaceCode   string          `json:"spaceCode" gorm:"size:255;not null;uniqueIndex:uniq_code;comment:Microservice space code;"` // Microservice space code
-	Alias       string          `json:"alias" gorm:"size:255;not null;uniqueIndex:uniq_code;comment:Service alias;"`               // Service alias
-	ServiceId   string          `json:"serviceId" gorm:"size:20;not null;comment:Service ID this alias belongs to;"`               // Service ID this alias belongs to
-	Description *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                    // Details
-	CreatedAt   time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                 // Create timestamp
-	UpdatedAt   time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                       // Update timestamp
-	Deleted     string          `json:"-" gorm:"uniqueIndex:uniq_code;size:20;default:0;comment:Delete flag;"`                     // Delete flag
-	DeletedAt   *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                      // Delete timestamp
+	ID          string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                               // Unique ID
+	SpaceCode   string          `json:"spaceCode" gorm:"size:255;not null;uniqueIndex:uniq_service_alias_code;comment:Microservice space code;"` // Microservice space code
+	Alias       string          `json:"alias" gorm:"size:255;not null;uniqueIndex:uniq_service_alias_code;comment:Service alias;"`               // Service alias
+	ServiceId   string          `json:"serviceId" gorm:"size:20;not null;comment:Service ID this alias belongs to;"`                             // Service ID this alias belongs to
+	Description *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                                  // Details
+	CreatedAt   time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                               // Create timestamp
+	UpdatedAt   time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                                     // Update timestamp
+	Deleted     string          `json:"-" gorm:"uniqueIndex:uniq_service_alias_code;size:20;default:0;comment:Delete flag;"`                     // Delete flag
+	DeletedAt   *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                                      // Delete timestamp
 }
 
 func (a ServiceAlias) TableName() string {
@@ -53,7 +53,7 @@ type ServiceAliasForm struct {
 	SpaceCode   string  `json:"spaceCode" binding:"required,max=255"` // Microservice space code
 	Alias       string  `json:"alias" binding:"required,max=255"`     // Service alias
 	ServiceId   string  `json:"serviceId" binding:"required,max=20"`  // Service ID this alias belongs to
-	Description *string `json:"description"`                           // Details
+	Description *string `json:"description"`                          // Details
 }
 
 // A validation function for the `ServiceAliasForm` struct.

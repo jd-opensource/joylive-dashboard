@@ -11,25 +11,25 @@ import (
 
 // Loadbalance policy management
 type PolicyLoadbalance struct {
-	ID                  string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                                                  // Unique ID
-	Name                string          `json:"name" gorm:"size:100;not null;uniqueIndex:uniq_name;comment:Policy name;"`                                                   // Policy name
-	SpaceCode           *string         `json:"spaceCode,omitempty" gorm:"size:255;uniqueIndex:uniq_name;uniqueIndex:uniq_service;comment:Microservice space code;"`        // Microservice space code
-	SourceApplicationID *string         `json:"sourceApplicationId,omitempty" gorm:"size:20;uniqueIndex:uniq_name;uniqueIndex:uniq_service;comment:Source application ID;"` // Source application ID
-	TargetServiceId     string          `json:"targetServiceId" gorm:"size:20;not null;uniqueIndex:uniq_name;uniqueIndex:uniq_service;comment:Target service ID;"`          // Target service ID
-	Group               string          `json:"group" gorm:"size:255;not null;default:default;comment:Group;"`                                                              // Group
-	Path                *string         `json:"path,omitempty" gorm:"size:255;comment:Path or interface;"`                                                                  // Path or interface
-	Method              *string         `json:"method,omitempty" gorm:"size:255;comment:Method;"`                                                                           // Method
-	PolicyType          string          `json:"policyType" gorm:"size:20;not null;comment:Loadbalance policy type;"`                                                        // Loadbalance policy type
-	StickyType          *string         `json:"stickyType,omitempty" gorm:"size:20;comment:Sticky type;"`                                                                   // Sticky type
-	Version             int64           `json:"version" gorm:"not null;default:1;comment:Version;"`                                                                         // Version
-	Enabled             int             `json:"enabled" gorm:"not null;default:0;comment:Enabled;"`                                                                         // Enabled
-	Description         *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                                                     // Details
-	Creator             *string         `json:"creator,omitempty" gorm:"size:255;comment:Creator;"`                                                                         // Creator
-	Modifier            *string         `json:"modifier,omitempty" gorm:"size:255;comment:Modifier;"`                                                                       // Modifier
-	CreatedAt           time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                                                  // Create timestamp
-	UpdatedAt           time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                                                        // Update timestamp
-	Deleted             string          `json:"-" gorm:"uniqueIndex:uniq_name;uniqueIndex:uniq_service;size:20;default:0;comment:Delete flag;"`                             // Delete flag
-	DeletedAt           *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                                                         // Delete timestamp
+	ID                  string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                                                                                        // Unique ID
+	Name                string          `json:"name" gorm:"size:100;not null;uniqueIndex:uniq_policy_loadbalance_name;comment:Policy name;"`                                                                      // Policy name
+	SpaceCode           *string         `json:"spaceCode,omitempty" gorm:"size:255;uniqueIndex:uniq_policy_loadbalance_name;uniqueIndex:uniq_policy_loadbalance_service;comment:Microservice space code;"`        // Microservice space code
+	SourceApplicationID *string         `json:"sourceApplicationId,omitempty" gorm:"size:20;uniqueIndex:uniq_policy_loadbalance_name;uniqueIndex:uniq_policy_loadbalance_service;comment:Source application ID;"` // Source application ID
+	TargetServiceId     string          `json:"targetServiceId" gorm:"size:20;not null;uniqueIndex:uniq_policy_loadbalance_name;uniqueIndex:uniq_policy_loadbalance_service;comment:Target service ID;"`          // Target service ID
+	Group               string          `json:"group" gorm:"size:255;not null;default:default;comment:Group;"`                                                                                                    // Group
+	Path                *string         `json:"path,omitempty" gorm:"size:255;comment:Path or interface;"`                                                                                                        // Path or interface
+	Method              *string         `json:"method,omitempty" gorm:"size:255;comment:Method;"`                                                                                                                 // Method
+	PolicyType          string          `json:"policyType" gorm:"size:20;not null;comment:Loadbalance policy type;"`                                                                                              // Loadbalance policy type
+	StickyType          *string         `json:"stickyType,omitempty" gorm:"size:20;comment:Sticky type;"`                                                                                                         // Sticky type
+	Version             int64           `json:"version" gorm:"not null;default:1;comment:Version;"`                                                                                                               // Version
+	Enabled             int             `json:"enabled" gorm:"not null;default:0;comment:Enabled;"`                                                                                                               // Enabled
+	Description         *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                                                                                           // Details
+	Creator             *string         `json:"creator,omitempty" gorm:"size:255;comment:Creator;"`                                                                                                               // Creator
+	Modifier            *string         `json:"modifier,omitempty" gorm:"size:255;comment:Modifier;"`                                                                                                             // Modifier
+	CreatedAt           time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                                                                                        // Create timestamp
+	UpdatedAt           time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                                                                                              // Update timestamp
+	Deleted             string          `json:"-" gorm:"uniqueIndex:uniq_policy_loadbalance_name;uniqueIndex:uniq_policy_loadbalance_service;size:20;default:0;comment:Delete flag;"`                             // Delete flag
+	DeletedAt           *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                                                                                               // Delete timestamp
 }
 
 func (a PolicyLoadbalance) TableName() string {
@@ -60,18 +60,18 @@ type PolicyLoadbalances []*PolicyLoadbalance
 
 // Defining the data structure for creating a `PolicyLoadbalance` struct.
 type PolicyLoadbalanceForm struct {
-	Name                string  `json:"name" binding:"required,max=100"`             // Policy name
-	SpaceCode           *string `json:"spaceCode"`                                   // Microservice space code
-	SourceApplicationID *string `json:"sourceApplicationId"`                         // Source application ID
-	TargetServiceId     string  `json:"targetServiceId" binding:"required,max=20"`   // Target service ID
-	Group               string  `json:"group" binding:"required,max=255"`            // Group
-	Path                *string `json:"path"`                                        // Path or interface
-	Method              *string `json:"method"`                                      // Method
-	PolicyType          string  `json:"policyType" binding:"required,max=20"`        // Loadbalance policy type
-	StickyType          *string `json:"stickyType"`                                  // Sticky type
-	Version             int64   `json:"version"`                                     // Version
-	Enabled             int     `json:"enabled"`                                     // Enabled
-	Description         *string `json:"description"`                                 // Details
+	Name                string  `json:"name" binding:"required,max=100"`           // Policy name
+	SpaceCode           *string `json:"spaceCode"`                                 // Microservice space code
+	SourceApplicationID *string `json:"sourceApplicationId"`                       // Source application ID
+	TargetServiceId     string  `json:"targetServiceId" binding:"required,max=20"` // Target service ID
+	Group               string  `json:"group" binding:"required,max=255"`          // Group
+	Path                *string `json:"path"`                                      // Path or interface
+	Method              *string `json:"method"`                                    // Method
+	PolicyType          string  `json:"policyType" binding:"required,max=20"`      // Loadbalance policy type
+	StickyType          *string `json:"stickyType"`                                // Sticky type
+	Version             int64   `json:"version"`                                   // Version
+	Enabled             int     `json:"enabled"`                                   // Enabled
+	Description         *string `json:"description"`                               // Details
 }
 
 // A validation function for the `PolicyLoadbalanceForm` struct.

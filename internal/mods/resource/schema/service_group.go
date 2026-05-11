@@ -11,17 +11,17 @@ import (
 
 // Service group management
 type ServiceGroup struct {
-	ID            string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                         // Unique ID
-	Name          string          `json:"name" gorm:"size:255;not null;comment:Group name;"`                                                 // Group name
-	Code          string          `json:"code" gorm:"size:255;not null;uniqueIndex:uniq_code;comment:Group code;"`                           // Group code
-	IsolationCode *string         `json:"isolationCode,omitempty" gorm:"size:255;comment:Isolation code;"`                                   // Isolation code
-	ServiceId     string          `json:"serviceId" gorm:"size:20;not null;uniqueIndex:uniq_code;comment:Service ID this group belongs to;"` // Service ID this group belongs to
-	Labels        *string         `json:"labels,omitempty" gorm:"size:1024;comment:Labels;"`                                                 // Labels
-	Description   *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                            // Details
-	CreatedAt     time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                         // Create timestamp
-	UpdatedAt     time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                               // Update timestamp
-	Deleted       string          `json:"-" gorm:"size:20;uniqueIndex:uniq_code;default:0;comment:Delete flag;"`                             // Delete flag
-	DeletedAt     *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                                // Delete timestamp
+	ID            string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                                       // Unique ID
+	Name          string          `json:"name" gorm:"size:255;not null;comment:Group name;"`                                                               // Group name
+	Code          string          `json:"code" gorm:"size:255;not null;uniqueIndex:uniq_service_group_code;comment:Group code;"`                           // Group code
+	IsolationCode *string         `json:"isolationCode,omitempty" gorm:"size:255;comment:Isolation code;"`                                                 // Isolation code
+	ServiceId     string          `json:"serviceId" gorm:"size:20;not null;uniqueIndex:uniq_service_group_code;comment:Service ID this group belongs to;"` // Service ID this group belongs to
+	Labels        *string         `json:"labels,omitempty" gorm:"size:1024;comment:Labels;"`                                                               // Labels
+	Description   *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                                          // Details
+	CreatedAt     time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                                       // Create timestamp
+	UpdatedAt     time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                                             // Update timestamp
+	Deleted       string          `json:"-" gorm:"size:20;uniqueIndex:uniq_service_group_code;default:0;comment:Delete flag;"`                             // Delete flag
+	DeletedAt     *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                                              // Delete timestamp
 }
 
 func (a ServiceGroup) TableName() string {

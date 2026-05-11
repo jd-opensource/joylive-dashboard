@@ -1,10 +1,10 @@
 package api
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/biz"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/schema"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
-	"github.com/gin-gonic/gin"
 )
 
 // Service management for microservices
@@ -19,6 +19,7 @@ type Service struct {
 // @Param pageSize query int true "pagination size" default(10)
 // @Param name query string false "Name of service"
 // @Param space_code query string false "Space code"
+// @Param role query string false "Filter by role of current user's applications: provider, consumer"
 // @Success 200 {object} util.ResponseResult{data=[]schema.Service}
 // @Failure 401 {object} util.ResponseResult
 // @Failure 500 {object} util.ResponseResult
