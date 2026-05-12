@@ -119,6 +119,9 @@ func (a *PolicyLoadbalance) Update(ctx context.Context, id string, formItem *sch
 	if err := formItem.FillTo(policyLoadbalance); err != nil {
 		return err
 	}
+	modifier := util.FromUsername(ctx)
+	policyLoadbalance.Modifier = &modifier
+	policyLoadbalance.Version++
 	policyLoadbalance.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {

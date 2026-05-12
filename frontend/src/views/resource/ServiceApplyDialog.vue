@@ -92,7 +92,6 @@ function handleOk() {
                     ...values,
                     service_id: serviceId,
                     role: 'consumer',
-                    status: 'approved',
                 }
                 const result = await apis.application_service.createApplicationService(params).catch(() => {
                     throw new Error()

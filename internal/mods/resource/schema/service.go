@@ -4,26 +4,30 @@ import (
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
+	"github.com/jd-opensource/joylive-dashboard/internal/mods/space/schema"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 	"gorm.io/gorm"
 )
 
 // Service management for microservices
 type Service struct {
-	ID               string          `json:"id" gorm:"size:20;primarykey;"`                        // Unique ID
-	Name             string          `json:"name" gorm:"size:255;uniqueIndex:uniq_svc_name"`       // Name
-	SpaceCode        string          `json:"space_code" gorm:"size:255;uniqueIndex:uniq_svc_name"` // Space code
-	RegistrationType string          `json:"registration_type" gorm:"size:20"`                     // Registration type: HTTP, RPC_APP, RPC_INTERFACE
-	Source           string          `json:"source" gorm:"size:255"`                               // Data source: Local, JSF, JDAP
-	Tenant           string          `json:"tenant" gorm:"size:255"`                               // Tenant
-	Creator          string          `json:"creator" gorm:"size:255"`                              // Creator
-	Extra            *string         `json:"extra,omitempty" gorm:"type:json"`                     // Extra info
-	Version          int64           `json:"version" gorm:"not null;default:1"`                    // Version
-	Description      string          `json:"description" gorm:"size:255"`                          // Description
-	CreatedAt        time.Time       `json:"created_at" gorm:"index;"`                             // Create time
-	UpdatedAt        time.Time       `json:"updated_at" gorm:"index;"`                             // Update time
-	Deleted          string          `json:"-" gorm:"size:20;uniqueIndex:uniq_svc_name;default:0"` // Logical delete flag
-	DeletedAt        *gorm.DeletedAt `json:"-" gorm:"comment:Delete time;"`                        // Delete time
+	ID                       string          `json:"id" gorm:"size:20;primarykey;"`                               // Unique ID
+	Name                     string          `json:"name" gorm:"size:255;uniqueIndex:uniq_svc_name"`              // Name
+	SpaceCode                string          `json:"space_code" gorm:"size:255;uniqueIndex:uniq_svc_name"`        // Space code
+	Space                    *schema.Space   `json:"space,omitempty" gorm:"foreignKey:SpaceCode;references:Code"` // Space
+	RegistrationType         string          `json:"registration_type" gorm:"size:20"`                            // Registration type: HTTP, RPC_APP, RPC_INTERFACE
+	Source                   string          `json:"source" gorm:"size:255"`                                      // Data source: Local, JSF, JDAP
+	Tenant                   string          `json:"tenant" gorm:"size:255"`                                      // Tenant
+	Creator                  string          `json:"creator" gorm:"size:255"`                                     // Creator
+	Extra                    *string         `json:"extra,omitempty" gorm:"type:json"`                            // Extra info
+	Version                  int64           `json:"version" gorm:"not null;default:1"`                           // Version
+	Description              string          `json:"description" gorm:"size:255"`                                 // Description
+	CreatedAt                time.Time       `json:"created_at" gorm:"index;"`                                    // Create time
+	UpdatedAt                time.Time       `json:"updated_at" gorm:"index;"`                                    // Update time
+	Deleted                  string          `json:"-" gorm:"size:20;uniqueIndex:uniq_svc_name;default:0"`        // Logical delete flag
+	DeletedAt                *gorm.DeletedAt `json:"-" gorm:"comment:Delete time;"`                               // Delete time
+	ApplicationServiceStatus string          `json:"application_service_status,omitempty" gorm:"->"`              // Application service status (virtual field, read-only)
+	ApplicationName          string          `json:"application_name,omitempty" gorm:"->"`                       // Application name (virtual field, read-only)
 }
 
 func (a *Service) TableName() string {

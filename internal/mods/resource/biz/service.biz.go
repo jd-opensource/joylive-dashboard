@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
@@ -122,6 +123,7 @@ func (a *Service) Update(ctx context.Context, id string, formItem *schema.Servic
 	if err := formItem.FillTo(svc); err != nil {
 		return err
 	}
+	svc.Version++
 	svc.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
@@ -143,6 +145,36 @@ func (a *Service) Delete(ctx context.Context, id string) error {
 			return err
 		}
 		return a.DataPermissionBIZ.DeleteByTypeAndDataId(ctx, schema.DataPermissionTypeService, id)
+	})
+}
+
+// ToggleAuth toggles the authorized flag in the service's extra field.
+func (a *Service) ToggleAuth(ctx context.Context, id string, authorized int) error {
+	svc, err := a.ServiceDAL.Get(ctx, id)
+	if err != nil {
+		return err
+	} else if svc == nil {
+		return errors.NotFound("", "Service not found")
+	}
+
+	extra := make(map[string]interface{})
+	if svc.Extra != nil {
+		if err := json.Unmarshal([]byte(*svc.Extra), &extra); err != nil {
+			return errors.BadRequest("", "Invalid extra JSON")
+		}
+	}
+	extra["authorized"] = authorized
+	extraBytes, err := json.Marshal(extra)
+	if err != nil {
+		return errors.BadRequest("", "Failed to marshal extra JSON")
+	}
+	extraStr := string(extraBytes)
+	svc.Extra = &extraStr
+	svc.Version++
+	svc.UpdatedAt = time.Now()
+
+	return a.Trans.Exec(ctx, func(ctx context.Context) error {
+		return a.ServiceDAL.Update(ctx, svc)
 	})
 }
 

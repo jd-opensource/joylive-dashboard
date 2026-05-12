@@ -82,7 +82,10 @@ func WrapPageQuery(ctx context.Context, db *gorm.DB, pp PaginationParam, opts Qu
 func FindPage(ctx context.Context, db *gorm.DB, pp PaginationParam, opts QueryOptions, out interface{}) (int64, error) {
 	db = db.WithContext(ctx)
 	var count int64
-	err := db.Count(&count).Error
+	// Use a cloned session for Count because GORM's Count() strips the Select clause,
+	// which would cause custom SELECT expressions (e.g. JOINed columns) to be lost
+	// in the subsequent Find call.
+	err := db.Session(&gorm.Session{}).Count(&count).Error
 	if err != nil {
 		return 0, err
 	} else if count == 0 {

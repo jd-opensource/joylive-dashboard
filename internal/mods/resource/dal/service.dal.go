@@ -3,6 +3,7 @@ package dal
 import (
 	"context"
 
+	"github.com/jd-opensource/joylive-dashboard/internal/config"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/schema"
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
@@ -11,7 +12,8 @@ import (
 
 // GetServiceDB returns the database instance for Service (only active records).
 func GetServiceDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
-	return util.GetDB(ctx, defDB).Model(new(schema.Service)).Where("deleted = '0'")
+	tableName := config.C.FormatTableName("service")
+	return util.GetDB(ctx, defDB).Model(new(schema.Service)).Preload("Space").Where(tableName + ".deleted = '0'")
 }
 
 // Service data access layer
@@ -26,37 +28,77 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 		opt = opts[0]
 	}
 
-	db := GetServiceDB(ctx, a.DB)
-	if v := params.LikeName; len(v) > 0 {
-		db = db.Where("name LIKE ?", "%"+v+"%")
-	}
-	if v := params.SpaceCode; len(v) > 0 {
-		db = db.Where("space_code = ?", v)
-	}
+	tableName := config.C.FormatTableName("service")
+
+	// Build role subquery if needed
+	var roleSubQuery *gorm.DB
 	if role := params.Role; role != "" {
-		// Filter services by role (provider/consumer) linked to applications the user has data permission for.
 		if params.UserID != "" {
 			appPermQuery := GetDataPermissionDB(ctx, a.DB).
 				Where("type = ? AND user = ? AND tenant = ? AND permission & 1 = 1", schema.DataPermissionTypeApplication, params.UserID, params.Tenant).
 				Select("data_id")
-			relQuery := GetApplicationServiceDB(ctx, a.DB).
+			roleSubQuery = GetApplicationServiceDB(ctx, a.DB).
 				Where("role = ?", role).
 				Where("application_id IN (?)", appPermQuery).
 				Select("service_id")
-			db = db.Where("id IN (?)", relQuery)
 		} else {
-			// Root user: only filter by role, no data permission restriction
-			relQuery := GetApplicationServiceDB(ctx, a.DB).
+			roleSubQuery = GetApplicationServiceDB(ctx, a.DB).
 				Where("role = ?", role).
 				Select("service_id")
-			db = db.Where("id IN (?)", relQuery)
 		}
+	}
+
+	// For consumer role, use a fresh query with JOINs (no Preload to avoid conflict)
+	if params.Role == "consumer" {
+		appSvcTable := config.C.FormatTableName("application_service")
+		appTable := config.C.FormatTableName("application")
+		db := util.GetDB(ctx, a.DB).Model(new(schema.Service)).
+			Where(tableName+".deleted = '0'").
+			Select(
+				tableName+".*, "+
+					appSvcTable+".status as application_service_status, "+
+					appTable+".name as application_name",
+			).Joins(
+			"LEFT JOIN "+appSvcTable+" ON "+appSvcTable+".service_id = "+tableName+".id AND "+appSvcTable+".role = ? AND "+appSvcTable+".deleted = '0'",
+			params.Role,
+		).Joins(
+			"LEFT JOIN " + appTable + " ON " + appTable + ".id = " + appSvcTable + ".application_id AND " + appTable + ".deleted = '0'",
+		)
+		if v := params.LikeName; len(v) > 0 {
+			db = db.Where(tableName+".name LIKE ?", "%"+v+"%")
+		}
+		if v := params.SpaceCode; len(v) > 0 {
+			db = db.Where(tableName+".space_code = ?", v)
+		}
+		if roleSubQuery != nil {
+			db = db.Where(tableName+".id IN (?)", roleSubQuery)
+		}
+		var list schema.Services
+		pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		return &schema.ServiceQueryResult{
+			PageResult: pageResult,
+			Data:       list,
+		}, nil
+	}
+
+	// Non-consumer queries: use GetServiceDB with Preload
+	db := GetServiceDB(ctx, a.DB)
+	if v := params.LikeName; len(v) > 0 {
+		db = db.Where(tableName+".name LIKE ?", "%"+v+"%")
+	}
+	if v := params.SpaceCode; len(v) > 0 {
+		db = db.Where(tableName+".space_code = ?", v)
+	}
+	if roleSubQuery != nil {
+		db = db.Where(tableName+".id IN (?)", roleSubQuery)
 	} else if v := params.UserID; len(v) > 0 {
-		// No role filter: restrict by direct service data permissions
 		permQuery := GetDataPermissionDB(ctx, a.DB).
 			Where("type = ? AND user = ? AND tenant = ? AND permission & 1 = 1", schema.DataPermissionTypeService, v, params.Tenant).
 			Select("data_id")
-		db = db.Where("id IN (?)", permQuery)
+		db = db.Where(tableName+".id IN (?)", permQuery)
 	}
 
 	var list schema.Services
@@ -64,7 +106,6 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-
 	return &schema.ServiceQueryResult{
 		PageResult: pageResult,
 		Data:       list,

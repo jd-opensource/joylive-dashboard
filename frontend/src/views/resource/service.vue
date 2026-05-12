@@ -86,7 +86,7 @@
                     :data-source="listData"
                     :loading="loading"
                     :pagination="paginationState"
-                    :scroll="{ x: 1200 }"
+                    :scroll="{ x: 1260 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
                         <template v-if="'createAt' === column.key">
@@ -94,6 +94,14 @@
                         </template>
                         <template v-if="'registration_type' === column.key">
                             {{ registrationTypeMap[record.registration_type] || record.registration_type }}
+                        </template>
+                        <template v-if="'application_service_status' === column.key">
+                            <a-tag :color="statusColorMap[record.application_service_status]">
+                                {{
+                                    statusTextMap[record.application_service_status] ||
+                                    record.application_service_status
+                                }}
+                            </a-tag>
                         </template>
 
                         <template v-if="'action' === column.key">
@@ -112,6 +120,23 @@
                                     <a-tooltip>
                                         <template #title> {{ $t('pages.service.edit') }}</template>
                                         <edit-outlined />
+                                    </a-tooltip>
+                                </x-action-button>
+                                <x-action-button
+                                    v-if="activeTab === 'provider'"
+                                    @click="handleToggleAuth(record)">
+                                    <a-tooltip>
+                                        <template #title>
+                                            {{
+                                                isAuthorized(record)
+                                                    ? $t('pages.service.auth.disable')
+                                                    : $t('pages.service.auth.enable')
+                                            }}
+                                        </template>
+                                        <lock-outlined v-if="!isAuthorized(record)" />
+                                        <unlock-outlined
+                                            v-else
+                                            style="color: #52c41a" />
                                     </a-tooltip>
                                 </x-action-button>
                                 <x-action-button @click="handleRemove(record)">
@@ -141,14 +166,21 @@
 
 <script setup>
 import { message, Modal } from 'ant-design-vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
 import { usePagination, useForm } from '@/hooks'
 import EditDialog from './ServiceEditDialog.vue'
 import ApplyDialog from './ServiceApplyDialog.vue'
-import { PlusOutlined, EditOutlined, DeleteOutlined, ImportOutlined } from '@ant-design/icons-vue'
+import {
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    ImportOutlined,
+    LockOutlined,
+    UnlockOutlined,
+} from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
@@ -160,9 +192,18 @@ const registrationTypeMap = {
     RPC_APP: t('pages.service.form.registration_type.rpc_app'),
     RPC_INTERFACE: t('pages.service.form.registration_type.rpc_interface'),
 }
-const columns = [
+const statusTextMap = {
+    approved: t('pages.service.form.application_service_status.approved'),
+    pending: t('pages.service.form.application_service_status.pending'),
+    rejected: t('pages.service.form.application_service_status.rejected'),
+}
+const statusColorMap = {
+    approved: 'green',
+    pending: 'orange',
+    rejected: 'red',
+}
+const baseColumns = [
     { title: t('pages.service.form.name'), dataIndex: 'name', width: 200 },
-    { title: t('pages.service.form.space_code'), dataIndex: 'space_code', width: 150 },
     {
         title: t('pages.service.form.registration_type'),
         dataIndex: 'registration_type',
@@ -173,8 +214,25 @@ const columns = [
     { title: t('pages.service.form.version'), dataIndex: 'version', width: 80 },
     { title: t('pages.service.form.description'), dataIndex: 'description', ellipsis: true },
     { title: t('pages.service.form.created_at'), key: 'createAt', fixed: 'right', width: 180 },
-    { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
+    { title: t('button.action'), key: 'action', fixed: 'right', width: 180 },
 ]
+const consumerColumns = [
+    { title: t('pages.service.form.application_name'), dataIndex: 'application_name', width: 150 },
+    {
+        title: t('pages.service.form.application_service_status'),
+        dataIndex: 'application_service_status',
+        key: 'application_service_status',
+        width: 100,
+    },
+]
+const columns = computed(() => {
+    if (activeTab.value === 'consumer') {
+        const cols = [...baseColumns]
+        cols.splice(1, 0, ...consumerColumns)
+        return cols
+    }
+    return baseColumns
+})
 
 const { listData, loading, showLoading, hideLoading, paginationState, searchFormData, resetPagination } =
     usePagination()
@@ -283,6 +341,45 @@ function handleRemove({ id }) {
                         if (config('http.code.success') === success) {
                             resolve()
                             message.success(t('component.message.success.delete'))
+                            await getPageList()
+                        }
+                    } catch (error) {
+                        reject()
+                    }
+                })()
+            })
+        },
+    })
+}
+
+function isAuthorized(record) {
+    try {
+        const extra = record.extra ? JSON.parse(record.extra) : {}
+        return extra.authorized === 1
+    } catch {
+        return false
+    }
+}
+
+function handleToggleAuth(record) {
+    const authorized = isAuthorized(record) ? 0 : 1
+    const title = authorized === 1 ? t('pages.service.auth.enableTip') : t('pages.service.auth.disableTip')
+    Modal.confirm({
+        title,
+        content: t('button.confirm'),
+        okText: t('button.confirm'),
+        onOk: () => {
+            return new Promise((resolve, reject) => {
+                ;(async () => {
+                    try {
+                        const { success } = await apis.service
+                            .toggleServiceAuth(record.id, { authorized })
+                            .catch(() => {
+                                throw new Error()
+                            })
+                        if (config('http.code.success') === success) {
+                            resolve()
+                            message.success(t('component.message.success.save'))
                             await getPageList()
                         }
                     } catch (error) {

@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
@@ -14,6 +15,7 @@ import (
 type ApplicationService struct {
 	Trans                 *util.Trans
 	ApplicationServiceDAL *dal.ApplicationService
+	ServiceDAL            *dal.Service
 }
 
 // Query application services from the data access object based on the provided parameters and options.
@@ -53,9 +55,33 @@ func (a *ApplicationService) Create(ctx context.Context, formItem *schema.Applic
 		return nil, errors.BadRequest("", "Application service relationship already exists")
 	}
 
+	// Determine status: for consumer role, check if the service requires authorization
+	status := "pending"
+	if formItem.Role == "consumer" && formItem.Status == "" {
+		svc, err := a.ServiceDAL.Get(ctx, formItem.ServiceId)
+		if err != nil {
+			return nil, err
+		} else if svc != nil && svc.Extra != nil {
+			var extra map[string]interface{}
+			if json.Unmarshal([]byte(*svc.Extra), &extra) == nil {
+				if auth, ok := extra["authorized"].(float64); ok && auth == 1 {
+					status = "pending"
+				} else {
+					status = "approved"
+				}
+			} else {
+				status = "approved"
+			}
+		} else {
+			status = "approved"
+		}
+	} else if formItem.Status != "" {
+		status = formItem.Status
+	}
+
 	applicationService := &schema.ApplicationService{
 		ID:        util.NewXID(),
-		Status:    "pending",
+		Status:    status,
 		Deleted:   "0",
 		CreatedAt: time.Now(),
 	}

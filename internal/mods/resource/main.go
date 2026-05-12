@@ -57,6 +57,7 @@ func (a *Resource) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) e
 		svc.POST("", a.ServiceAPI.Create)
 		svc.PUT(":id", a.ServiceAPI.Update)
 		svc.DELETE(":id", a.ServiceAPI.Delete)
+		svc.PUT(":id/auth", a.ServiceAPI.ToggleAuth)
 		svc.DELETE(":id/consumer", a.ServiceAPI.DeleteConsumer)
 	}
 	applicationService := v1.Group("application-services")

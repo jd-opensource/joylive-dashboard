@@ -14,3 +14,5 @@ export const updateService = (id, params) => request.basic.put(`/api/v1/services
 export const delService = (id) => request.basic.delete(`/api/v1/services/${id}`)
 // 删除service的consumer关系
 export const delServiceConsumer = (id) => request.basic.delete(`/api/v1/services/${id}/consumer`)
+// 切换service的认证状态
+export const toggleServiceAuth = (id, params) => request.basic.put(`/api/v1/services/${id}/auth`, params)
