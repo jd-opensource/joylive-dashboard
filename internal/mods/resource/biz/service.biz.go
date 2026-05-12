@@ -145,3 +145,10 @@ func (a *Service) Delete(ctx context.Context, id string) error {
 		return a.DataPermissionBIZ.DeleteByTypeAndDataId(ctx, schema.DataPermissionTypeService, id)
 	})
 }
+
+// DeleteConsumer removes the consumer relationship for the specified service.
+func (a *Service) DeleteConsumer(ctx context.Context, serviceId string) error {
+	return a.Trans.Exec(ctx, func(ctx context.Context) error {
+		return a.ApplicationServiceBIZ.ApplicationServiceDAL.DeleteByServiceIDAndRole(ctx, serviceId, "consumer")
+	})
+}

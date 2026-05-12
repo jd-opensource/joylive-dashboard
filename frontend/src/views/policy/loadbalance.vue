@@ -115,6 +115,12 @@
                     :scroll="{ x: 1400 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
+                        <template v-if="'sourceApplicationId' === column.key">
+                            {{ applicationNameMap[record.sourceApplicationId] || record.sourceApplicationId }}
+                        </template>
+                        <template v-if="'targetServiceId' === column.key">
+                            {{ serviceNameMap[record.targetServiceId] || record.targetServiceId }}
+                        </template>
                         <template v-if="'enabled' === column.key">
                             <a-tag :color="record.enabled === 1 ? 'green' : 'default'">
                                 {{
@@ -174,8 +180,18 @@ defineOptions({
 const { t } = useI18n()
 const columns = [
     { title: t('pages.loadbalance.form.name'), dataIndex: 'name', width: 180 },
-    { title: t('pages.loadbalance.form.spaceCode'), dataIndex: 'spaceCode', width: 120 },
-    { title: t('pages.loadbalance.form.targetServiceId'), dataIndex: 'targetServiceId', width: 120 },
+    {
+        title: t('pages.loadbalance.form.sourceApplicationId'),
+        dataIndex: 'sourceApplicationId',
+        key: 'sourceApplicationId',
+        width: 150,
+    },
+    {
+        title: t('pages.loadbalance.form.targetServiceId'),
+        dataIndex: 'targetServiceId',
+        key: 'targetServiceId',
+        width: 150,
+    },
     { title: t('pages.loadbalance.form.group'), dataIndex: 'group', width: 100 },
     { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policyType', width: 120 },
     { title: t('pages.loadbalance.form.enabled'), key: 'enabled', width: 80 },
@@ -192,6 +208,8 @@ const editDialogRef = ref()
 const spaceOptions = ref([])
 const serviceOptions = ref([])
 const applicationOptions = ref([])
+const serviceNameMap = ref({})
+const applicationNameMap = ref({})
 
 const SPACE_CODE_KEY = 'loadbalance_space_code'
 
@@ -226,6 +244,7 @@ async function loadServiceOptions() {
         })
         if (config('http.code.success') === success) {
             serviceOptions.value = data || []
+            serviceNameMap.value = Object.fromEntries(serviceOptions.value.map((item) => [item.id, item.name]))
         }
     } catch (error) {
         // ignore
@@ -239,6 +258,7 @@ async function loadApplicationOptions() {
         })
         if (config('http.code.success') === success) {
             applicationOptions.value = data || []
+            applicationNameMap.value = Object.fromEntries(applicationOptions.value.map((item) => [item.id, item.name]))
         }
     } catch (error) {
         // ignore

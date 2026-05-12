@@ -12,3 +12,5 @@ export const createService = (params) => request.basic.post('/api/v1/services', 
 export const updateService = (id, params) => request.basic.put(`/api/v1/services/${id}`, params)
 // 删除service
 export const delService = (id) => request.basic.delete(`/api/v1/services/${id}`)
+// 删除service的consumer关系
+export const delServiceConsumer = (id) => request.basic.delete(`/api/v1/services/${id}/consumer`)

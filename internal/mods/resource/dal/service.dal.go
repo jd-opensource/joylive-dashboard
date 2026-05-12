@@ -33,22 +33,30 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 	if v := params.SpaceCode; len(v) > 0 {
 		db = db.Where("space_code = ?", v)
 	}
-	if v := params.UserID; len(v) > 0 {
+	if role := params.Role; role != "" {
+		// Filter services by role (provider/consumer) linked to applications the user has data permission for.
+		if params.UserID != "" {
+			appPermQuery := GetDataPermissionDB(ctx, a.DB).
+				Where("type = ? AND user = ? AND tenant = ? AND permission & 1 = 1", schema.DataPermissionTypeApplication, params.UserID, params.Tenant).
+				Select("data_id")
+			relQuery := GetApplicationServiceDB(ctx, a.DB).
+				Where("role = ?", role).
+				Where("application_id IN (?)", appPermQuery).
+				Select("service_id")
+			db = db.Where("id IN (?)", relQuery)
+		} else {
+			// Root user: only filter by role, no data permission restriction
+			relQuery := GetApplicationServiceDB(ctx, a.DB).
+				Where("role = ?", role).
+				Select("service_id")
+			db = db.Where("id IN (?)", relQuery)
+		}
+	} else if v := params.UserID; len(v) > 0 {
+		// No role filter: restrict by direct service data permissions
 		permQuery := GetDataPermissionDB(ctx, a.DB).
 			Where("type = ? AND user = ? AND tenant = ? AND permission & 1 = 1", schema.DataPermissionTypeService, v, params.Tenant).
 			Select("data_id")
 		db = db.Where("id IN (?)", permQuery)
-	}
-	// Filter services by role of current login user's applications (provider/consumer).
-	if role := params.Role; role != "" && params.Creator != "" {
-		appQuery := GetApplicationDB(ctx, a.DB).
-			Where("creator = ?", params.Creator).
-			Select("id")
-		relQuery := GetApplicationServiceDB(ctx, a.DB).
-			Where("role = ?", role).
-			Where("application_id IN (?)", appQuery).
-			Select("service_id")
-		db = db.Where("id IN (?)", relQuery)
 	}
 
 	var list schema.Services

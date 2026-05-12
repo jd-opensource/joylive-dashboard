@@ -61,9 +61,11 @@ func (a *PolicyLoadbalance) Create(ctx context.Context, formItem *schema.PolicyL
 		return nil, errors.BadRequest("", "Policy loadbalance with the same space code, source application and target service already exists")
 	}
 
+	creator := util.FromUsername(ctx)
 	policyLoadbalance := &schema.PolicyLoadbalance{
 		ID:        util.NewXID(),
 		Deleted:   "0",
+		Creator:   &creator,
 		CreatedAt: time.Now(),
 	}
 

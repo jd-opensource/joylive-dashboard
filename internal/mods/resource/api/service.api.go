@@ -132,3 +132,21 @@ func (a *Service) Delete(c *gin.Context) {
 	}
 	util.ResOK(c)
 }
+
+// @Tags ServiceAPI
+// @Security ApiKeyAuth
+// @Summary Delete consumer relationship for service
+// @Param id path string true "service id"
+// @Success 200 {object} util.ResponseResult
+// @Failure 401 {object} util.ResponseResult
+// @Failure 500 {object} util.ResponseResult
+// @Router /api/v1/services/{id}/consumer [delete]
+func (a *Service) DeleteConsumer(c *gin.Context) {
+	ctx := c.Request.Context()
+	err := a.ServiceBIZ.DeleteConsumer(ctx, c.Param("id"))
+	if err != nil {
+		util.ResError(c, err)
+		return
+	}
+	util.ResOK(c)
+}

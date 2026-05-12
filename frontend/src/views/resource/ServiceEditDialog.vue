@@ -153,7 +153,7 @@ formRules.value = {
 function handleCreate() {
     showModal({
         type: 'create',
-        title: t('pages.service.add'),
+        title: t('pages.service.create'),
     })
     formData.value.registration_type = 'HTTP'
     const saved = localStorage.getItem(SPACE_CODE_KEY)

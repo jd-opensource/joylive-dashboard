@@ -2,6 +2,7 @@ package dal
 
 import (
 	"context"
+	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/schema"
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
@@ -86,4 +87,16 @@ func (a *ApplicationService) Update(ctx context.Context, item *schema.Applicatio
 // Delete the specified application service from the database.
 func (a *ApplicationService) Delete(ctx context.Context, id string) error {
 	return errors.WithStack(util.SoftDelete(ctx, GetApplicationServiceDB(ctx, a.DB), id))
+}
+
+// DeleteByServiceIDAndRole deletes application service records by service ID and role.
+func (a *ApplicationService) DeleteByServiceIDAndRole(ctx context.Context, serviceId, role string) error {
+	now := time.Now()
+	result := GetApplicationServiceDB(ctx, a.DB).
+		Where("service_id = ? AND role = ?", serviceId, role).
+		UpdateColumns(map[string]interface{}{
+			"deleted":    gorm.Expr("id"),
+			"deleted_at": &now,
+		})
+	return errors.WithStack(result.Error)
 }

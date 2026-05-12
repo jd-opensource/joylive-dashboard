@@ -54,6 +54,7 @@ func (a *Space) Create(ctx context.Context, formItem *schema.SpaceForm) (*schema
 
 	space := &schema.Space{
 		ID:        util.NewXID(),
+		Tenant:    util.FromTenant(ctx),
 		Creator:   util.FromUsername(ctx),
 		CreatedAt: time.Now(),
 	}
