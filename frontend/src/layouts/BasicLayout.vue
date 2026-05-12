@@ -10,6 +10,7 @@
                         @config="$refs.configDialogRef.handleOpen()">
                         <template #left>
                             <brand :theme="config.headerTheme"></brand>
+                            <x-breadcrumb :theme="config.headerTheme"></x-breadcrumb>
                         </template>
                     </basic-header>
                     <a-layout>
@@ -85,6 +86,9 @@
                         <basic-header
                             :theme="config.headerTheme"
                             @config="$refs.configDialogRef.handleOpen()">
+                            <template #left>
+                                <x-breadcrumb :theme="config.headerTheme"></x-breadcrumb>
+                            </template>
                         </basic-header>
                         <multi-tab v-if="config.multiTab"></multi-tab>
                         <basic-content></basic-content>

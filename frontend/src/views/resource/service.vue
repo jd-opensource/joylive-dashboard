@@ -1,77 +1,94 @@
 <template>
-    <a-tabs
-        v-model:activeKey="activeTab"
-        class="mb-8-2"
-        @change="onTabChange">
-        <a-tab-pane
-            key="provider"
-            :tab="$t('pages.service.tab.provider')"></a-tab-pane>
-        <a-tab-pane
-            key="consumer"
-            :tab="$t('pages.service.tab.consumer')"></a-tab-pane>
-        <a-tab-pane
-            key="all"
-            :tab="$t('pages.service.tab.all')"></a-tab-pane>
-    </a-tabs>
-    <x-search-bar class="mb-8-2">
-        <template #default="{ gutter, colSpan }">
-            <a-form
-                :label-col="{ style: { width: '100px' } }"
-                :model="searchFormData"
-                layout="inline">
-                <a-row :gutter="gutter">
-                    <a-col v-bind="colSpan">
-                        <a-form-item
-                            :label="$t('pages.service.form.space_code')"
-                            name="space_code">
-                            <a-select
-                                :placeholder="$t('pages.service.form.space_code.placeholder')"
-                                v-model:value="searchFormData.space_code"
-                                show-search
-                                :filter-option="filterSpaceOption"
-                                @change="onSpaceChange">
-                                <a-select-option
-                                    v-for="item in spaceOptions"
-                                    :key="item.code"
-                                    :value="item.code">
-                                    {{ item.name }} ({{ item.code }})
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
+    <a-card
+        :bordered="false"
+        :body-style="{ padding: 0 }"
+        class="service-card">
+        <a-layout>
+            <a-layout-sider
+                width="180"
+                class="service-sider">
+                <a-menu
+                    v-model:selectedKeys="selectedKeys"
+                    mode="inline"
+                    @click="onMenuClick">
+                    <a-menu-item key="provider">
+                        <template #icon><deployment-unit-outlined /></template>
+                        {{ $t('pages.service.tab.provider') }}
+                    </a-menu-item>
+                    <a-menu-item key="consumer">
+                        <template #icon><import-outlined /></template>
+                        {{ $t('pages.service.tab.consumer') }}
+                    </a-menu-item>
+                    <a-menu-item key="all">
+                        <template #icon><appstore-outlined /></template>
+                        {{ $t('pages.service.tab.all') }}
+                    </a-menu-item>
+                </a-menu>
+            </a-layout-sider>
+            <a-layout-content class="service-content">
+                <a-form
+                    :label-col="{ style: { width: '100px' } }"
+                    :model="searchFormData"
+                    layout="inline"
+                    class="service-search-form">
+                    <a-row
+                        :gutter="16"
+                        style="width: 100%">
+                        <a-col
+                            :xs="24"
+                            :sm="24"
+                            :md="12"
+                            :xl="8">
+                            <a-form-item
+                                :label="$t('pages.service.form.space_code')"
+                                name="space_code">
+                                <a-select
+                                    :placeholder="$t('pages.service.form.space_code.placeholder')"
+                                    v-model:value="searchFormData.space_code"
+                                    show-search
+                                    :filter-option="filterSpaceOption"
+                                    @change="onSpaceChange">
+                                    <a-select-option
+                                        v-for="item in spaceOptions"
+                                        :key="item.code"
+                                        :value="item.code">
+                                        {{ item.name }} ({{ item.code }})
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
+                        </a-col>
+                        <a-col
+                            :xs="24"
+                            :sm="24"
+                            :md="12"
+                            :xl="8">
+                            <a-form-item
+                                :label="$t('pages.service.form.name')"
+                                name="name">
+                                <a-input
+                                    :placeholder="$t('pages.service.form.name.placeholder')"
+                                    v-model:value="searchFormData.name"></a-input>
+                            </a-form-item>
+                        </a-col>
+                        <a-col
+                            :xs="24"
+                            :sm="24"
+                            :md="24"
+                            :xl="8"
+                            class="align-right">
+                            <a-space>
+                                <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
+                                <a-button
+                                    ghost
+                                    type="primary"
+                                    @click="handleSearch">
+                                    {{ $t('button.search') }}
+                                </a-button>
+                            </a-space>
+                        </a-col>
+                    </a-row>
+                </a-form>
 
-                    <a-col v-bind="colSpan">
-                        <a-form-item
-                            :label="$t('pages.service.form.name')"
-                            name="name">
-                            <a-input
-                                :placeholder="$t('pages.service.form.name.placeholder')"
-                                v-model:value="searchFormData.name"></a-input>
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col
-                        class="align-right"
-                        v-bind="colSpan">
-                        <a-space>
-                            <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
-                            <a-button
-                                ghost
-                                type="primary"
-                                @click="handleSearch">
-                                {{ $t('button.search') }}
-                            </a-button>
-                        </a-space>
-                    </a-col>
-                </a-row>
-            </a-form>
-        </template>
-    </x-search-bar>
-    <a-row
-        :gutter="8"
-        :wrap="false">
-        <a-col flex="auto">
-            <a-card type="flex">
                 <x-action-bar class="mb-8-2">
                     <a-button
                         v-action="'add'"
@@ -111,9 +128,9 @@
                         </template>
                     </template>
                 </a-table>
-            </a-card>
-        </a-col>
-    </a-row>
+            </a-layout-content>
+        </a-layout>
+    </a-card>
 
     <edit-dialog
         ref="editDialogRef"
@@ -130,7 +147,14 @@ import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
 import { usePagination, useForm } from '@/hooks'
 import EditDialog from './ServiceEditDialog.vue'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    DeploymentUnitOutlined,
+    ImportOutlined,
+    AppstoreOutlined,
+} from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
@@ -155,15 +179,15 @@ const { resetForm } = useForm()
 const editDialogRef = ref()
 const spaceOptions = ref([])
 const applicationOptions = ref([])
-const activeTab = ref('provider')
+const selectedKeys = ref(['provider'])
 
 const SPACE_CODE_KEY = 'service_space_code'
 
 function currentRole() {
-    return activeTab.value === 'all' ? '' : activeTab.value
+    return selectedKeys.value[0] === 'all' ? '' : selectedKeys.value[0]
 }
 
-function onTabChange() {
+function onMenuClick() {
     resetPagination()
     getPageList()
 }
@@ -289,4 +313,46 @@ async function onOk() {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.service-card {
+    .ant-layout {
+        background: #fff;
+    }
+}
+
+.service-sider {
+    background: #fff;
+    border-right: 1px solid #f0f0f0;
+
+    :deep(.ant-menu) {
+        border-right: none;
+        padding-top: 8px;
+    }
+
+    :deep(.ant-menu-item) {
+        margin: 4px 8px;
+        border-radius: 6px;
+        height: 40px;
+        line-height: 40px;
+    }
+}
+
+.service-content {
+    padding: 24px;
+}
+
+.service-search-form {
+    margin-bottom: 16px;
+
+    :deep(.ant-form-inline .ant-form-item) {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
+
+    :deep(.ant-form-item-control-input-content) {
+        > * {
+            width: 100%;
+        }
+    }
+}
+</style>

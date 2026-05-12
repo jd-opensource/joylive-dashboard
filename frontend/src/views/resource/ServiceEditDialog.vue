@@ -67,12 +67,22 @@
                         <a-form-item
                             :label="$t('pages.service.form.registration_type')"
                             name="registration_type">
-                            <a-input v-model:value="formData.registration_type"></a-input>
+                            <a-select v-model:value="formData.registration_type">
+                                <a-select-option value="HTTP">
+                                    {{ $t('pages.service.form.registration_type.http') }}
+                                </a-select-option>
+                                <a-select-option value="RPC_APP">
+                                    {{ $t('pages.service.form.registration_type.rpc_app') }}
+                                </a-select-option>
+                                <a-select-option value="RPC_INTERFACE">
+                                    {{ $t('pages.service.form.registration_type.rpc_interface') }}
+                                </a-select-option>
+                            </a-select>
                         </a-form-item>
                     </a-col>
                 </a-row>
 
-                <a-row :gutter="12">
+                <!-- <a-row :gutter="12">
                     <a-col :span="12">
                         <a-form-item
                             :label="$t('pages.service.form.source')"
@@ -80,7 +90,7 @@
                             <a-input v-model:value="formData.source"></a-input>
                         </a-form-item>
                     </a-col>
-                </a-row>
+                </a-row> -->
 
                 <a-row :gutter="24">
                     <a-col :span="24">
@@ -138,7 +148,6 @@ formRules.value = {
     space_code: { required: true, message: t('pages.service.form.space_code.placeholder') },
     application_id: { required: true, message: t('pages.service.form.application_id.placeholder') },
     registration_type: { required: true, message: t('pages.service.form.registration_type.placeholder') },
-    source: { required: true, message: t('pages.service.form.source.placeholder') },
 }
 
 function handleCreate() {
@@ -146,6 +155,7 @@ function handleCreate() {
         type: 'create',
         title: t('pages.service.add'),
     })
+    formData.value.registration_type = 'HTTP'
     const saved = localStorage.getItem(SPACE_CODE_KEY)
     if (saved && props.spaceOptions.some((item) => item.code === saved)) {
         formData.value.space_code = saved

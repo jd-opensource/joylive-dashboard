@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `service` (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
   `space_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '微服务空间编码',
   `registration_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '服务注册粒度: HTTP应用级(HTTP), RPC应用级(RPC_APP), RPC接口级(RPC_INTERFACE)',
-  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '数据来源: Local, JSF, JDAP',
+  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '数据来源: Local, JSF, JDAP',
   `tenant` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '租户',
   `creator` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
   `extra` json NULL COMMENT '其他信息',
