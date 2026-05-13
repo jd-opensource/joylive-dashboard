@@ -18,8 +18,6 @@ type DataPermission struct {
 
 // Query data permissions from the data access object based on the provided parameters and options.
 func (a *DataPermission) Query(ctx context.Context, params schema.DataPermissionQueryParam) (*schema.DataPermissionQueryResult, error) {
-	params.Pagination = false
-
 	result, err := a.DataPermissionDAL.Query(ctx, params, schema.DataPermissionQueryOptions{
 		QueryOptions: util.QueryOptions{
 			OrderFields: []util.OrderByParam{

@@ -3,16 +3,17 @@
         class="x-breadcrumb"
         :class="{ 'x-breadcrumb--dark': theme === 'dark' }">
         <a-breadcrumb-item
-            v-for="item in breadcrumbData"
+            v-for="item in breadcrumbList"
             :key="item.name">
-            {{ item.meta.title }}
+            {{ item.title }}
         </a-breadcrumb-item>
     </a-breadcrumb>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({
     name: 'XBreadcrumb',
@@ -26,8 +27,16 @@ defineProps({
 })
 
 const route = useRoute()
+const { t } = useI18n()
 
 const breadcrumbData = ref([])
+
+const breadcrumbList = computed(() =>
+    (breadcrumbData.value || []).map((item) => ({
+        ...item,
+        title: t(item.name, item.meta?.title || ''),
+    }))
+)
 
 update()
 

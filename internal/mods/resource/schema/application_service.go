@@ -12,13 +12,13 @@ import (
 // Application and service relationship management
 type ApplicationService struct {
 	ID            string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                               // Unique ID
-	ApplicationId string          `json:"applicationId" gorm:"size:20;uniqueIndex:idx_name;comment:ApplicationId;"`                // ApplicationId
-	ServiceId     string          `json:"serviceId" gorm:"size:20;uniqueIndex:idx_name;comment:ServiceId;"`                        // ServiceId
+	ApplicationId string          `json:"application_id" gorm:"size:20;uniqueIndex:idx_name;comment:ApplicationId;"`               // ApplicationId
+	ServiceId     string          `json:"service_id" gorm:"size:20;uniqueIndex:idx_name;comment:ServiceId;"`                       // ServiceId
 	Role          string          `json:"role" gorm:"size:20;uniqueIndex:idx_name;comment:App role such as provider or consumer;"` // App role such as provider or consumer
 	Status        string          `json:"status" gorm:"size:20;comment:消费状态: approved, rejected, pending;"`                        // 消费状态: approved, rejected, pending
 	Description   *string         `json:"description" gorm:"size:255;comment:Details;"`                                            // Details
-	CreatedAt     time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                               // Create timestamp
-	UpdatedAt     time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                     // Update timestamp
+	CreatedAt     time.Time       `json:"created_at" gorm:"autoCreateTime;comment:Create timestamp;"`                              // Create timestamp
+	UpdatedAt     time.Time       `json:"updated_at,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                    // Update timestamp
 	Deleted       string          `json:"-" gorm:"uniqueIndex:idx_name;comment:Delete flag;size:20;default:0"`                     // Delete flag
 	DeletedAt     *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                      // Delete timestamp
 }

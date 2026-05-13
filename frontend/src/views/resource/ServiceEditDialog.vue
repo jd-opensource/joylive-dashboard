@@ -2,7 +2,7 @@
     <a-modal
         :open="modal.open"
         :title="modal.title"
-        :width="640"
+        :width="480"
         :confirm-loading="modal.confirmLoading"
         :after-close="onAfterClose"
         :cancel-text="cancelText"
@@ -15,92 +15,66 @@
             :rules="formRules"
             :label-col="{ style: { width: '110px' } }">
             <a-card class="mb-8-2">
-                <a-row :gutter="12">
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.service.form.name')"
-                            name="name">
-                            <a-input v-model:value="formData.name"></a-input>
-                        </a-form-item>
-                    </a-col>
+                <a-form-item
+                    :label="$t('pages.service.form.name')"
+                    name="name">
+                    <a-input v-model:value="formData.name"></a-input>
+                </a-form-item>
 
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.service.form.space_code')"
-                            name="space_code">
-                            <a-select
-                                v-model:value="formData.space_code"
-                                show-search
-                                :filter-option="filterSpaceOption">
-                                <a-select-option
-                                    v-for="item in props.spaceOptions"
-                                    :key="item.code"
-                                    :value="item.code">
-                                    {{ item.name }} ({{ item.code }})
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                <a-form-item
+                    :label="$t('pages.service.form.space_code')"
+                    name="space_code">
+                    <a-select
+                        v-model:value="formData.space_code"
+                        show-search
+                        :filter-option="filterSpaceOption">
+                        <a-select-option
+                            v-for="item in props.spaceOptions"
+                            :key="item.code"
+                            :value="item.code">
+                            {{ item.name }} ({{ item.code }})
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-                <a-row :gutter="12">
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.service.form.application_id')"
-                            name="application_id">
-                            <a-select
-                                v-model:value="formData.application_id"
-                                show-search
-                                :placeholder="$t('pages.service.form.application_id.placeholder')"
-                                :filter-option="filterApplicationOption">
-                                <a-select-option
-                                    v-for="item in props.applicationOptions"
-                                    :key="item.id"
-                                    :value="item.id">
-                                    {{ item.name }}
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
+                <a-form-item
+                    :label="$t('pages.service.form.application_id')"
+                    name="application_id">
+                    <a-select
+                        v-model:value="formData.application_id"
+                        show-search
+                        :placeholder="$t('pages.service.form.application_id.placeholder')"
+                        :filter-option="filterApplicationOption">
+                        <a-select-option
+                            v-for="item in props.applicationOptions"
+                            :key="item.id"
+                            :value="item.id">
+                            {{ item.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.service.form.registration_type')"
-                            name="registration_type">
-                            <a-select v-model:value="formData.registration_type">
-                                <a-select-option value="HTTP">
-                                    {{ $t('pages.service.form.registration_type.http') }}
-                                </a-select-option>
-                                <a-select-option value="RPC_APP">
-                                    {{ $t('pages.service.form.registration_type.rpc_app') }}
-                                </a-select-option>
-                                <a-select-option value="RPC_INTERFACE">
-                                    {{ $t('pages.service.form.registration_type.rpc_interface') }}
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                <a-form-item
+                    :label="$t('pages.service.form.registration_type')"
+                    name="registration_type">
+                    <a-select v-model:value="formData.registration_type">
+                        <a-select-option value="HTTP">
+                            {{ $t('pages.service.form.registration_type.http') }}
+                        </a-select-option>
+                        <a-select-option value="RPC_APP">
+                            {{ $t('pages.service.form.registration_type.rpc_app') }}
+                        </a-select-option>
+                        <a-select-option value="RPC_INTERFACE">
+                            {{ $t('pages.service.form.registration_type.rpc_interface') }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-                <!-- <a-row :gutter="12">
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.service.form.source')"
-                            name="source">
-                            <a-input v-model:value="formData.source"></a-input>
-                        </a-form-item>
-                    </a-col>
-                </a-row> -->
-
-                <a-row :gutter="24">
-                    <a-col :span="24">
-                        <a-form-item
-                            :label="$t('pages.service.form.description')"
-                            name="description">
-                            <a-textarea v-model:value="formData.description"></a-textarea>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                <a-form-item
+                    :label="$t('pages.service.form.description')"
+                    name="description">
+                    <a-textarea v-model:value="formData.description"></a-textarea>
+                </a-form-item>
             </a-card>
         </a-form>
     </a-modal>
@@ -145,9 +119,9 @@ function filterApplicationOption(input, option) {
 }
 formRules.value = {
     name: { required: true, message: t('pages.service.form.name.placeholder') },
-    space_code: { required: true, message: t('pages.service.form.space_code.placeholder') },
-    application_id: { required: true, message: t('pages.service.form.application_id.placeholder') },
-    registration_type: { required: true, message: t('pages.service.form.registration_type.placeholder') },
+    spaceCode: { required: true, message: t('pages.service.form.space_code.placeholder') },
+    applicationId: { required: true, message: t('pages.service.form.application_id.placeholder') },
+    registrationType: { required: true, message: t('pages.service.form.registration_type.placeholder') },
 }
 
 function handleCreate() {

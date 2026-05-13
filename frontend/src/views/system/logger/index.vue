@@ -142,7 +142,7 @@ const columns = [
     { title: t('pages.system.logger.form.user_name'), dataIndex: 'user_id' },
     { title: t('pages.system.logger.form.tag'), dataIndex: 'tag', key: 'tags' },
     { title: t('pages.system.logger.form.message'), dataIndex: 'message' },
-    { title: t('pages.system.logger.form.created_at'), dataIndex: 'created_at', key: 'createAt', width: 180 },
+    { title: t('pages.system.logger.form.created_at'), dataIndex: 'created_at', key: 'created_at', width: 180 },
 ]
 const { listData, paginationState, loading, showLoading, hideLoading, resetPagination, searchFormData } =
     usePagination()

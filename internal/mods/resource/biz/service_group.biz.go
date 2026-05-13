@@ -16,6 +16,14 @@ type ServiceGroup struct {
 	ServiceGroupDAL *dal.ServiceGroup
 }
 
+var DefaultGroup = &schema.ServiceGroup{
+	Name:          "默认分组",
+	Code:          "default",
+	CreatedAt:     time.Now(),
+	UpdatedAt:     time.Now(),
+	Description:   util.StringPtr("未指定分组的实例，皆为默认分组；默认分组策略即服务级策略。"),
+}
+
 // Query service groups from the data access object based on the provided parameters and options.
 func (a *ServiceGroup) Query(ctx context.Context, params schema.ServiceGroupQueryParam) (*schema.ServiceGroupQueryResult, error) {
 	params.Pagination = false
@@ -30,6 +38,10 @@ func (a *ServiceGroup) Query(ctx context.Context, params schema.ServiceGroupQuer
 	if err != nil {
 		return nil, err
 	}
+
+	// Inject a virtual default group at the head of the list
+	result.Data = append(schema.ServiceGroups{DefaultGroup}, result.Data...)
+
 	return result, nil
 }
 

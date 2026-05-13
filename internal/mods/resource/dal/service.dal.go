@@ -57,6 +57,7 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 			Select(
 				tableName+".*, "+
 					appSvcTable+".status as application_service_status, "+
+					appSvcTable+".application_id as application_id, "+
 					appTable+".name as application_name",
 			).Joins(
 			"LEFT JOIN "+appSvcTable+" ON "+appSvcTable+".service_id = "+tableName+".id AND "+appSvcTable+".role = ? AND "+appSvcTable+".deleted = '0'",
@@ -127,20 +128,24 @@ func (a *Service) Get(ctx context.Context, id string, opts ...schema.ServiceQuer
 		return nil, nil
 	}
 
-	// Query application_name from application_service (role=provider) joined with application
+	// Query application info from application_service (role=provider) joined with application
 	appSvcTable := config.C.FormatTableName("application_service")
 	appTable := config.C.FormatTableName("application")
-	var appName string
+	var appInfo struct {
+		ApplicationId   string
+		ApplicationName string
+	}
 	err = util.GetDB(ctx, a.DB).
 		Table(appSvcTable).
-		Select(appTable + ".name").
+		Select(appSvcTable+".application_id, "+appTable+".name as application_name").
 		Joins("LEFT JOIN "+appTable+" ON "+appTable+".id = "+appSvcTable+".application_id AND "+appTable+".deleted = '0'").
 		Where(appSvcTable+".service_id = ? AND "+appSvcTable+".role = ? AND "+appSvcTable+".deleted = '0'", id, "provider").
-		Scan(&appName).Error
+		Scan(&appInfo).Error
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	item.ApplicationName = appName
+	item.ApplicationId = appInfo.ApplicationId
+	item.ApplicationName = appInfo.ApplicationName
 
 	return item, nil
 }

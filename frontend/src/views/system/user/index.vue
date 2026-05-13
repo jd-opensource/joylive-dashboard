@@ -133,7 +133,7 @@ const columns = [
     { title: t('pages.system.user.form.phone'), dataIndex: 'phone', width: 120 },
     { title: t('pages.system.user.form.email'), dataIndex: 'email', width: 100 },
     { title: t('pages.system.user.form.status'), dataIndex: 'status', key: 'statusType', width: 60 },
-    { title: t('pages.system.user.form.created_at'), key: 'createAt', fixed: 'right', width: 120 },
+    { title: t('pages.system.user.form.created_at'), key: 'created_at', fixed: 'right', width: 120 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 100 },
 ]
 

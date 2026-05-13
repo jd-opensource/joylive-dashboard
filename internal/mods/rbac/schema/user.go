@@ -3,11 +3,11 @@ package schema
 import (
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
 	"github.com/jd-opensource/joylive-dashboard/pkg/crypto/hash"
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
-	"github.com/go-playground/validator/v10"
 )
 
 const (

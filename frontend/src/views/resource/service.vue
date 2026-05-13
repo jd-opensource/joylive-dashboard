@@ -218,11 +218,11 @@ const baseColumns = [
     { title: t('pages.service.form.creator'), dataIndex: 'creator', width: 120 },
     { title: t('pages.service.form.version'), dataIndex: 'version', width: 80 },
     { title: t('pages.service.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.service.form.created_at'), key: 'createAt', fixed: 'right', width: 180 },
+    { title: t('pages.service.form.created_at'), key: 'created_at', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 180 },
 ]
 const consumerColumns = [
-    { title: t('pages.service.form.application_name'), dataIndex: 'application_name', width: 150 },
+    { title: t('pages.service.form.application_name'), dataIndex: 'applicationName', width: 150 },
     {
         title: t('pages.service.form.application_service_status'),
         dataIndex: 'application_service_status',
@@ -403,7 +403,7 @@ function onTableChange({ current, pageSize }) {
 
 function handleResetSearch() {
     const spaceCode = searchFormData.value.space_code
-    searchFormData.value = { space_code: spaceCode }
+    searchFormData.value = { spaceCode: spaceCode }
     resetPagination()
     getPageList()
 }

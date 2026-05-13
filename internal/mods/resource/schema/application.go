@@ -32,9 +32,9 @@ func (a *Application) TableName() string {
 // ApplicationQueryParam defines the query parameters for Application.
 type ApplicationQueryParam struct {
 	util.PaginationParam
-	LikeName string `form:"name"`    // Name (like)
-	UserID   string `form:"-"`       // User ID (set programmatically for permission filter)
-	Tenant   string `form:"-"`       // Tenant (set programmatically for permission filter)
+	LikeName string `form:"name"` // Name (like)
+	UserID   string `form:"-"`    // User ID (set programmatically for permission filter)
+	Tenant   string `form:"-"`    // Tenant (set programmatically for permission filter)
 }
 
 // ApplicationQueryOptions defines the query options for Application.

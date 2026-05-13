@@ -27,11 +27,11 @@
 
             <!-- 服务空间 -->
             <a-form-item
-                :label="$t('pages.permission.form.spaceCode')"
-                name="spaceCode">
+                :label="$t('pages.permission.form.space_code')"
+                name="space_code">
                 <a-select
-                    :placeholder="$t('pages.permission.form.spaceCode.placeholder')"
-                    v-model:value="formData.spaceCode"
+                    :placeholder="$t('pages.permission.form.space_code.placeholder')"
+                    v-model:value="formData.space_code"
                     allow-clear
                     show-search
                     :filter-option="filterSpaceOption">
@@ -269,7 +269,7 @@ const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 formRules.value = {
     name: { required: true, message: t('pages.permission.form.name.required') },
-    spaceCode: { required: true, message: t('pages.permission.form.spaceCode.required') },
+    spaceCode: { required: true, message: t('pages.permission.form.space_code.required') },
     targetServiceId: { required: true, message: t('pages.permission.form.targetServiceId.required') },
     relationType: { required: true, message: t('pages.permission.form.relationType.required') },
     type: { required: true, message: t('pages.permission.form.type.required') },
@@ -283,13 +283,13 @@ const enabledSwitch = computed({
 })
 
 const filteredServiceOptions = computed(() => {
-    const spaceCode = formData.value.spaceCode
+    const spaceCode = formData.value.space_code
     if (!spaceCode) return props.serviceOptions
     return props.serviceOptions.filter((item) => item.space_code === spaceCode)
 })
 
 watch(
-    () => formData.value.spaceCode,
+    () => formData.value.space_code,
     (_val, oldVal) => {
         if (oldVal !== undefined) {
             formData.value.targetServiceId = undefined

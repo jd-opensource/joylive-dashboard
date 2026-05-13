@@ -50,17 +50,15 @@
                 key="group"
                 :tab="$t('pages.service.detail.tab.group')" />
             <a-tab-pane
+                key="alias"
+                :tab="$t('pages.service.detail.tab.alias')" />
+            <a-tab-pane
                 key="interface"
                 :tab="$t('pages.service.detail.tab.interface')" />
             <a-tab-pane
                 key="consumer"
                 :tab="$t('pages.service.detail.tab.consumer')" />
-            <a-tab-pane
-                key="monitor"
-                :tab="$t('pages.service.detail.tab.monitor')" />
-            <a-tab-pane
-                key="alias"
-                :tab="$t('pages.service.detail.tab.alias')" />
+            <!-- <a-tab-pane key="monitor" :tab="$t('pages.service.detail.tab.monitor')" /> -->
             <a-tab-pane
                 key="api"
                 :tab="$t('pages.service.detail.tab.api')" />
@@ -100,15 +98,122 @@
                     <template v-if="'labels' === column.key">
                         {{ record.labels || '--' }}
                     </template>
-                    <template v-if="'updatedAt' === column.key">
+                    <template v-if="'updated_at' === column.key">
                         {{ formatUtcDateTime(record.updated_at) }}
                     </template>
                     <template v-if="'action' === column.key">
-                        <a-space>
+                        <a-space v-if="record.id !== 'default'">
                             <a @click="$refs.groupEditRef.handleEdit(record)">{{ $t('pages.service.group.edit') }}</a>
                             <a
                                 style="color: #ff4d4f"
                                 @click="handleRemoveGroup(record)"
+                                >{{ $t('pages.system.delete') }}</a
+                            >
+                        </a-space>
+                    </template>
+                </template>
+            </a-table>
+        </div>
+
+        <!-- 服务别名 Tab 内容 -->
+        <div v-else-if="activeTab === 'alias'">
+            <div class="group-toolbar">
+                <a-button
+                    type="primary"
+                    @click="$refs.aliasEditRef.handleCreate()">
+                    {{ $t('pages.service.alias.create') }}
+                </a-button>
+                <div class="group-toolbar-right">
+                    <a-input-search
+                        v-model:value="aliasSearchName"
+                        :placeholder="$t('pages.service.alias.search.placeholder')"
+                        style="width: 200px"
+                        allow-clear
+                        @search="loadAliasList"
+                        @pressEnter="loadAliasList" />
+                    <a-button @click="loadAliasList">
+                        <template #icon><reload-outlined /></template>
+                    </a-button>
+                </div>
+            </div>
+            <a-table
+                :columns="aliasColumns"
+                :data-source="aliasListData"
+                :loading="aliasLoading"
+                :pagination="aliasPagination"
+                @change="onAliasTableChange">
+                <template #bodyCell="{ column, record }">
+                    <template v-if="'updated_at' === column.key">
+                        {{ formatUtcDateTime(record.updated_at) }}
+                    </template>
+                    <template v-if="'action' === column.key">
+                        <a-space>
+                            <a @click="$refs.aliasEditRef.handleEdit(record)">{{ $t('pages.service.alias.edit') }}</a>
+                            <a
+                                style="color: #ff4d4f"
+                                @click="handleRemoveAlias(record)"
+                                >{{ $t('pages.system.delete') }}</a
+                            >
+                        </a-space>
+                    </template>
+                </template>
+            </a-table>
+        </div>
+
+        <!-- 成员管理 Tab 内容 -->
+        <div v-else-if="activeTab === 'member'">
+            <div class="group-toolbar">
+                <a-button
+                    type="primary"
+                    @click="$refs.memberEditRef.handleCreate()">
+                    {{ $t('pages.member.add') }}
+                </a-button>
+                <div class="group-toolbar-right">
+                    <a-input-search
+                        v-model:value="memberSearchUser"
+                        :placeholder="$t('pages.member.search.placeholder')"
+                        style="width: 200px"
+                        allow-clear
+                        @search="loadMemberList"
+                        @pressEnter="loadMemberList" />
+                    <a-button @click="loadMemberList">
+                        <template #icon><reload-outlined /></template>
+                    </a-button>
+                </div>
+            </div>
+            <a-table
+                :columns="memberColumns"
+                :data-source="memberListData"
+                :loading="memberLoading"
+                :pagination="memberPagination"
+                @change="onMemberTableChange">
+                <template #bodyCell="{ column, record }">
+                    <template v-if="'permission' === column.key">
+                        <a-tag
+                            v-if="record.permission & 1"
+                            color="green"
+                            >{{ $t('pages.member.form.permission.read') }}</a-tag
+                        >
+                        <a-tag
+                            v-if="record.permission & 2"
+                            color="blue"
+                            >{{ $t('pages.member.form.permission.write') }}</a-tag
+                        >
+                        <a-tag
+                            v-if="record.permission & 4"
+                            color="red"
+                            >{{ $t('pages.member.form.permission.delete') }}</a-tag
+                        >
+                    </template>
+                    <template v-if="'created_at' === column.key">
+                        {{ formatUtcDateTime(record.created_at) }}
+                    </template>
+                    <template v-if="'action' === column.key">
+                        <a-space>
+                            <a @click="$refs.memberEditRef.handleEdit(record)">{{ $t('pages.member.edit') }}</a>
+                            <a
+                                style="color: #ff4d4f"
+                                @click="handleRemoveMember(record)"
                                 >{{ $t('pages.system.delete') }}</a
                             >
                         </a-space>
@@ -129,6 +234,19 @@
             ref="groupEditRef"
             :service-id="serviceId"
             @ok="loadGroupList" />
+
+        <!-- 别名编辑弹窗 -->
+        <alias-edit-dialog
+            ref="aliasEditRef"
+            :service-id="serviceId"
+            :space-code="serviceData.space?.code || serviceData.space_code"
+            @ok="loadAliasList" />
+
+        <!-- 成员编辑弹窗 -->
+        <member-edit-dialog
+            ref="memberEditRef"
+            :service-id="serviceId"
+            @ok="loadMemberList" />
     </div>
 </template>
 
@@ -142,6 +260,8 @@ import { config } from '@/config'
 import { formatUtcDateTime } from '@/utils/util'
 import { useI18n } from 'vue-i18n'
 import GroupEditDialog from './ServiceGroupEditDialog.vue'
+import AliasEditDialog from './ServiceAliasEditDialog.vue'
+import MemberEditDialog from './MemberEditDialog.vue'
 
 defineOptions({
     name: 'serviceDetail',
@@ -151,7 +271,7 @@ const route = useRoute()
 const { t } = useI18n()
 const serviceId = ref(route.params.id)
 const serviceData = ref({})
-const activeTab = ref('group')
+const activeTab = ref('instance')
 const groupSearchName = ref('')
 
 const registrationTypeMap = {
@@ -183,11 +303,6 @@ const groupColumns = [
         width: 150,
     },
     {
-        title: t('pages.service.group.form.isolationCode'),
-        dataIndex: 'isolation_code',
-        width: 180,
-    },
-    {
         title: t('pages.service.group.form.labels'),
         dataIndex: 'labels',
         key: 'labels',
@@ -200,7 +315,87 @@ const groupColumns = [
     },
     {
         title: t('pages.service.group.form.updated_at'),
-        key: 'updatedAt',
+        key: 'updated_at',
+        width: 180,
+    },
+    {
+        title: t('button.action'),
+        key: 'action',
+        width: 120,
+    },
+]
+
+// 服务别名
+const aliasSearchName = ref('')
+const aliasListData = ref([])
+const aliasLoading = ref(false)
+const aliasPagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    showTotal: (total) => `共 ${total} 条`,
+})
+
+const aliasColumns = [
+    {
+        title: t('pages.service.alias.form.alias'),
+        dataIndex: 'alias',
+        width: 150,
+    },
+    {
+        title: t('pages.service.alias.form.description'),
+        dataIndex: 'description',
+        ellipsis: true,
+    },
+    {
+        title: t('pages.service.alias.form.updated_at'),
+        key: 'updated_at',
+        width: 180,
+    },
+    {
+        title: t('button.action'),
+        key: 'action',
+        width: 120,
+    },
+]
+
+// 成员管理
+const memberSearchUser = ref('')
+const memberListData = ref([])
+const memberLoading = ref(false)
+const memberPagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    showTotal: (total) => `共 ${total} 条`,
+})
+
+const memberColumns = [
+    {
+        title: t('pages.member.form.user'),
+        dataIndex: 'user',
+        width: 150,
+    },
+    {
+        title: t('pages.member.form.tenant'),
+        dataIndex: 'tenant',
+        width: 150,
+    },
+    {
+        title: t('pages.member.form.role'),
+        dataIndex: 'role',
+        width: 100,
+    },
+    {
+        title: t('pages.member.form.permission'),
+        key: 'permission',
+        width: 200,
+    },
+    {
+        title: t('pages.member.form.created_at'),
+        key: 'created_at',
         width: 180,
     },
     {
@@ -213,6 +408,8 @@ const groupColumns = [
 onMounted(() => {
     loadServiceDetail()
     loadGroupList()
+    loadAliasList()
+    loadMemberList()
 })
 
 async function loadServiceDetail() {
@@ -279,6 +476,115 @@ function handleRemoveGroup({ id }) {
         },
     })
 }
+
+async function loadAliasList() {
+    try {
+        aliasLoading.value = true
+        const { data, success, total } = await apis.service
+            .getServiceAliasList({
+                pageSize: aliasPagination.pageSize,
+                current: aliasPagination.current,
+                service_id: serviceId.value,
+                alias: aliasSearchName.value || undefined,
+            })
+            .catch(() => {
+                throw new Error()
+            })
+        aliasLoading.value = false
+        if (config('http.code.success') === success) {
+            aliasListData.value = data || []
+            aliasPagination.total = total || 0
+        }
+    } catch (error) {
+        aliasLoading.value = false
+    }
+}
+
+function onAliasTableChange({ current, pageSize }) {
+    aliasPagination.current = current
+    aliasPagination.pageSize = pageSize
+    loadAliasList()
+}
+
+function handleRemoveAlias({ id }) {
+    Modal.confirm({
+        title: t('pages.service.alias.delTip'),
+        okText: t('button.confirm'),
+        onOk: () => {
+            return new Promise((resolve, reject) => {
+                ;(async () => {
+                    try {
+                        const { success } = await apis.service.delServiceAlias(id).catch(() => {
+                            throw new Error()
+                        })
+                        if (config('http.code.success') === success) {
+                            resolve()
+                            message.success(t('component.message.success.delete'))
+                            await loadAliasList()
+                        }
+                    } catch (error) {
+                        reject()
+                    }
+                })()
+            })
+        },
+    })
+}
+
+async function loadMemberList() {
+    try {
+        memberLoading.value = true
+        const { data, success, total } = await apis.service
+            .getDataPermissionList({
+                pageSize: memberPagination.pageSize,
+                current: memberPagination.current,
+                type: 'service',
+                data_id: serviceId.value,
+                user: memberSearchUser.value || undefined,
+            })
+            .catch(() => {
+                throw new Error()
+            })
+        memberLoading.value = false
+        if (config('http.code.success') === success) {
+            memberListData.value = data || []
+            memberPagination.total = total || 0
+        }
+    } catch (error) {
+        memberLoading.value = false
+    }
+}
+
+function onMemberTableChange({ current, pageSize }) {
+    memberPagination.current = current
+    memberPagination.pageSize = pageSize
+    loadMemberList()
+}
+
+function handleRemoveMember({ id }) {
+    Modal.confirm({
+        title: t('pages.member.delTip'),
+        okText: t('button.confirm'),
+        onOk: () => {
+            return new Promise((resolve, reject) => {
+                ;(async () => {
+                    try {
+                        const { success } = await apis.service.delDataPermission(id).catch(() => {
+                            throw new Error()
+                        })
+                        if (config('http.code.success') === success) {
+                            resolve()
+                            message.success(t('component.message.success.delete'))
+                            await loadMemberList()
+                        }
+                    } catch (error) {
+                        reject()
+                    }
+                })()
+            })
+        },
+    })
+}
 </script>
 
 <style lang="less" scoped>
@@ -288,26 +594,31 @@ function handleRemoveGroup({ id }) {
 
 .info-card {
     margin-bottom: 16px;
+
     .info-title {
         font-weight: 600;
         font-size: 15px;
         margin-bottom: 12px;
         color: #333;
     }
+
     .info-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px 24px;
     }
+
     .info-item {
         display: flex;
         align-items: center;
         font-size: 13px;
+
         .info-label {
             color: #666;
             margin-right: 8px;
             white-space: nowrap;
         }
+
         .info-value {
             color: #333;
         }

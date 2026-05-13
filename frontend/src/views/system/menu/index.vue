@@ -153,7 +153,7 @@ const columns = ref([
     { title: t('pages.system.menu.form.type'), dataIndex: 'type', key: 'menuType', width: 80 },
     { title: t('pages.system.menu.form.status'), dataIndex: 'status', key: 'statusType', width: 80 },
     { title: t('pages.system.menu.form.sequence'), dataIndex: 'sequence', width: 100 },
-    { title: t('pages.system.menu.form.created_at'), dataIndex: 'created_at', key: 'createAt', width: 180 },
+    { title: t('pages.system.menu.form.created_at'), dataIndex: 'created_at', key: 'created_at', width: 180 },
     { title: t('button.action'), key: 'action', width: 180 },
 ])
 const { listData, loading, showLoading, hideLoading, searchFormData, paginationState, resetPagination } =

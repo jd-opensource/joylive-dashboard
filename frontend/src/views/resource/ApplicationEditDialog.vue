@@ -2,7 +2,7 @@
     <a-modal
         :open="modal.open"
         :title="modal.title"
-        :width="640"
+        :width="480"
         :confirm-loading="modal.confirmLoading"
         :after-close="onAfterClose"
         :cancel-text="cancelText"
@@ -15,43 +15,29 @@
             :rules="formRules"
             :label-col="{ style: { width: '90px' } }">
             <a-card class="mb-8-2">
-                <a-row :gutter="12">
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.application.form.name')"
-                            name="name">
-                            <a-input v-model:value="formData.name"></a-input>
-                        </a-form-item>
-                    </a-col>
+                <a-form-item
+                    :label="$t('pages.application.form.name')"
+                    name="name">
+                    <a-input v-model:value="formData.name"></a-input>
+                </a-form-item>
 
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.application.form.alias')"
-                            name="alias">
-                            <a-input v-model:value="formData.alias"></a-input>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                <a-form-item
+                    :label="$t('pages.application.form.alias')"
+                    name="alias">
+                    <a-input v-model:value="formData.alias"></a-input>
+                </a-form-item>
 
-                <a-row :gutter="12">
-                    <a-col :span="12">
-                        <a-form-item
-                            :label="$t('pages.application.form.language')"
-                            name="language">
-                            <a-input v-model:value="formData.language"></a-input>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                <a-form-item
+                    :label="$t('pages.application.form.language')"
+                    name="language">
+                    <a-input v-model:value="formData.language"></a-input>
+                </a-form-item>
 
-                <a-row :gutter="24">
-                    <a-col :span="24">
-                        <a-form-item
-                            :label="$t('pages.application.form.description')"
-                            name="description">
-                            <a-textarea v-model:value="formData.description"></a-textarea>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                <a-form-item
+                    :label="$t('pages.application.form.description')"
+                    name="description">
+                    <a-textarea v-model:value="formData.description"></a-textarea>
+                </a-form-item>
             </a-card>
         </a-form>
     </a-modal>

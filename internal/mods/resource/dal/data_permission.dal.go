@@ -28,6 +28,16 @@ func (a *DataPermission) Query(ctx context.Context, params schema.DataPermission
 
 	db := GetDataPermissionDB(ctx, a.DB)
 
+	if v := params.Type; len(v) > 0 {
+		db = db.Where("type = ?", v)
+	}
+	if v := params.DataId; len(v) > 0 {
+		db = db.Where("data_id = ?", v)
+	}
+	if v := params.User; len(v) > 0 {
+		db = db.Where("user LIKE ?", "%"+v+"%")
+	}
+
 	var list schema.DataPermissions
 	pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)
 	if err != nil {

@@ -14,10 +14,10 @@
                         :md="8"
                         :xl="6">
                         <a-form-item
-                            :label="$t('pages.permission.form.spaceCode')"
+                            :label="$t('pages.permission.form.space_code')"
                             name="space_code">
                             <a-select
-                                :placeholder="$t('pages.permission.form.spaceCode.placeholder')"
+                                :placeholder="$t('pages.permission.form.space_code.placeholder')"
                                 v-model:value="searchFormData.space_code"
                                 show-search
                                 :filter-option="filterSpaceOption"
@@ -138,7 +138,7 @@
                         </template>
 
                         <template v-if="'createAt' === column.key">
-                            {{ formatUtcDateTime(record.createdAt) }}
+                            {{ formatUtcDateTime(record.created_at) }}
                         </template>
 
                         <template v-if="'action' === column.key">
@@ -205,7 +205,7 @@ const columns = [
     { title: t('pages.permission.form.enabled'), key: 'enabled', width: 80 },
     { title: t('pages.permission.form.creator'), dataIndex: 'creator', width: 100 },
     { title: t('pages.permission.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.permission.form.createdAt'), key: 'createAt', fixed: 'right', width: 180 },
+    { title: t('pages.permission.form.created_at'), key: 'created_at', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 

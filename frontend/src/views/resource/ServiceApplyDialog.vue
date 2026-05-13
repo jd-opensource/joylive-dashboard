@@ -70,7 +70,7 @@ function filterApplicationOption(input, option) {
 }
 
 formRules.value = {
-    application_id: { required: true, message: t('pages.service.form.application_id.placeholder') },
+    applicationId: { required: true, message: t('pages.service.form.application_id.placeholder') },
     description: { required: true, message: t('pages.service.form.apply_reason.placeholder') },
 }
 

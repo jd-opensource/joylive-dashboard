@@ -14,12 +14,12 @@ type ServiceGroup struct {
 	ID            string          `json:"id" gorm:"size:20;primaryKey;<-:create;comment:Unique ID;"`                                                       // Unique ID
 	Name          string          `json:"name" gorm:"size:255;not null;comment:Group name;"`                                                               // Group name
 	Code          string          `json:"code" gorm:"size:255;not null;uniqueIndex:uniq_service_group_code;comment:Group code;"`                           // Group code
-	IsolationCode *string         `json:"isolationCode,omitempty" gorm:"size:255;comment:Isolation code;"`                                                 // Isolation code
-	ServiceId     string          `json:"serviceId" gorm:"size:20;not null;uniqueIndex:uniq_service_group_code;comment:Service ID this group belongs to;"` // Service ID this group belongs to
+	IsolationCode *string         `json:"isolation_code,omitempty" gorm:"size:255;comment:Isolation code;"`                                                 // Isolation code
+	ServiceId     string          `json:"service_id" gorm:"size:20;not null;uniqueIndex:uniq_service_group_code;comment:Service ID this group belongs to;"` // Service ID this group belongs to
 	Labels        *string         `json:"labels,omitempty" gorm:"size:1024;comment:Labels;"`                                                               // Labels
 	Description   *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                                                          // Details
-	CreatedAt     time.Time       `json:"createdAt" gorm:"autoCreateTime;comment:Create timestamp;"`                                                       // Create timestamp
-	UpdatedAt     time.Time       `json:"updatedAt,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                                             // Update timestamp
+	CreatedAt     time.Time       `json:"created_at" gorm:"autoCreateTime;comment:Create timestamp;"`                                                       // Create timestamp
+	UpdatedAt     time.Time       `json:"updated_at,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                                             // Update timestamp
 	Deleted       string          `json:"-" gorm:"size:20;uniqueIndex:uniq_service_group_code;default:0;comment:Delete flag;"`                             // Delete flag
 	DeletedAt     *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                                              // Delete timestamp
 }
@@ -54,8 +54,8 @@ type ServiceGroups []*ServiceGroup
 type ServiceGroupForm struct {
 	Name          string  `json:"name" binding:"required,max=255"`            // Group name
 	Code          string  `json:"code" binding:"required,max=255"`            // Group code
-	IsolationCode *string `json:"isolation_code" binding:"omitempty,max=255"` // Isolation code
-	ServiceId     string  `json:"service_id" binding:"required,max=20"`       // Service ID this group belongs to
+	IsolationCode *string `json:"isolation_code" binding:"omitempty,max=255"`  // Isolation code
+	ServiceId     string  `json:"service_id" binding:"required,max=20"`        // Service ID this group belongs to
 	Labels        *string `json:"labels" binding:"omitempty,max=1024"`        // Labels
 	Description   *string `json:"description" binding:"omitempty,max=255"`    // Details
 }

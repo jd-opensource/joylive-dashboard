@@ -16,38 +16,17 @@
             :label-col="{ style: { width: '100px' } }"
             :wrapper-col="{ flex: 1 }">
             <a-form-item
-                :label="$t('pages.service.group.form.name')"
-                name="name">
+                :label="$t('pages.service.alias.form.alias')"
+                name="alias">
                 <a-input
-                    :placeholder="$t('pages.service.group.form.name.placeholder')"
-                    v-model:value="formData.name" />
+                    :placeholder="$t('pages.service.alias.form.alias.placeholder')"
+                    v-model:value="formData.alias" />
             </a-form-item>
             <a-form-item
-                :label="$t('pages.service.group.form.code')"
-                name="code">
-                <a-input
-                    :placeholder="$t('pages.service.group.form.code.placeholder')"
-                    v-model:value="formData.code" />
-            </a-form-item>
-            <a-form-item
-                :label="$t('pages.service.group.form.isolationCode')"
-                name="isolation_code">
-                <a-input
-                    :placeholder="$t('pages.service.group.form.isolationCode.placeholder')"
-                    v-model:value="formData.isolation_code" />
-            </a-form-item>
-            <a-form-item
-                :label="$t('pages.service.group.form.labels')"
-                name="labels">
-                <a-input
-                    :placeholder="$t('pages.service.group.form.labels.placeholder')"
-                    v-model:value="formData.labels" />
-            </a-form-item>
-            <a-form-item
-                :label="$t('pages.service.group.form.description')"
+                :label="$t('pages.service.alias.form.description')"
                 name="description">
                 <a-textarea
-                    :placeholder="$t('pages.service.group.form.description.placeholder')"
+                    :placeholder="$t('pages.service.alias.form.description.placeholder')"
                     v-model:value="formData.description"
                     :rows="3" />
             </a-form-item>
@@ -66,6 +45,7 @@ import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
     serviceId: { type: String, default: '' },
+    spaceCode: { type: String, default: '' },
 })
 
 const emit = defineEmits(['ok'])
@@ -76,23 +56,22 @@ const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 
 formRules.value = {
-    name: { required: true, message: t('pages.service.group.form.name.required') },
-    code: { required: true, message: t('pages.service.group.form.code.required') },
+    alias: { required: true, message: t('pages.service.alias.form.alias.required') },
 }
 
 function handleCreate() {
     showModal({
         type: 'create',
-        title: t('pages.service.group.create'),
+        title: t('pages.service.alias.create'),
     })
 }
 
 async function handleEdit(record = {}) {
     showModal({
         type: 'edit',
-        title: t('pages.service.group.edit'),
+        title: t('pages.service.alias.edit'),
     })
-    const { data, success } = await apis.service.getServiceGroup(record.id).catch(() => ({}))
+    const { data, success } = await apis.service.getServiceAlias(record.id).catch(() => ({}))
     if (!success) {
         message.error(t('component.message.error.save'))
         hideModal()
@@ -108,16 +87,16 @@ function handleOk() {
         .then(async (values) => {
             try {
                 showLoading()
-                const params = { ...values, serviceId: props.serviceId }
+                const params = { ...values, serviceId: props.serviceId, space_code: props.space_code }
                 let result = null
                 switch (modal.value.type) {
                     case 'create':
-                        result = await apis.service.createServiceGroup(params).catch(() => {
+                        result = await apis.service.createServiceAlias(params).catch(() => {
                             throw new Error()
                         })
                         break
                     case 'edit':
-                        result = await apis.service.updateServiceGroup(formData.value.id, params).catch(() => {
+                        result = await apis.service.updateServiceAlias(formData.value.id, params).catch(() => {
                             throw new Error()
                         })
                         break
