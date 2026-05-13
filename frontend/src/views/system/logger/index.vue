@@ -112,7 +112,7 @@
                     <a-tag color="processing">{{ record.tag }}</a-tag>
                 </template>
 
-                <template v-if="'createAt' === column.key"> {{ formatUtcDateTime(record.created_at) }} </template>
+                <template v-if="'created_at' === column.key"> {{ formatUtcDateTime(record.created_at) }} </template>
             </template>
         </a-table>
     </a-card>

@@ -1,10 +1,7 @@
 package rbac
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -12,20 +9,24 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/casbin/casbin/v3"
+	casbinlog "github.com/casbin/casbin/v3/log"
+	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/dal"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/rbac/schema"
 	"github.com/jd-opensource/joylive-dashboard/pkg/cachex"
 	"github.com/jd-opensource/joylive-dashboard/pkg/logging"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
-	"github.com/casbin/casbin/v2"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 // Load rbac permissions to casbin
 type Casbinx struct {
 	enforcer        *atomic.Value `wire:"-"`
 	ticker          *time.Ticker  `wire:"-"`
+	DB              *gorm.DB
 	Cache           cachex.Cacher
 	MenuDAL         *dal.Menu
 	MenuResourceDAL *dal.MenuResource
@@ -75,21 +76,21 @@ func (a *Casbinx) load(ctx context.Context) error {
 	queue := make(chan *policyQueueItem, len(roleResult.Data))
 	threadNum := config.C.Middleware.Casbin.LoadThread
 	lock := new(sync.Mutex)
-	buf := new(bytes.Buffer)
+	var policies [][]string
 
 	wg := new(sync.WaitGroup)
 	wg.Add(threadNum)
 	for i := 0; i < threadNum; i++ {
 		go func() {
 			defer wg.Done()
-			ibuf := new(bytes.Buffer)
+			var localPolicies [][]string
 			for item := range queue {
 				for _, res := range item.Resources {
-					_, _ = ibuf.WriteString(fmt.Sprintf("p, %s, %s, %s \n", item.RoleID, res.Path, res.Method))
+					localPolicies = append(localPolicies, []string{"p", item.RoleID, res.Path, res.Method})
 				}
 			}
 			lock.Lock()
-			_, _ = buf.Write(ibuf.Bytes())
+			policies = append(policies, localPolicies...)
 			lock.Unlock()
 		}()
 	}
@@ -109,32 +110,40 @@ func (a *Casbinx) load(ctx context.Context) error {
 	close(queue)
 	wg.Wait()
 
-	if buf.Len() > 0 {
-		policyFile := filepath.Join(config.C.General.WorkDir, config.C.Middleware.Casbin.GenPolicyFile)
-		_ = os.Rename(policyFile, policyFile+".bak")
-		_ = os.MkdirAll(filepath.Dir(policyFile), 0755)
-		if err := os.WriteFile(policyFile, buf.Bytes(), 0666); err != nil {
-			logging.Context(ctx).Error("Failed to write policy file", zap.Error(err))
-			return err
-		}
-		// set readonly
-		_ = os.Chmod(policyFile, 0444)
-
-		modelFile := filepath.Join(config.C.General.WorkDir, config.C.Middleware.Casbin.ModelFile)
-		e, err := casbin.NewEnforcer(modelFile, policyFile)
-		if err != nil {
-			logging.Context(ctx).Error("Failed to create casbin enforcer", zap.Error(err))
-			return err
-		}
-		e.EnableLog(config.C.IsDebug())
-		a.enforcer.Store(e)
+	adapter, err := gormadapter.NewAdapterByDBUseTableName(a.DB, "", "casbin_rule")
+	if err != nil {
+		logging.Context(ctx).Error("Failed to create gorm adapter", zap.Error(err))
+		return err
 	}
+
+	modelFile := filepath.Join(config.C.General.WorkDir, config.C.Middleware.Casbin.ModelFile)
+	e, err := casbin.NewEnforcer(modelFile, adapter)
+	if err != nil {
+		logging.Context(ctx).Error("Failed to create casbin enforcer", zap.Error(err))
+		return err
+	}
+	if config.C.IsDebug() {
+		casbinLogger := casbinlog.NewDefaultLogger()
+		_ = casbinLogger.SetEventTypes([]casbinlog.EventType{casbinlog.EventEnforce})
+		e.SetLogger(casbinLogger)
+	}
+
+	if len(policies) > 0 {
+		e.ClearPolicy()
+		_, _ = e.AddPolicies(policies)
+		if err := e.SavePolicy(); err != nil {
+			logging.Context(ctx).Error("Failed to save casbin policy", zap.Error(err))
+			return err
+		}
+	}
+
+	a.enforcer.Store(e)
 
 	logging.Context(ctx).Info("Casbin load policy",
 		zap.Duration("cost", time.Since(start)),
 		zap.Int("roles", len(roleResult.Data)),
 		zap.Int32("resources", resCount),
-		zap.Int("bytes", buf.Len()),
+		zap.Int("policies", len(policies)),
 	)
 	return nil
 }

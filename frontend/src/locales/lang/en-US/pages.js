@@ -111,6 +111,7 @@ export default {
     'pages.system.user.form.roles.placeholder': 'Please select roles',
     'pages.system.user.form.roles.required': 'Please select at least one role',
     'pages.system.user.form.remark': 'Remark',
+    'pages.system.user.form.remark.placeholder': 'Remark',
     'pages.system.user.form.status': 'Status',
     'pages.system.user.form.status.activated': 'Activated',
     'pages.system.user.form.status.freezed': 'Freezed',

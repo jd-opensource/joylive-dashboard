@@ -67,7 +67,7 @@
                     :scroll="{ x: 1000 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
-                        <template v-if="'createAt' === column.key">
+                        <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
 

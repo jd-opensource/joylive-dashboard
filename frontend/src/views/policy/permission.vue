@@ -115,14 +115,14 @@
                     :scroll="{ x: 1500 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
-                        <template v-if="'sourceApplicationId' === column.key">
-                            {{ applicationNameMap[record.sourceApplicationId] || record.sourceApplicationId }}
+                        <template v-if="'source_application_id' === column.key">
+                            {{ applicationNameMap[record.source_application_id] || record.source_application_id }}
                         </template>
-                        <template v-if="'targetServiceId' === column.key">
-                            {{ serviceNameMap[record.targetServiceId] || record.targetServiceId }}
+                        <template v-if="'target_service_id' === column.key">
+                            {{ serviceNameMap[record.target_service_id] || record.target_service_id }}
                         </template>
-                        <template v-if="'relationType' === column.key">
-                            {{ relationTypeMap[record.relationType] || record.relationType }}
+                        <template v-if="'relation_type' === column.key">
+                            {{ relationTypeMap[record.relation_type] || record.relation_type }}
                         </template>
                         <template v-if="'type' === column.key">
                             {{ permissionTypeMap[record.type] || record.type }}
@@ -137,7 +137,7 @@
                             </a-tag>
                         </template>
 
-                        <template v-if="'createAt' === column.key">
+                        <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
 
@@ -188,24 +188,30 @@ const columns = [
     { title: t('pages.permission.form.name'), dataIndex: 'name', width: 180 },
     {
         title: t('pages.permission.form.sourceApplicationId'),
-        dataIndex: 'sourceApplicationId',
-        key: 'sourceApplicationId',
+        dataIndex: 'source_application_id',
+        key: 'source_application_id',
         width: 150,
     },
     {
         title: t('pages.permission.form.targetServiceId'),
-        dataIndex: 'targetServiceId',
-        key: 'targetServiceId',
+        dataIndex: 'target_service_id',
+        key: 'target_service_id',
         width: 150,
     },
     { title: t('pages.permission.form.path'), dataIndex: 'path', width: 150 },
     { title: t('pages.permission.form.method'), dataIndex: 'method', width: 100 },
-    { title: t('pages.permission.form.relationType'), dataIndex: 'relationType', key: 'relationType', width: 100 },
+    { title: t('pages.permission.form.relationType'), dataIndex: 'relation_type', key: 'relation_type', width: 100 },
     { title: t('pages.permission.form.type'), dataIndex: 'type', key: 'type', width: 100 },
     { title: t('pages.permission.form.enabled'), key: 'enabled', width: 80 },
     { title: t('pages.permission.form.creator'), dataIndex: 'creator', width: 100 },
     { title: t('pages.permission.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.permission.form.created_at'), key: 'created_at', fixed: 'right', width: 180 },
+    {
+        title: t('pages.permission.form.created_at'),
+        dataIndex: 'created_at',
+        key: 'created_at',
+        fixed: 'right',
+        width: 180,
+    },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 

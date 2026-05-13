@@ -113,6 +113,7 @@ export default {
     'pages.system.user.form.roles.placeholder': '请选择角色',
     'pages.system.user.form.roles.required': '请至少选择一个角色',
     'pages.system.user.form.remark': '备注',
+    'pages.system.user.form.remark.placeholder': '备注',
     'pages.system.user.form.status': '状态',
     'pages.system.user.form.status.activated': '正常',
     'pages.system.user.form.status.freezed': '冻结',

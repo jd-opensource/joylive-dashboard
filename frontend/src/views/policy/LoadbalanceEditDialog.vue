@@ -49,10 +49,10 @@
                     <a-col :span="12">
                         <a-form-item
                             :label="$t('pages.loadbalance.form.sourceApplicationId')"
-                            name="sourceApplicationId">
+                            name="source_application_id">
                             <a-select
                                 :placeholder="$t('pages.loadbalance.form.sourceApplicationId.placeholder')"
-                                v-model:value="formData.sourceApplicationId"
+                                v-model:value="formData.source_application_id"
                                 allow-clear
                                 show-search
                                 :filter-option="filterAppOption">
@@ -69,10 +69,10 @@
                     <a-col :span="12">
                         <a-form-item
                             :label="$t('pages.loadbalance.form.targetServiceId')"
-                            name="targetServiceId">
+                            name="target_service_id">
                             <a-select
                                 :placeholder="$t('pages.loadbalance.form.targetServiceId.placeholder')"
-                                v-model:value="formData.targetServiceId"
+                                v-model:value="formData.target_service_id"
                                 show-search
                                 :filter-option="filterServiceOption">
                                 <a-select-option
@@ -90,10 +90,10 @@
                     <a-col :span="12">
                         <a-form-item
                             :label="$t('pages.loadbalance.form.policyType')"
-                            name="policyType">
+                            name="policy_type">
                             <a-select
                                 :placeholder="$t('pages.loadbalance.form.policyType.placeholder')"
-                                v-model:value="formData.policyType">
+                                v-model:value="formData.policy_type">
                                 <a-select-option value="RANDOM">随机策略</a-select-option>
                                 <a-select-option value="ROUND_ROBIN">轮询策略</a-select-option>
                                 <a-select-option value="CUSTOM_RESPONSE">自适应策略</a-select-option>
@@ -152,9 +152,9 @@ const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 formRules.value = {
     name: { required: true, message: t('pages.loadbalance.form.name.required') },
-    spaceCode: { required: true, message: t('pages.loadbalance.form.space_code.required') },
-    targetServiceId: { required: true, message: t('pages.loadbalance.form.targetServiceId.required') },
-    policyType: { required: true, message: t('pages.loadbalance.form.policyType.required') },
+    space_code: { required: true, message: t('pages.loadbalance.form.space_code.required') },
+    target_service_id: { required: true, message: t('pages.loadbalance.form.targetServiceId.required') },
+    policy_type: { required: true, message: t('pages.loadbalance.form.policyType.required') },
 }
 
 const enabledSwitch = computed({
@@ -174,7 +174,7 @@ watch(
     () => formData.value.space_code,
     (_val, oldVal) => {
         if (oldVal !== undefined) {
-            formData.value.targetServiceId = undefined
+            formData.value.target_service_id = undefined
         }
     }
 )

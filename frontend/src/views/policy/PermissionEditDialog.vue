@@ -47,10 +47,10 @@
             <!-- 调用应用 -->
             <a-form-item
                 :label="$t('pages.permission.form.sourceApplicationId')"
-                name="sourceApplicationId">
+                name="source_application_id">
                 <a-select
                     :placeholder="$t('pages.permission.form.sourceApplicationId.placeholder')"
-                    v-model:value="formData.sourceApplicationId"
+                    v-model:value="formData.source_application_id"
                     allow-clear
                     show-search
                     :filter-option="filterAppOption">
@@ -66,10 +66,10 @@
             <!-- 目标服务 -->
             <a-form-item
                 :label="$t('pages.permission.form.targetServiceId')"
-                name="targetServiceId">
+                name="target_service_id">
                 <a-select
                     :placeholder="$t('pages.permission.form.targetServiceId.placeholder')"
-                    v-model:value="formData.targetServiceId"
+                    v-model:value="formData.target_service_id"
                     show-search
                     :filter-option="filterServiceOption">
                     <a-select-option
@@ -115,12 +115,12 @@
             <!-- 鉴权方式 -->
             <a-form-item
                 :label="$t('pages.permission.form.authMethod')"
-                name="relationType"
+                name="relation_type"
                 class="auth-method-form-item">
                 <div class="auth-method-section">
                     <div class="auth-method-header">
                         <span class="auth-method-label">{{ $t('pages.permission.form.authMethod.settingLabel') }}</span>
-                        <a-radio-group v-model:value="formData.relationType">
+                        <a-radio-group v-model:value="formData.relation_type">
                             <a-radio value="AND">AND({{ $t('pages.permission.form.relationType.and') }})</a-radio>
                             <a-radio value="OR">OR({{ $t('pages.permission.form.relationType.or') }})</a-radio>
                         </a-radio-group>
@@ -269,9 +269,9 @@ const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 formRules.value = {
     name: { required: true, message: t('pages.permission.form.name.required') },
-    spaceCode: { required: true, message: t('pages.permission.form.space_code.required') },
-    targetServiceId: { required: true, message: t('pages.permission.form.targetServiceId.required') },
-    relationType: { required: true, message: t('pages.permission.form.relationType.required') },
+    space_code: { required: true, message: t('pages.permission.form.space_code.required') },
+    target_service_id: { required: true, message: t('pages.permission.form.targetServiceId.required') },
+    relation_type: { required: true, message: t('pages.permission.form.relationType.required') },
     type: { required: true, message: t('pages.permission.form.type.required') },
 }
 
@@ -292,7 +292,7 @@ watch(
     () => formData.value.space_code,
     (_val, oldVal) => {
         if (oldVal !== undefined) {
-            formData.value.targetServiceId = undefined
+            formData.value.target_service_id = undefined
         }
     }
 )
@@ -331,7 +331,7 @@ function removeCondition(index) {
 function handleCreate() {
     formData.value.group = 'default'
     formData.value.enabled = 0
-    formData.value.relationType = 'AND'
+    formData.value.relation_type = 'AND'
     formData.value.type = 'BLACK'
     formData.value.conditions = [createEmptyCondition()]
     showModal({
@@ -354,8 +354,15 @@ async function handleEdit(record = {}) {
     }
     formRecord.value = data
     const cloned = cloneDeep(data)
-    // 确保 conditions 是数组
-    if (!cloned.conditions || !Array.isArray(cloned.conditions)) {
+    // conditions 从后端返回可能是 JSON 字符串，需要解析为数组
+    if (typeof cloned.conditions === 'string') {
+        try {
+            cloned.conditions = JSON.parse(cloned.conditions)
+        } catch {
+            cloned.conditions = []
+        }
+    }
+    if (!Array.isArray(cloned.conditions) || cloned.conditions.length === 0) {
         cloned.conditions = [createEmptyCondition()]
     }
     formData.value = cloned
@@ -370,7 +377,7 @@ function handleOk() {
                 const params = {
                     ...values,
                     group: formData.value.group || 'default',
-                    conditions: formData.value.conditions || [],
+                    conditions: formData.value.conditions ? JSON.stringify(formData.value.conditions) : undefined,
                 }
                 let result = null
                 switch (modal.value.type) {

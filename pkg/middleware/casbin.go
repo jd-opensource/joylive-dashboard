@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
-	"github.com/casbin/casbin/v2"
+	"github.com/casbin/casbin/v3"
 	"github.com/gin-gonic/gin"
 )
 

@@ -4727,6 +4727,12 @@ const docTemplate = `{
                         "description": "Space code",
                         "name": "space_code",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by role of current user's applications: provider, consumer",
+                        "name": "role",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -4956,6 +4962,142 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/services/{id}/auth": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ServiceAPI",
+                    "ServiceAPI"
+                ],
+                "summary": "Toggle service authorization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "service id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "service id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Authorization flag",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/services/{id}/consumer": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ServiceAPI",
+                    "ServiceAPI"
+                ],
+                "summary": "Toggle service authorization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "service id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "service id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Authorization flag",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/util.ResponseResult"
                         }
@@ -5674,10 +5816,7 @@ const docTemplate = `{
         "schema.ApplicationForm": {
             "type": "object",
             "required": [
-                "enhance",
-                "name",
-                "source",
-                "tenant"
+                "name"
             ],
             "properties": {
                 "alias": {
@@ -5690,8 +5829,7 @@ const docTemplate = `{
                 },
                 "enhance": {
                     "description": "Enhance method: Agent, Sidecar",
-                    "type": "string",
-                    "maxLength": 20
+                    "type": "string"
                 },
                 "language": {
                     "description": "Language: Java, Python, Golang",
@@ -5704,24 +5842,18 @@ const docTemplate = `{
                 },
                 "source": {
                     "description": "Data source: Local, JSF, JDAP",
-                    "type": "string",
-                    "maxLength": 255
-                },
-                "tenant": {
-                    "description": "Tenant",
-                    "type": "string",
-                    "maxLength": 255
+                    "type": "string"
                 }
             }
         },
         "schema.ApplicationService": {
             "type": "object",
             "properties": {
-                "applicationId": {
+                "application_id": {
                     "description": "ApplicationId",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -5737,7 +5869,7 @@ const docTemplate = `{
                     "description": "App role such as provider or consumer",
                     "type": "string"
                 },
-                "serviceId": {
+                "service_id": {
                     "description": "ServiceId",
                     "type": "string"
                 },
@@ -5745,7 +5877,7 @@ const docTemplate = `{
                     "description": "消费状态: approved, rejected, pending",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 }
@@ -5797,7 +5929,7 @@ const docTemplate = `{
         "schema.DataPermission": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -5805,7 +5937,7 @@ const docTemplate = `{
                     "description": "Creator",
                     "type": "string"
                 },
-                "dataId": {
+                "data_id": {
                     "description": "Data ID",
                     "type": "string"
                 },
@@ -5829,7 +5961,7 @@ const docTemplate = `{
                     "description": "Data type (table name)",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -5842,14 +5974,14 @@ const docTemplate = `{
         "schema.DataPermissionForm": {
             "type": "object",
             "required": [
-                "dataId",
+                "data_id",
                 "role",
                 "tenant",
                 "type",
                 "user"
             ],
             "properties": {
-                "dataId": {
+                "data_id": {
                     "description": "Data ID",
                     "type": "string",
                     "maxLength": 20
@@ -6140,7 +6272,7 @@ const docTemplate = `{
         "schema.PolicyAuth": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -6168,15 +6300,15 @@ const docTemplate = `{
                     "description": "Parameters (JSON)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
@@ -6184,7 +6316,7 @@ const docTemplate = `{
                     "description": "Auth type",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -6197,8 +6329,8 @@ const docTemplate = `{
         "schema.PolicyAuthForm": {
             "type": "object",
             "required": [
-                "spaceCode",
-                "targetServiceId",
+                "space_code",
+                "target_service_id",
                 "type"
             ],
             "properties": {
@@ -6214,16 +6346,16 @@ const docTemplate = `{
                     "description": "Parameters (JSON)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -6242,15 +6374,15 @@ const docTemplate = `{
         "schema.PolicyCircuitBreak": {
             "type": "object",
             "properties": {
-                "allowedCallsInHalfOpenState": {
+                "allowed_calls_in_half_open_state": {
                     "description": "Allowed calls in half open state",
                     "type": "integer"
                 },
-                "codePolicy": {
+                "code_policy": {
                     "description": "Code policy (JSON)",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -6258,7 +6390,7 @@ const docTemplate = `{
                     "description": "Creator",
                     "type": "string"
                 },
-                "degradeConfig": {
+                "degrade_config": {
                     "description": "Degrade config (JSON)",
                     "type": "string"
                 },
@@ -6270,11 +6402,11 @@ const docTemplate = `{
                     "description": "Enabled",
                     "type": "integer"
                 },
-                "errorCodes": {
+                "error_codes": {
                     "description": "Error codes (JSON)",
                     "type": "string"
                 },
-                "errorMessages": {
+                "error_messages": {
                     "description": "Error messages (JSON)",
                     "type": "string"
                 },
@@ -6282,11 +6414,11 @@ const docTemplate = `{
                     "description": "Exceptions (JSON)",
                     "type": "string"
                 },
-                "failureRateThreshold": {
+                "failure_rate_threshold": {
                     "description": "Failure rate threshold",
                     "type": "integer"
                 },
-                "forceOpen": {
+                "force_open": {
                     "description": "Force open",
                     "type": "integer"
                 },
@@ -6302,7 +6434,7 @@ const docTemplate = `{
                     "description": "Policy level",
                     "type": "string"
                 },
-                "messagePolicy": {
+                "message_policy": {
                     "description": "Message policy (JSON)",
                     "type": "string"
                 },
@@ -6310,7 +6442,7 @@ const docTemplate = `{
                     "description": "Method",
                     "type": "string"
                 },
-                "minCallsThreshold": {
+                "min_calls_threshold": {
                     "description": "Min calls threshold",
                     "type": "integer"
                 },
@@ -6322,7 +6454,7 @@ const docTemplate = `{
                     "description": "Policy name",
                     "type": "string"
                 },
-                "outlierMaxPercent": {
+                "outlier_max_percent": {
                     "description": "Outlier max percent",
                     "type": "integer"
                 },
@@ -6330,51 +6462,51 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "realizeType": {
+                "realize_type": {
                     "description": "Realize type",
                     "type": "string"
                 },
-                "recoveryDuration": {
+                "recovery_duration": {
                     "description": "Recovery duration (ms)",
                     "type": "integer"
                 },
-                "recoveryEnabled": {
+                "recovery_enabled": {
                     "description": "Recovery enabled",
                     "type": "integer"
                 },
-                "recoveryPhase": {
+                "recovery_phase": {
                     "description": "Recovery phase",
                     "type": "integer"
                 },
-                "slidingWindowSize": {
+                "sliding_window_size": {
                     "description": "Sliding window size",
                     "type": "integer"
                 },
-                "slidingWindowType": {
+                "sliding_window_type": {
                     "description": "Sliding window type",
                     "type": "string"
                 },
-                "slowCallDurationThreshold": {
+                "slow_call_duration_threshold": {
                     "description": "Slow call duration threshold",
                     "type": "integer"
                 },
-                "slowCallRateThreshold": {
+                "slow_call_rate_threshold": {
                     "description": "Slow call rate threshold",
                     "type": "integer"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -6382,7 +6514,7 @@ const docTemplate = `{
                     "description": "Version",
                     "type": "integer"
                 },
-                "waitDurationInOpenState": {
+                "wait_duration_in_open_state": {
                     "description": "Wait duration in open state",
                     "type": "integer"
                 }
@@ -6394,21 +6526,21 @@ const docTemplate = `{
                 "group",
                 "level",
                 "name",
-                "realizeType",
-                "slidingWindowType",
-                "spaceCode",
-                "targetServiceId"
+                "realize_type",
+                "sliding_window_type",
+                "space_code",
+                "target_service_id"
             ],
             "properties": {
-                "allowedCallsInHalfOpenState": {
+                "allowed_calls_in_half_open_state": {
                     "description": "Allowed calls in half open state",
                     "type": "integer"
                 },
-                "codePolicy": {
+                "code_policy": {
                     "description": "Code policy (JSON)",
                     "type": "string"
                 },
-                "degradeConfig": {
+                "degrade_config": {
                     "description": "Degrade config (JSON)",
                     "type": "string"
                 },
@@ -6420,11 +6552,11 @@ const docTemplate = `{
                     "description": "Enabled",
                     "type": "integer"
                 },
-                "errorCodes": {
+                "error_codes": {
                     "description": "Error codes (JSON)",
                     "type": "string"
                 },
-                "errorMessages": {
+                "error_messages": {
                     "description": "Error messages (JSON)",
                     "type": "string"
                 },
@@ -6432,11 +6564,11 @@ const docTemplate = `{
                     "description": "Exceptions (JSON)",
                     "type": "string"
                 },
-                "failureRateThreshold": {
+                "failure_rate_threshold": {
                     "description": "Failure rate threshold",
                     "type": "integer"
                 },
-                "forceOpen": {
+                "force_open": {
                     "description": "Force open",
                     "type": "integer"
                 },
@@ -6450,7 +6582,7 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 20
                 },
-                "messagePolicy": {
+                "message_policy": {
                     "description": "Message policy (JSON)",
                     "type": "string"
                 },
@@ -6458,7 +6590,7 @@ const docTemplate = `{
                     "description": "Method",
                     "type": "string"
                 },
-                "minCallsThreshold": {
+                "min_calls_threshold": {
                     "description": "Min calls threshold",
                     "type": "integer"
                 },
@@ -6467,7 +6599,7 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 100
                 },
-                "outlierMaxPercent": {
+                "outlier_max_percent": {
                     "description": "Outlier max percent",
                     "type": "integer"
                 },
@@ -6475,50 +6607,50 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "realizeType": {
+                "realize_type": {
                     "description": "Realize type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "recoveryDuration": {
+                "recovery_duration": {
                     "description": "Recovery duration (ms)",
                     "type": "integer"
                 },
-                "recoveryEnabled": {
+                "recovery_enabled": {
                     "description": "Recovery enabled",
                     "type": "integer"
                 },
-                "recoveryPhase": {
+                "recovery_phase": {
                     "description": "Recovery phase",
                     "type": "integer"
                 },
-                "slidingWindowSize": {
+                "sliding_window_size": {
                     "description": "Sliding window size",
                     "type": "integer"
                 },
-                "slidingWindowType": {
+                "sliding_window_type": {
                     "description": "Sliding window type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "slowCallDurationThreshold": {
+                "slow_call_duration_threshold": {
                     "description": "Slow call duration threshold",
                     "type": "integer"
                 },
-                "slowCallRateThreshold": {
+                "slow_call_rate_threshold": {
                     "description": "Slow call rate threshold",
                     "type": "integer"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -6527,7 +6659,7 @@ const docTemplate = `{
                     "description": "Version",
                     "type": "integer"
                 },
-                "waitDurationInOpenState": {
+                "wait_duration_in_open_state": {
                     "description": "Wait duration in open state",
                     "type": "integer"
                 }
@@ -6540,7 +6672,7 @@ const docTemplate = `{
                     "description": "Match conditions (JSON)",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -6548,7 +6680,7 @@ const docTemplate = `{
                     "description": "Creator",
                     "type": "string"
                 },
-                "delayTimeMs": {
+                "delay_time_ms": {
                     "description": "Delay time (ms)",
                     "type": "integer"
                 },
@@ -6560,11 +6692,11 @@ const docTemplate = `{
                     "description": "Enabled",
                     "type": "integer"
                 },
-                "errorCode": {
+                "error_code": {
                     "description": "Error code",
                     "type": "integer"
                 },
-                "errorMsg": {
+                "error_msg": {
                     "description": "Error message",
                     "type": "string"
                 },
@@ -6596,7 +6728,7 @@ const docTemplate = `{
                     "description": "Fault injection percent",
                     "type": "integer"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string"
                 },
@@ -6604,15 +6736,15 @@ const docTemplate = `{
                     "description": "Injection scope (inbound | outbound)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
@@ -6620,7 +6752,7 @@ const docTemplate = `{
                     "description": "Fault injection type (error | delay)",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -6635,10 +6767,10 @@ const docTemplate = `{
             "required": [
                 "group",
                 "name",
-                "relationType",
+                "relation_type",
                 "scope",
-                "spaceCode",
-                "targetServiceId",
+                "space_code",
+                "target_service_id",
                 "type"
             ],
             "properties": {
@@ -6646,7 +6778,7 @@ const docTemplate = `{
                     "description": "Match conditions (JSON)",
                     "type": "string"
                 },
-                "delayTimeMs": {
+                "delay_time_ms": {
                     "description": "Delay time (ms)",
                     "type": "integer"
                 },
@@ -6658,11 +6790,11 @@ const docTemplate = `{
                     "description": "Enabled",
                     "type": "integer"
                 },
-                "errorCode": {
+                "error_code": {
                     "description": "Error code",
                     "type": "integer"
                 },
-                "errorMsg": {
+                "error_msg": {
                     "description": "Error message",
                     "type": "string"
                 },
@@ -6688,7 +6820,7 @@ const docTemplate = `{
                     "description": "Fault injection percent",
                     "type": "integer"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string",
                     "maxLength": 20
@@ -6698,16 +6830,16 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 20
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -6726,7 +6858,7 @@ const docTemplate = `{
         "schema.PolicyInvocation": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -6766,19 +6898,19 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "retryPolicy": {
+                "retry_policy": {
                     "description": "Retry policy (JSON)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
@@ -6786,7 +6918,7 @@ const docTemplate = `{
                     "description": "Invocation type (failfast | failover | failsafe)",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -6801,8 +6933,8 @@ const docTemplate = `{
             "required": [
                 "group",
                 "name",
-                "spaceCode",
-                "targetServiceId",
+                "space_code",
+                "target_service_id",
                 "type"
             ],
             "properties": {
@@ -6832,20 +6964,20 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "retryPolicy": {
+                "retry_policy": {
                     "description": "Retry policy (JSON)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -6864,7 +6996,7 @@ const docTemplate = `{
         "schema.PolicyLimit": {
             "type": "object",
             "properties": {
-                "actionParameters": {
+                "action_parameters": {
                     "description": "Action parameters (JSON)",
                     "type": "string"
                 },
@@ -6872,11 +7004,11 @@ const docTemplate = `{
                     "description": "Match conditions (JSON)",
                     "type": "string"
                 },
-                "cpuUsage": {
+                "cpu_usage": {
                     "description": "Max CPU usage",
                     "type": "integer"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -6900,15 +7032,15 @@ const docTemplate = `{
                     "description": "Unique ID",
                     "type": "string"
                 },
-                "loadUsage": {
+                "load_usage": {
                     "description": "Max system load",
                     "type": "integer"
                 },
-                "maxConcurrency": {
+                "max_concurrency": {
                     "description": "Max concurrency",
                     "type": "integer"
                 },
-                "maxWaitMs": {
+                "max_wait_ms": {
                     "description": "Max wait time (ms)",
                     "type": "integer"
                 },
@@ -6928,27 +7060,27 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "realizeType": {
+                "realize_type": {
                     "description": "Realize type",
                     "type": "string"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string"
                 },
-                "slidingWindows": {
+                "sliding_windows": {
                     "description": "Sliding windows (JSON)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
@@ -6956,7 +7088,7 @@ const docTemplate = `{
                     "description": "Limit policy type (Rate, Concurrency, Load)",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -6971,14 +7103,14 @@ const docTemplate = `{
             "required": [
                 "group",
                 "name",
-                "realizeType",
-                "relationType",
-                "spaceCode",
-                "targetServiceId",
+                "realize_type",
+                "relation_type",
+                "space_code",
+                "target_service_id",
                 "type"
             ],
             "properties": {
-                "actionParameters": {
+                "action_parameters": {
                     "description": "Action parameters (JSON)",
                     "type": "string"
                 },
@@ -6986,7 +7118,7 @@ const docTemplate = `{
                     "description": "Match conditions (JSON)",
                     "type": "string"
                 },
-                "cpuUsage": {
+                "cpu_usage": {
                     "description": "Max CPU usage",
                     "type": "integer"
                 },
@@ -7003,15 +7135,15 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
-                "loadUsage": {
+                "load_usage": {
                     "description": "Max system load",
                     "type": "integer"
                 },
-                "maxConcurrency": {
+                "max_concurrency": {
                     "description": "Max concurrency",
                     "type": "integer"
                 },
-                "maxWaitMs": {
+                "max_wait_ms": {
                     "description": "Max wait time (ms)",
                     "type": "integer"
                 },
@@ -7028,30 +7160,30 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "realizeType": {
+                "realize_type": {
                     "description": "Realize type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "slidingWindows": {
+                "sliding_windows": {
                     "description": "Sliding windows (JSON)",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -7070,7 +7202,7 @@ const docTemplate = `{
         "schema.PolicyLoadbalance": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -7110,27 +7242,27 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "policyType": {
+                "policy_type": {
                     "description": "Loadbalance policy type",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "stickyType": {
+                "sticky_type": {
                     "description": "Sticky type",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -7145,8 +7277,8 @@ const docTemplate = `{
             "required": [
                 "group",
                 "name",
-                "policyType",
-                "targetServiceId"
+                "policy_type",
+                "target_service_id"
             ],
             "properties": {
                 "description": {
@@ -7175,24 +7307,24 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "policyType": {
+                "policy_type": {
                     "description": "Loadbalance policy type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "stickyType": {
+                "sticky_type": {
                     "description": "Sticky type",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -7210,7 +7342,7 @@ const docTemplate = `{
                     "description": "Match conditions (JSON)",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -7250,19 +7382,19 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
@@ -7270,7 +7402,7 @@ const docTemplate = `{
                     "description": "Permission type",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -7285,9 +7417,9 @@ const docTemplate = `{
             "required": [
                 "group",
                 "name",
-                "relationType",
-                "spaceCode",
-                "targetServiceId",
+                "relation_type",
+                "space_code",
+                "target_service_id",
                 "type"
             ],
             "properties": {
@@ -7321,21 +7453,21 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -7354,7 +7486,7 @@ const docTemplate = `{
         "schema.PolicyRoute": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -7398,19 +7530,19 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 },
@@ -7427,7 +7559,7 @@ const docTemplate = `{
                     "description": "Match conditions (JSON)",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -7451,15 +7583,15 @@ const docTemplate = `{
                     "description": "Sort order",
                     "type": "integer"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string"
                 },
-                "routeId": {
+                "route_id": {
                     "description": "Route ID",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 }
@@ -7468,8 +7600,8 @@ const docTemplate = `{
         "schema.PolicyRouteDetailForm": {
             "type": "object",
             "required": [
-                "relationType",
-                "routeId"
+                "relation_type",
+                "route_id"
             ],
             "properties": {
                 "conditions": {
@@ -7492,12 +7624,12 @@ const docTemplate = `{
                     "description": "Sort order",
                     "type": "integer"
                 },
-                "relationType": {
+                "relation_type": {
                     "description": "Relation type",
                     "type": "string",
                     "maxLength": 20
                 },
-                "routeId": {
+                "route_id": {
                     "description": "Route ID",
                     "type": "string",
                     "maxLength": 20
@@ -7509,8 +7641,8 @@ const docTemplate = `{
             "required": [
                 "group",
                 "name",
-                "spaceCode",
-                "targetServiceId"
+                "space_code",
+                "target_service_id"
             ],
             "properties": {
                 "description": {
@@ -7543,16 +7675,16 @@ const docTemplate = `{
                     "description": "Path or interface",
                     "type": "string"
                 },
-                "sourceApplicationId": {
+                "source_application_id": {
                     "description": "Source application ID",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
                 },
-                "targetServiceId": {
+                "target_service_id": {
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
@@ -7678,6 +7810,18 @@ const docTemplate = `{
         "schema.Service": {
             "type": "object",
             "properties": {
+                "application_id": {
+                    "description": "Application ID (virtual field, read-only)",
+                    "type": "string"
+                },
+                "application_name": {
+                    "description": "Application name (virtual field, read-only)",
+                    "type": "string"
+                },
+                "application_service_status": {
+                    "description": "Application service status (virtual field, read-only)",
+                    "type": "string"
+                },
                 "created_at": {
                     "description": "Create time",
                     "type": "string"
@@ -7710,6 +7854,14 @@ const docTemplate = `{
                     "description": "Data source: Local, JSF, JDAP",
                     "type": "string"
                 },
+                "space": {
+                    "description": "Space",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.Space"
+                        }
+                    ]
+                },
                 "space_code": {
                     "description": "Space code",
                     "type": "string"
@@ -7735,7 +7887,7 @@ const docTemplate = `{
                     "description": "Service alias",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -7747,15 +7899,15 @@ const docTemplate = `{
                     "description": "Unique ID",
                     "type": "string"
                 },
-                "serviceId": {
+                "service_id": {
                     "description": "Service ID this alias belongs to",
                     "type": "string"
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 }
@@ -7765,8 +7917,8 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "alias",
-                "serviceId",
-                "spaceCode"
+                "service_id",
+                "space_code"
             ],
             "properties": {
                 "alias": {
@@ -7778,12 +7930,12 @@ const docTemplate = `{
                     "description": "Details",
                     "type": "string"
                 },
-                "serviceId": {
+                "service_id": {
                     "description": "Service ID this alias belongs to",
                     "type": "string",
                     "maxLength": 20
                 },
-                "spaceCode": {
+                "space_code": {
                     "description": "Microservice space code",
                     "type": "string",
                     "maxLength": 255
@@ -7796,9 +7948,7 @@ const docTemplate = `{
                 "application_id",
                 "name",
                 "registration_type",
-                "source",
-                "space_code",
-                "tenant"
+                "space_code"
             ],
             "properties": {
                 "application_id": {
@@ -7826,16 +7976,10 @@ const docTemplate = `{
                 },
                 "source": {
                     "description": "Data source",
-                    "type": "string",
-                    "maxLength": 255
+                    "type": "string"
                 },
                 "space_code": {
                     "description": "Space code",
-                    "type": "string",
-                    "maxLength": 255
-                },
-                "tenant": {
-                    "description": "Tenant",
                     "type": "string",
                     "maxLength": 255
                 }
@@ -7848,7 +7992,7 @@ const docTemplate = `{
                     "description": "Group code",
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "description": "Create timestamp",
                     "type": "string"
                 },
@@ -7860,7 +8004,7 @@ const docTemplate = `{
                     "description": "Unique ID",
                     "type": "string"
                 },
-                "isolationCode": {
+                "isolation_code": {
                     "description": "Isolation code",
                     "type": "string"
                 },
@@ -7872,11 +8016,11 @@ const docTemplate = `{
                     "description": "Group name",
                     "type": "string"
                 },
-                "serviceId": {
+                "service_id": {
                     "description": "Service ID this group belongs to",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "description": "Update timestamp",
                     "type": "string"
                 }

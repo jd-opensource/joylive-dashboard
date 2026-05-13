@@ -115,14 +115,14 @@
                     :scroll="{ x: 1300 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
-                        <template v-if="'sourceApplicationId' === column.key">
-                            {{ applicationNameMap[record.sourceApplicationId] || record.sourceApplicationId }}
+                        <template v-if="'source_application_id' === column.key">
+                            {{ applicationNameMap[record.source_application_id] || record.source_application_id }}
                         </template>
-                        <template v-if="'targetServiceId' === column.key">
-                            {{ serviceNameMap[record.targetServiceId] || record.targetServiceId }}
+                        <template v-if="'target_service_id' === column.key">
+                            {{ serviceNameMap[record.target_service_id] || record.target_service_id }}
                         </template>
-                        <template v-if="'policyType' === column.key">
-                            {{ policyTypeMap[record.policyType] || record.policyType }}
+                        <template v-if="'policy_type' === column.key">
+                            {{ policyTypeMap[record.policy_type] || record.policy_type }}
                         </template>
                         <template v-if="'enabled' === column.key">
                             <a-tag :color="record.enabled === 1 ? 'green' : 'default'">
@@ -134,7 +134,7 @@
                             </a-tag>
                         </template>
 
-                        <template v-if="'createAt' === column.key">
+                        <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
 
@@ -185,17 +185,17 @@ const columns = [
     { title: t('pages.loadbalance.form.name'), dataIndex: 'name', width: 180 },
     {
         title: t('pages.loadbalance.form.sourceApplicationId'),
-        dataIndex: 'sourceApplicationId',
-        key: 'sourceApplicationId',
+        dataIndex: 'source_application_id',
+        key: 'source_application_id',
         width: 150,
     },
     {
         title: t('pages.loadbalance.form.targetServiceId'),
-        dataIndex: 'targetServiceId',
-        key: 'targetServiceId',
+        dataIndex: 'target_service_id',
+        key: 'target_service_id',
         width: 150,
     },
-    { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policyType', key: 'policyType', width: 120 },
+    { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policy_type', key: 'policy_type', width: 120 },
     { title: t('pages.loadbalance.form.enabled'), key: 'enabled', width: 80 },
     { title: t('pages.loadbalance.form.creator'), dataIndex: 'creator', width: 100 },
     { title: t('pages.loadbalance.form.description'), dataIndex: 'description', ellipsis: true },
@@ -347,7 +347,7 @@ function onTableChange({ current, pageSize }) {
 
 function handleResetSearch() {
     const spaceCode = searchFormData.value.space_code
-    searchFormData.value = { spaceCode: spaceCode }
+    searchFormData.value = { space_code: spaceCode }
     resetPagination()
     getPageList()
 }

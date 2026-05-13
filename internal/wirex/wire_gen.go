@@ -117,6 +117,7 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 		LoggerBIZ: bizLogger,
 	}
 	casbinx := &rbac.Casbinx{
+		DB:              db,
 		Cache:           cacher,
 		MenuDAL:         menu,
 		MenuResourceDAL: menuResource,
@@ -158,6 +159,7 @@ func BuildInjector(ctx context.Context) (*Injector, func(), error) {
 	bizApplicationService := &biz2.ApplicationService{
 		Trans:                 trans,
 		ApplicationServiceDAL: applicationService,
+		ServiceDAL:            service,
 	}
 	bizService := &biz2.Service{
 		Trans:                 trans,

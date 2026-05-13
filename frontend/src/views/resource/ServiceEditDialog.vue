@@ -119,9 +119,9 @@ function filterApplicationOption(input, option) {
 }
 formRules.value = {
     name: { required: true, message: t('pages.service.form.name.placeholder') },
-    spaceCode: { required: true, message: t('pages.service.form.space_code.placeholder') },
-    applicationId: { required: true, message: t('pages.service.form.application_id.placeholder') },
-    registrationType: { required: true, message: t('pages.service.form.registration_type.placeholder') },
+    space_code: { required: true, message: t('pages.service.form.space_code.placeholder') },
+    application_id: { required: true, message: t('pages.service.form.application_id.placeholder') },
+    registration_type: { required: true, message: t('pages.service.form.registration_type.placeholder') },
 }
 
 function handleCreate() {

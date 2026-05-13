@@ -56,7 +56,6 @@ definitions:
         type: string
       enhance:
         description: 'Enhance method: Agent, Sidecar'
-        maxLength: 20
         type: string
       language:
         description: 'Language: Java, Python, Golang'
@@ -67,24 +66,16 @@ definitions:
         type: string
       source:
         description: 'Data source: Local, JSF, JDAP'
-        maxLength: 255
-        type: string
-      tenant:
-        description: Tenant
-        maxLength: 255
         type: string
     required:
-    - enhance
     - name
-    - source
-    - tenant
     type: object
   schema.ApplicationService:
     properties:
-      applicationId:
+      application_id:
         description: ApplicationId
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       description:
@@ -96,13 +87,13 @@ definitions:
       role:
         description: App role such as provider or consumer
         type: string
-      serviceId:
+      service_id:
         description: ServiceId
         type: string
       status:
         description: '消费状态: approved, rejected, pending'
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
     type: object
@@ -140,13 +131,13 @@ definitions:
     type: object
   schema.DataPermission:
     properties:
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
         description: Creator
         type: string
-      dataId:
+      data_id:
         description: Data ID
         type: string
       id:
@@ -164,7 +155,7 @@ definitions:
       type:
         description: Data type (table name)
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       user:
@@ -173,7 +164,7 @@ definitions:
     type: object
   schema.DataPermissionForm:
     properties:
-      dataId:
+      data_id:
         description: Data ID
         maxLength: 20
         type: string
@@ -197,7 +188,7 @@ definitions:
         maxLength: 50
         type: string
     required:
-    - dataId
+    - data_id
     - role
     - tenant
     - type
@@ -394,7 +385,7 @@ definitions:
     type: object
   schema.PolicyAuth:
     properties:
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
@@ -415,19 +406,19 @@ definitions:
       params:
         description: Parameters (JSON)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
       type:
         description: Auth type
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -445,14 +436,14 @@ definitions:
       params:
         description: Parameters (JSON)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -464,25 +455,25 @@ definitions:
         description: Version
         type: integer
     required:
-    - spaceCode
-    - targetServiceId
+    - space_code
+    - target_service_id
     - type
     type: object
   schema.PolicyCircuitBreak:
     properties:
-      allowedCallsInHalfOpenState:
+      allowed_calls_in_half_open_state:
         description: Allowed calls in half open state
         type: integer
-      codePolicy:
+      code_policy:
         description: Code policy (JSON)
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
         description: Creator
         type: string
-      degradeConfig:
+      degrade_config:
         description: Degrade config (JSON)
         type: string
       description:
@@ -491,19 +482,19 @@ definitions:
       enabled:
         description: Enabled
         type: integer
-      errorCodes:
+      error_codes:
         description: Error codes (JSON)
         type: string
-      errorMessages:
+      error_messages:
         description: Error messages (JSON)
         type: string
       exceptions:
         description: Exceptions (JSON)
         type: string
-      failureRateThreshold:
+      failure_rate_threshold:
         description: Failure rate threshold
         type: integer
-      forceOpen:
+      force_open:
         description: Force open
         type: integer
       group:
@@ -515,13 +506,13 @@ definitions:
       level:
         description: Policy level
         type: string
-      messagePolicy:
+      message_policy:
         description: Message policy (JSON)
         type: string
       method:
         description: Method
         type: string
-      minCallsThreshold:
+      min_calls_threshold:
         description: Min calls threshold
         type: integer
       modifier:
@@ -530,64 +521,64 @@ definitions:
       name:
         description: Policy name
         type: string
-      outlierMaxPercent:
+      outlier_max_percent:
         description: Outlier max percent
         type: integer
       path:
         description: Path or interface
         type: string
-      realizeType:
+      realize_type:
         description: Realize type
         type: string
-      recoveryDuration:
+      recovery_duration:
         description: Recovery duration (ms)
         type: integer
-      recoveryEnabled:
+      recovery_enabled:
         description: Recovery enabled
         type: integer
-      recoveryPhase:
+      recovery_phase:
         description: Recovery phase
         type: integer
-      slidingWindowSize:
+      sliding_window_size:
         description: Sliding window size
         type: integer
-      slidingWindowType:
+      sliding_window_type:
         description: Sliding window type
         type: string
-      slowCallDurationThreshold:
+      slow_call_duration_threshold:
         description: Slow call duration threshold
         type: integer
-      slowCallRateThreshold:
+      slow_call_rate_threshold:
         description: Slow call rate threshold
         type: integer
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
         description: Version
         type: integer
-      waitDurationInOpenState:
+      wait_duration_in_open_state:
         description: Wait duration in open state
         type: integer
     type: object
   schema.PolicyCircuitBreakForm:
     properties:
-      allowedCallsInHalfOpenState:
+      allowed_calls_in_half_open_state:
         description: Allowed calls in half open state
         type: integer
-      codePolicy:
+      code_policy:
         description: Code policy (JSON)
         type: string
-      degradeConfig:
+      degrade_config:
         description: Degrade config (JSON)
         type: string
       description:
@@ -596,19 +587,19 @@ definitions:
       enabled:
         description: Enabled
         type: integer
-      errorCodes:
+      error_codes:
         description: Error codes (JSON)
         type: string
-      errorMessages:
+      error_messages:
         description: Error messages (JSON)
         type: string
       exceptions:
         description: Exceptions (JSON)
         type: string
-      failureRateThreshold:
+      failure_rate_threshold:
         description: Failure rate threshold
         type: integer
-      forceOpen:
+      force_open:
         description: Force open
         type: integer
       group:
@@ -619,89 +610,89 @@ definitions:
         description: Policy level
         maxLength: 20
         type: string
-      messagePolicy:
+      message_policy:
         description: Message policy (JSON)
         type: string
       method:
         description: Method
         type: string
-      minCallsThreshold:
+      min_calls_threshold:
         description: Min calls threshold
         type: integer
       name:
         description: Policy name
         maxLength: 100
         type: string
-      outlierMaxPercent:
+      outlier_max_percent:
         description: Outlier max percent
         type: integer
       path:
         description: Path or interface
         type: string
-      realizeType:
+      realize_type:
         description: Realize type
         maxLength: 20
         type: string
-      recoveryDuration:
+      recovery_duration:
         description: Recovery duration (ms)
         type: integer
-      recoveryEnabled:
+      recovery_enabled:
         description: Recovery enabled
         type: integer
-      recoveryPhase:
+      recovery_phase:
         description: Recovery phase
         type: integer
-      slidingWindowSize:
+      sliding_window_size:
         description: Sliding window size
         type: integer
-      slidingWindowType:
+      sliding_window_type:
         description: Sliding window type
         maxLength: 20
         type: string
-      slowCallDurationThreshold:
+      slow_call_duration_threshold:
         description: Slow call duration threshold
         type: integer
-      slowCallRateThreshold:
+      slow_call_rate_threshold:
         description: Slow call rate threshold
         type: integer
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
       version:
         description: Version
         type: integer
-      waitDurationInOpenState:
+      wait_duration_in_open_state:
         description: Wait duration in open state
         type: integer
     required:
     - group
     - level
     - name
-    - realizeType
-    - slidingWindowType
-    - spaceCode
-    - targetServiceId
+    - realize_type
+    - sliding_window_type
+    - space_code
+    - target_service_id
     type: object
   schema.PolicyFault:
     properties:
       conditions:
         description: Match conditions (JSON)
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
         description: Creator
         type: string
-      delayTimeMs:
+      delay_time_ms:
         description: Delay time (ms)
         type: integer
       description:
@@ -710,10 +701,10 @@ definitions:
       enabled:
         description: Enabled
         type: integer
-      errorCode:
+      error_code:
         description: Error code
         type: integer
-      errorMsg:
+      error_msg:
         description: Error message
         type: string
       group:
@@ -737,25 +728,25 @@ definitions:
       percent:
         description: Fault injection percent
         type: integer
-      relationType:
+      relation_type:
         description: Relation type
         type: string
       scope:
         description: Injection scope (inbound | outbound)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
       type:
         description: Fault injection type (error | delay)
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -767,7 +758,7 @@ definitions:
       conditions:
         description: Match conditions (JSON)
         type: string
-      delayTimeMs:
+      delay_time_ms:
         description: Delay time (ms)
         type: integer
       description:
@@ -776,10 +767,10 @@ definitions:
       enabled:
         description: Enabled
         type: integer
-      errorCode:
+      error_code:
         description: Error code
         type: integer
-      errorMsg:
+      error_msg:
         description: Error message
         type: string
       group:
@@ -799,7 +790,7 @@ definitions:
       percent:
         description: Fault injection percent
         type: integer
-      relationType:
+      relation_type:
         description: Relation type
         maxLength: 20
         type: string
@@ -807,14 +798,14 @@ definitions:
         description: Injection scope (inbound | outbound)
         maxLength: 20
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -828,15 +819,15 @@ definitions:
     required:
     - group
     - name
-    - relationType
+    - relation_type
     - scope
-    - spaceCode
-    - targetServiceId
+    - space_code
+    - target_service_id
     - type
     type: object
   schema.PolicyInvocation:
     properties:
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
@@ -866,22 +857,22 @@ definitions:
       path:
         description: Path or interface
         type: string
-      retryPolicy:
+      retry_policy:
         description: Retry policy (JSON)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
       type:
         description: Invocation type (failfast | failover | failsafe)
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -910,17 +901,17 @@ definitions:
       path:
         description: Path or interface
         type: string
-      retryPolicy:
+      retry_policy:
         description: Retry policy (JSON)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -934,22 +925,22 @@ definitions:
     required:
     - group
     - name
-    - spaceCode
-    - targetServiceId
+    - space_code
+    - target_service_id
     - type
     type: object
   schema.PolicyLimit:
     properties:
-      actionParameters:
+      action_parameters:
         description: Action parameters (JSON)
         type: string
       conditions:
         description: Match conditions (JSON)
         type: string
-      cpuUsage:
+      cpu_usage:
         description: Max CPU usage
         type: integer
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
@@ -967,13 +958,13 @@ definitions:
       id:
         description: Unique ID
         type: string
-      loadUsage:
+      load_usage:
         description: Max system load
         type: integer
-      maxConcurrency:
+      max_concurrency:
         description: Max concurrency
         type: integer
-      maxWaitMs:
+      max_wait_ms:
         description: Max wait time (ms)
         type: integer
       method:
@@ -988,28 +979,28 @@ definitions:
       path:
         description: Path or interface
         type: string
-      realizeType:
+      realize_type:
         description: Realize type
         type: string
-      relationType:
+      relation_type:
         description: Relation type
         type: string
-      slidingWindows:
+      sliding_windows:
         description: Sliding windows (JSON)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
       type:
         description: Limit policy type (Rate, Concurrency, Load)
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -1018,13 +1009,13 @@ definitions:
     type: object
   schema.PolicyLimitForm:
     properties:
-      actionParameters:
+      action_parameters:
         description: Action parameters (JSON)
         type: string
       conditions:
         description: Match conditions (JSON)
         type: string
-      cpuUsage:
+      cpu_usage:
         description: Max CPU usage
         type: integer
       description:
@@ -1037,13 +1028,13 @@ definitions:
         description: Group
         maxLength: 255
         type: string
-      loadUsage:
+      load_usage:
         description: Max system load
         type: integer
-      maxConcurrency:
+      max_concurrency:
         description: Max concurrency
         type: integer
-      maxWaitMs:
+      max_wait_ms:
         description: Max wait time (ms)
         type: integer
       method:
@@ -1056,25 +1047,25 @@ definitions:
       path:
         description: Path or interface
         type: string
-      realizeType:
+      realize_type:
         description: Realize type
         maxLength: 20
         type: string
-      relationType:
+      relation_type:
         description: Relation type
         maxLength: 20
         type: string
-      slidingWindows:
+      sliding_windows:
         description: Sliding windows (JSON)
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -1088,15 +1079,15 @@ definitions:
     required:
     - group
     - name
-    - realizeType
-    - relationType
-    - spaceCode
-    - targetServiceId
+    - realize_type
+    - relation_type
+    - space_code
+    - target_service_id
     - type
     type: object
   schema.PolicyLoadbalance:
     properties:
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
@@ -1126,22 +1117,22 @@ definitions:
       path:
         description: Path or interface
         type: string
-      policyType:
+      policy_type:
         description: Loadbalance policy type
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      stickyType:
+      sticky_type:
         description: Sticky type
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -1170,20 +1161,20 @@ definitions:
       path:
         description: Path or interface
         type: string
-      policyType:
+      policy_type:
         description: Loadbalance policy type
         maxLength: 20
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      stickyType:
+      sticky_type:
         description: Sticky type
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -1193,15 +1184,15 @@ definitions:
     required:
     - group
     - name
-    - policyType
-    - targetServiceId
+    - policy_type
+    - target_service_id
     type: object
   schema.PolicyPermission:
     properties:
       conditions:
         description: Match conditions (JSON)
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
@@ -1231,22 +1222,22 @@ definitions:
       path:
         description: Path or interface
         type: string
-      relationType:
+      relation_type:
         description: Relation type
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
       type:
         description: Permission type
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -1278,18 +1269,18 @@ definitions:
       path:
         description: Path or interface
         type: string
-      relationType:
+      relation_type:
         description: Relation type
         maxLength: 20
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -1303,14 +1294,14 @@ definitions:
     required:
     - group
     - name
-    - relationType
-    - spaceCode
-    - targetServiceId
+    - relation_type
+    - space_code
+    - target_service_id
     - type
     type: object
   schema.PolicyRoute:
     properties:
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       creator:
@@ -1343,16 +1334,16 @@ definitions:
       path:
         description: Path or interface
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
       version:
@@ -1364,7 +1355,7 @@ definitions:
       conditions:
         description: Match conditions (JSON)
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       description:
@@ -1382,13 +1373,13 @@ definitions:
       order:
         description: Sort order
         type: integer
-      relationType:
+      relation_type:
         description: Relation type
         type: string
-      routeId:
+      route_id:
         description: Route ID
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
     type: object
@@ -1409,17 +1400,17 @@ definitions:
       order:
         description: Sort order
         type: integer
-      relationType:
+      relation_type:
         description: Relation type
         maxLength: 20
         type: string
-      routeId:
+      route_id:
         description: Route ID
         maxLength: 20
         type: string
     required:
-    - relationType
-    - routeId
+    - relation_type
+    - route_id
     type: object
   schema.PolicyRouteForm:
     properties:
@@ -1446,14 +1437,14 @@ definitions:
       path:
         description: Path or interface
         type: string
-      sourceApplicationId:
+      source_application_id:
         description: Source application ID
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
-      targetServiceId:
+      target_service_id:
         description: Target service ID
         maxLength: 20
         type: string
@@ -1463,8 +1454,8 @@ definitions:
     required:
     - group
     - name
-    - spaceCode
-    - targetServiceId
+    - space_code
+    - target_service_id
     type: object
   schema.Role:
     properties:
@@ -1550,6 +1541,15 @@ definitions:
     type: object
   schema.Service:
     properties:
+      application_id:
+        description: Application ID (virtual field, read-only)
+        type: string
+      application_name:
+        description: Application name (virtual field, read-only)
+        type: string
+      application_service_status:
+        description: Application service status (virtual field, read-only)
+        type: string
       created_at:
         description: Create time
         type: string
@@ -1574,6 +1574,10 @@ definitions:
       source:
         description: 'Data source: Local, JSF, JDAP'
         type: string
+      space:
+        allOf:
+        - $ref: '#/definitions/schema.Space'
+        description: Space
       space_code:
         description: Space code
         type: string
@@ -1592,7 +1596,7 @@ definitions:
       alias:
         description: Service alias
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       description:
@@ -1601,13 +1605,13 @@ definitions:
       id:
         description: Unique ID
         type: string
-      serviceId:
+      service_id:
         description: Service ID this alias belongs to
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
     type: object
@@ -1620,18 +1624,18 @@ definitions:
       description:
         description: Details
         type: string
-      serviceId:
+      service_id:
         description: Service ID this alias belongs to
         maxLength: 20
         type: string
-      spaceCode:
+      space_code:
         description: Microservice space code
         maxLength: 255
         type: string
     required:
     - alias
-    - serviceId
-    - spaceCode
+    - service_id
+    - space_code
     type: object
   schema.ServiceForm:
     properties:
@@ -1655,30 +1659,23 @@ definitions:
         type: string
       source:
         description: Data source
-        maxLength: 255
         type: string
       space_code:
         description: Space code
-        maxLength: 255
-        type: string
-      tenant:
-        description: Tenant
         maxLength: 255
         type: string
     required:
     - application_id
     - name
     - registration_type
-    - source
     - space_code
-    - tenant
     type: object
   schema.ServiceGroup:
     properties:
       code:
         description: Group code
         type: string
-      createdAt:
+      created_at:
         description: Create timestamp
         type: string
       description:
@@ -1687,7 +1684,7 @@ definitions:
       id:
         description: Unique ID
         type: string
-      isolationCode:
+      isolation_code:
         description: Isolation code
         type: string
       labels:
@@ -1696,10 +1693,10 @@ definitions:
       name:
         description: Group name
         type: string
-      serviceId:
+      service_id:
         description: Service ID this group belongs to
         type: string
-      updatedAt:
+      updated_at:
         description: Update timestamp
         type: string
     type: object
@@ -4745,6 +4742,10 @@ paths:
         in: query
         name: space_code
         type: string
+      - description: 'Filter by role of current user''s applications: provider, consumer'
+        in: query
+        name: role
+        type: string
       responses:
         "200":
           description: OK
@@ -4895,6 +4896,92 @@ paths:
       - ApiKeyAuth: []
       summary: Update service record by ID
       tags:
+      - ServiceAPI
+  /api/v1/services/{id}/auth:
+    put:
+      parameters:
+      - description: service id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: service id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization flag
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      - ApiKeyAuth: []
+      summary: Toggle service authorization
+      tags:
+      - ServiceAPI
+      - ServiceAPI
+  /api/v1/services/{id}/consumer:
+    delete:
+      parameters:
+      - description: service id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: service id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization flag
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      - ApiKeyAuth: []
+      summary: Toggle service authorization
+      tags:
+      - ServiceAPI
       - ServiceAPI
   /api/v1/spaces:
     get:

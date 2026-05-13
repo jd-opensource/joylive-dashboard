@@ -108,7 +108,7 @@ function handleOk() {
         .then(async (values) => {
             try {
                 showLoading()
-                const params = { ...values, serviceId: props.serviceId }
+                const params = { ...values, service_id: props.serviceId }
                 let result = null
                 switch (modal.value.type) {
                     case 'create':

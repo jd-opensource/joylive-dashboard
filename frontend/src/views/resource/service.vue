@@ -92,7 +92,7 @@
                         <template v-if="'name' === column.key">
                             <a @click="goToDetail(record)">{{ record.name }}</a>
                         </template>
-                        <template v-if="'createAt' === column.key">
+                        <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
                         <template v-if="'registration_type' === column.key">
@@ -222,7 +222,7 @@ const baseColumns = [
     { title: t('button.action'), key: 'action', fixed: 'right', width: 180 },
 ]
 const consumerColumns = [
-    { title: t('pages.service.form.application_name'), dataIndex: 'applicationName', width: 150 },
+    { title: t('pages.service.form.application_name'), dataIndex: 'application_name', width: 150 },
     {
         title: t('pages.service.form.application_service_status'),
         dataIndex: 'application_service_status',
@@ -403,7 +403,7 @@ function onTableChange({ current, pageSize }) {
 
 function handleResetSearch() {
     const spaceCode = searchFormData.value.space_code
-    searchFormData.value = { spaceCode: spaceCode }
+    searchFormData.value = { space_code: spaceCode }
     resetPagination()
     getPageList()
 }

@@ -86,7 +86,7 @@
                             </a-tag>
                         </template>
 
-                        <template v-if="'createAt' === column.key">
+                        <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
 
