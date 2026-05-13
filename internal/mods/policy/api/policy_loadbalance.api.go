@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/policy/biz"
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/policy/schema"
-	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 )
 
@@ -25,10 +24,6 @@ func (a *PolicyLoadbalance) Query(c *gin.Context) {
 	var params schema.PolicyLoadbalanceQueryParam
 	if err := util.ParseQuery(c, &params); err != nil {
 		util.ResError(c, err)
-		return
-	}
-	if params.SpaceCode == "" {
-		util.ResError(c, errors.BadRequest("", "SpaceCode is required"))
 		return
 	}
 

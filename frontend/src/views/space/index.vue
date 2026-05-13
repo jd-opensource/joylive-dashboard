@@ -102,7 +102,7 @@ import { ref } from 'vue'
 import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
-import { usePagination, useForm } from '@/hooks'
+import { usePagination } from '@/hooks'
 import EditDialog from './components/EditDialog.vue'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
@@ -123,7 +123,6 @@ const columns = [
 
 const { listData, loading, showLoading, hideLoading, paginationState, searchFormData, resetPagination } =
     usePagination()
-const { resetForm } = useForm()
 const editDialogRef = ref()
 
 getPageList()
@@ -190,7 +189,6 @@ function handleResetSearch() {
 }
 
 function handleSearch() {
-    resetForm()
     resetPagination()
     getPageList()
 }

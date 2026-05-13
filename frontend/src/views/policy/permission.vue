@@ -14,14 +14,14 @@
                         :md="8"
                         :xl="6">
                         <a-form-item
-                            :label="$t('pages.loadbalance.form.spaceCode')"
+                            :label="$t('pages.permission.form.spaceCode')"
                             name="space_code">
                             <a-select
-                                :placeholder="$t('pages.loadbalance.form.spaceCode.placeholder')"
+                                :placeholder="$t('pages.permission.form.spaceCode.placeholder')"
                                 v-model:value="searchFormData.space_code"
                                 show-search
                                 :filter-option="filterSpaceOption"
-                                @change="onSpaceChange">
+                                allow-clear>
                                 <a-select-option
                                     v-for="item in spaceOptions"
                                     :key="item.code"
@@ -38,10 +38,10 @@
                         :md="8"
                         :xl="6">
                         <a-form-item
-                            :label="$t('pages.loadbalance.form.targetServiceId')"
+                            :label="$t('pages.permission.form.targetServiceId')"
                             name="target_service_id">
                             <a-select
-                                :placeholder="$t('pages.loadbalance.form.targetServiceId.placeholder')"
+                                :placeholder="$t('pages.permission.form.targetServiceId.placeholder')"
                                 v-model:value="searchFormData.target_service_id"
                                 show-search
                                 :filter-option="filterServiceOption"
@@ -62,10 +62,10 @@
                         :md="8"
                         :xl="6">
                         <a-form-item
-                            :label="$t('pages.loadbalance.form.name')"
+                            :label="$t('pages.permission.form.name')"
                             name="name">
                             <a-input
-                                :placeholder="$t('pages.loadbalance.form.name.placeholder')"
+                                :placeholder="$t('pages.permission.form.name.placeholder')"
                                 v-model:value="searchFormData.name"></a-input>
                         </a-form-item>
                     </a-col>
@@ -104,7 +104,7 @@
                         <template #icon>
                             <plus-outlined></plus-outlined>
                         </template>
-                        {{ $t('pages.loadbalance.add') }}
+                        {{ $t('pages.permission.add') }}
                     </a-button>
                 </x-action-bar>
                 <a-table
@@ -112,7 +112,7 @@
                     :data-source="listData"
                     :loading="loading"
                     :pagination="paginationState"
-                    :scroll="{ x: 1300 }"
+                    :scroll="{ x: 1500 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
                         <template v-if="'sourceApplicationId' === column.key">
@@ -121,15 +121,18 @@
                         <template v-if="'targetServiceId' === column.key">
                             {{ serviceNameMap[record.targetServiceId] || record.targetServiceId }}
                         </template>
-                        <template v-if="'policyType' === column.key">
-                            {{ policyTypeMap[record.policyType] || record.policyType }}
+                        <template v-if="'relationType' === column.key">
+                            {{ relationTypeMap[record.relationType] || record.relationType }}
+                        </template>
+                        <template v-if="'type' === column.key">
+                            {{ permissionTypeMap[record.type] || record.type }}
                         </template>
                         <template v-if="'enabled' === column.key">
                             <a-tag :color="record.enabled === 1 ? 'green' : 'default'">
                                 {{
                                     record.enabled === 1
-                                        ? $t('pages.loadbalance.form.enabled.active')
-                                        : $t('pages.loadbalance.form.enabled.inactive')
+                                        ? $t('pages.permission.form.enabled.active')
+                                        : $t('pages.permission.form.enabled.inactive')
                                 }}
                             </a-tag>
                         </template>
@@ -141,7 +144,7 @@
                         <template v-if="'action' === column.key">
                             <x-action-button @click="$refs.editDialogRef.handleEdit(record)">
                                 <a-tooltip>
-                                    <template #title> {{ $t('pages.loadbalance.edit') }}</template>
+                                    <template #title> {{ $t('pages.permission.edit') }}</template>
                                     <edit-outlined />
                                 </a-tooltip>
                             </x-action-button>
@@ -173,33 +176,36 @@ import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
 import { usePagination } from '@/hooks'
-import EditDialog from './LoadbalanceEditDialog.vue'
+import EditDialog from './PermissionEditDialog.vue'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
-    name: 'loadbalanceList',
+    name: 'permissionList',
 })
 const { t } = useI18n()
 const columns = [
-    { title: t('pages.loadbalance.form.name'), dataIndex: 'name', width: 180 },
+    { title: t('pages.permission.form.name'), dataIndex: 'name', width: 180 },
     {
-        title: t('pages.loadbalance.form.sourceApplicationId'),
+        title: t('pages.permission.form.sourceApplicationId'),
         dataIndex: 'sourceApplicationId',
         key: 'sourceApplicationId',
         width: 150,
     },
     {
-        title: t('pages.loadbalance.form.targetServiceId'),
+        title: t('pages.permission.form.targetServiceId'),
         dataIndex: 'targetServiceId',
         key: 'targetServiceId',
         width: 150,
     },
-    { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policyType', key: 'policyType', width: 120 },
-    { title: t('pages.loadbalance.form.enabled'), key: 'enabled', width: 80 },
-    { title: t('pages.loadbalance.form.creator'), dataIndex: 'creator', width: 100 },
-    { title: t('pages.loadbalance.form.description'), dataIndex: 'description', ellipsis: true },
-    { title: t('pages.loadbalance.form.createdAt'), key: 'createAt', fixed: 'right', width: 180 },
+    { title: t('pages.permission.form.path'), dataIndex: 'path', width: 150 },
+    { title: t('pages.permission.form.method'), dataIndex: 'method', width: 100 },
+    { title: t('pages.permission.form.relationType'), dataIndex: 'relationType', key: 'relationType', width: 100 },
+    { title: t('pages.permission.form.type'), dataIndex: 'type', key: 'type', width: 100 },
+    { title: t('pages.permission.form.enabled'), key: 'enabled', width: 80 },
+    { title: t('pages.permission.form.creator'), dataIndex: 'creator', width: 100 },
+    { title: t('pages.permission.form.description'), dataIndex: 'description', ellipsis: true },
+    { title: t('pages.permission.form.createdAt'), key: 'createAt', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 
@@ -211,17 +217,19 @@ const serviceOptions = ref([])
 const applicationOptions = ref([])
 const serviceNameMap = ref({})
 const applicationNameMap = ref({})
-const policyTypeMap = {
-    RANDOM: '随机策略',
-    ROUND_ROBIN: '轮询策略',
-    CUSTOM_RESPONSE: '自适应策略',
+const relationTypeMap = {
+    OR: '或关系',
+    AND: '且关系',
 }
-
-const SPACE_CODE_KEY = 'loadbalance_space_code'
+const permissionTypeMap = {
+    BLACK: '黑名单',
+    WHITE: '白名单',
+}
 
 loadSpaceOptions()
 loadServiceOptions()
 loadApplicationOptions()
+getPageList()
 
 async function loadSpaceOptions() {
     try {
@@ -230,13 +238,6 @@ async function loadSpaceOptions() {
         })
         if (config('http.code.success') === success) {
             spaceOptions.value = data || []
-            if (spaceOptions.value.length > 0) {
-                const saved = localStorage.getItem(SPACE_CODE_KEY)
-                const found = saved && spaceOptions.value.some((item) => item.code === saved)
-                searchFormData.value.space_code = found ? saved : spaceOptions.value[0].code
-                localStorage.setItem(SPACE_CODE_KEY, searchFormData.value.space_code)
-                getPageList()
-            }
         }
     } catch (error) {
         // ignore
@@ -271,12 +272,6 @@ async function loadApplicationOptions() {
     }
 }
 
-function onSpaceChange(value) {
-    localStorage.setItem(SPACE_CODE_KEY, value)
-    resetPagination()
-    getPageList()
-}
-
 function filterSpaceOption(input, option) {
     const label = option.children?.[0]?.children || ''
     return option.value.toLowerCase().includes(input.toLowerCase()) || label.toLowerCase().includes(input.toLowerCase())
@@ -295,7 +290,7 @@ async function getPageList() {
         showLoading()
         const { pageSize, current } = paginationState
         const { success, data, total } = await apis.policy
-            .getLoadbalanceList({
+            .getPermissionList({
                 pageSize,
                 current,
                 ...searchFormData.value,
@@ -315,14 +310,14 @@ async function getPageList() {
 
 function handleRemove({ id }) {
     Modal.confirm({
-        title: t('pages.loadbalance.delTip'),
+        title: t('pages.permission.delTip'),
         content: t('button.confirm'),
         okText: t('button.confirm'),
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {
                     try {
-                        const { success } = await apis.policy.delLoadbalance(id).catch(() => {
+                        const { success } = await apis.policy.delPermission(id).catch(() => {
                             throw new Error()
                         })
                         if (config('http.code.success') === success) {
@@ -346,8 +341,7 @@ function onTableChange({ current, pageSize }) {
 }
 
 function handleResetSearch() {
-    const spaceCode = searchFormData.value.space_code
-    searchFormData.value = { space_code: spaceCode }
+    searchFormData.value = {}
     resetPagination()
     getPageList()
 }

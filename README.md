@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/jd-opensource/joylive-dashboard">
-    <img alt="JoyLive Logo" width="215" src="./frontend/public/images/logo.png">
+    <img alt="JoyLive Logo" width="188" src="./frontend/public/images/logo.png">
   </a>
   <br>
   <br>

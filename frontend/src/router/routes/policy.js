@@ -24,6 +24,17 @@ export default [
                     permission: '*',
                 },
             },
+            {
+                path: 'permission',
+                name: 'permissionList',
+                component: 'policy/permission.vue',
+                meta: {
+                    title: '服务鉴权策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
         ],
     },
 ]

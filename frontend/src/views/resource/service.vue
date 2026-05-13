@@ -170,7 +170,7 @@ import { ref, computed } from 'vue'
 import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
-import { usePagination, useForm } from '@/hooks'
+import { usePagination } from '@/hooks'
 import EditDialog from './ServiceEditDialog.vue'
 import ApplyDialog from './ServiceApplyDialog.vue'
 import {
@@ -236,7 +236,6 @@ const columns = computed(() => {
 
 const { listData, loading, showLoading, hideLoading, paginationState, searchFormData, resetPagination } =
     usePagination()
-const { resetForm } = useForm()
 const editDialogRef = ref()
 const spaceOptions = ref([])
 const applicationOptions = ref([])
@@ -405,7 +404,6 @@ function handleResetSearch() {
 }
 
 function handleSearch() {
-    resetForm()
     resetPagination()
     getPageList()
 }
