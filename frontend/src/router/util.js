@@ -103,7 +103,9 @@ export function formatRoutes(routes = [], parent = {}) {
                 },
             }
             // 面包屑导航
-            route.meta.breadcrumb = [...(parent?.meta?.breadcrumb ?? []), route]
+            route.meta.breadcrumb = localRoute?.meta?.breadcrumb
+                ? [...localRoute.meta.breadcrumb, route]
+                : [...(parent?.meta?.breadcrumb ?? []), route]
             // 重定向
             localRoute.redirect && (route.redirect = localRoute.redirect)
             // 是否有子菜单，并递归处理

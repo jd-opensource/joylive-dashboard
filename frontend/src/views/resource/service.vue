@@ -89,6 +89,9 @@
                     :scroll="{ x: 1260 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
+                        <template v-if="'name' === column.key">
+                            <a @click="goToDetail(record)">{{ record.name }}</a>
+                        </template>
                         <template v-if="'createAt' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
@@ -182,10 +185,12 @@ import {
     UnlockOutlined,
 } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 defineOptions({
     name: 'serviceList',
 })
+const router = useRouter()
 const { t } = useI18n()
 const registrationTypeMap = {
     HTTP: t('pages.service.form.registration_type.http'),
@@ -203,7 +208,7 @@ const statusColorMap = {
     rejected: 'red',
 }
 const baseColumns = [
-    { title: t('pages.service.form.name'), dataIndex: 'name', width: 200 },
+    { title: t('pages.service.form.name'), dataIndex: 'name', key: 'name', width: 200 },
     {
         title: t('pages.service.form.registration_type'),
         dataIndex: 'registration_type',
@@ -406,6 +411,10 @@ function handleResetSearch() {
 function handleSearch() {
     resetPagination()
     getPageList()
+}
+
+function goToDetail(record) {
+    router.push({ name: 'serviceDetail', params: { id: record.id } })
 }
 
 async function onOk() {

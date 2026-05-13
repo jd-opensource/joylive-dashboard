@@ -126,6 +126,22 @@ func (a *Service) Get(ctx context.Context, id string, opts ...schema.ServiceQuer
 	} else if !ok {
 		return nil, nil
 	}
+
+	// Query application_name from application_service (role=provider) joined with application
+	appSvcTable := config.C.FormatTableName("application_service")
+	appTable := config.C.FormatTableName("application")
+	var appName string
+	err = util.GetDB(ctx, a.DB).
+		Table(appSvcTable).
+		Select(appTable + ".name").
+		Joins("LEFT JOIN "+appTable+" ON "+appTable+".id = "+appSvcTable+".application_id AND "+appTable+".deleted = '0'").
+		Where(appSvcTable+".service_id = ? AND "+appSvcTable+".role = ? AND "+appSvcTable+".deleted = '0'", id, "provider").
+		Scan(&appName).Error
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	item.ApplicationName = appName
+
 	return item, nil
 }
 

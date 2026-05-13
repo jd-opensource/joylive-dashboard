@@ -35,6 +35,22 @@ export default [
                     permission: '*',
                 },
             },
+            {
+                path: 'service/:id',
+                name: 'serviceDetail',
+                component: 'resource/ServiceDetail.vue',
+                meta: {
+                    title: '服务详情',
+                    isMenu: false,
+                    keepAlive: false,
+                    permission: '*',
+                    active: 'serviceList',
+                    breadcrumb: [
+                        { name: 'resource', meta: { title: '基础资源' } },
+                        { name: 'serviceList', meta: { title: '服务管理' } },
+                    ],
+                },
+            },
         ],
     },
 ]

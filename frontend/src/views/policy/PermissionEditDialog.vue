@@ -13,7 +13,8 @@
             ref="formRef"
             :model="formData"
             :rules="formRules"
-            :label-col="{ style: { width: '110px' } }">
+            :label-col="{ style: { width: '110px' } }"
+            :wrapper-col="{ flex: 1 }">
             <!-- 规则名称 -->
             <a-form-item
                 :label="$t('pages.permission.form.name')"
@@ -22,7 +23,6 @@
                     :placeholder="$t('pages.permission.form.name.placeholder')"
                     v-model:value="formData.name"
                     :maxlength="60" />
-                <div class="form-hint">{{ $t('pages.permission.form.name.hint') }}</div>
             </a-form-item>
 
             <!-- 服务空间 -->
@@ -215,8 +215,8 @@
                 :label="$t('pages.permission.form.type')"
                 name="type">
                 <a-radio-group v-model:value="formData.type">
-                    <a-radio value="BLACK">{{ $t('pages.permission.form.type.black') }}</a-radio>
-                    <a-radio value="WHITE">{{ $t('pages.permission.form.type.white') }}</a-radio>
+                    <a-radio value="DENY">{{ $t('pages.permission.form.type.black') }}</a-radio>
+                    <a-radio value="ALLOW">{{ $t('pages.permission.form.type.white') }}</a-radio>
                 </a-radio-group>
             </a-form-item>
 

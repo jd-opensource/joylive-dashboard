@@ -1,2 +1,2 @@
-const notMenuPage = ['setting']
+const notMenuPage = ['setting', 'serviceDetail']
 export default notMenuPage

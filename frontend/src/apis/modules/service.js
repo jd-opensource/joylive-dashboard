@@ -16,3 +16,13 @@ export const delService = (id) => request.basic.delete(`/api/v1/services/${id}`)
 export const delServiceConsumer = (id) => request.basic.delete(`/api/v1/services/${id}/consumer`)
 // 切换service的认证状态
 export const toggleServiceAuth = (id, params) => request.basic.put(`/api/v1/services/${id}/auth`, params)
+// 获取服务分组列表
+export const getServiceGroupList = (params) => request.basic.get('/api/v1/service-groups', params)
+// 获取服务分组单条数据
+export const getServiceGroup = (id) => request.basic.get(`/api/v1/service-groups/${id}`)
+// 添加服务分组
+export const createServiceGroup = (params) => request.basic.post('/api/v1/service-groups', params)
+// 更新服务分组
+export const updateServiceGroup = (id, params) => request.basic.put(`/api/v1/service-groups/${id}`, params)
+// 删除服务分组
+export const delServiceGroup = (id) => request.basic.delete(`/api/v1/service-groups/${id}`)
