@@ -1,4 +1,14 @@
-# joylive-dashboard
+<div align="center">
+  <a href="https://github.com/jd-opensource/joylive-dashboard">
+    <img alt="JoyLive Logo" width="215" src="./frontend/public/images/logo.png">
+  </a>
+  <br>
+  <br>
+
+[![license](https://img.shields.io/github/license/jd-opensource/joylive-dashboard.svg)](LICENSE)
+
+  <h1>JoyLive-Dashboard</h1>
+</div>
 
 A microservice governance interface operation console serving joylive-agent. 一个服务于joylive-agent的微服务治理界面操作控制台。
 
@@ -195,4 +205,4 @@ make wire
 
 ## 许可证
 
-本项目采用 MIT 许可证，详情请查看 [LICENSE](LICENSE) 文件。
+本项目采用 Apache 许可证，详情请查看 [LICENSE](LICENSE) 文件。
