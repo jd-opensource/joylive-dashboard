@@ -79,6 +79,9 @@ func (a *PolicyLoadbalanceForm) Validate() error {
 	if a.Name == "" {
 		return errors.BadRequest("", "Name is required")
 	}
+	if a.SpaceCode == nil || *a.SpaceCode == "" {
+		return errors.BadRequest("", "SpaceCode is required")
+	}
 	if a.TargetServiceId == "" {
 		return errors.BadRequest("", "TargetServiceId is required")
 	}

@@ -112,7 +112,7 @@
                     :data-source="listData"
                     :loading="loading"
                     :pagination="paginationState"
-                    :scroll="{ x: 1400 }"
+                    :scroll="{ x: 1300 }"
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
                         <template v-if="'sourceApplicationId' === column.key">
@@ -120,6 +120,9 @@
                         </template>
                         <template v-if="'targetServiceId' === column.key">
                             {{ serviceNameMap[record.targetServiceId] || record.targetServiceId }}
+                        </template>
+                        <template v-if="'policyType' === column.key">
+                            {{ policyTypeMap[record.policyType] || record.policyType }}
                         </template>
                         <template v-if="'enabled' === column.key">
                             <a-tag :color="record.enabled === 1 ? 'green' : 'default'">
@@ -192,8 +195,7 @@ const columns = [
         key: 'targetServiceId',
         width: 150,
     },
-    { title: t('pages.loadbalance.form.group'), dataIndex: 'group', width: 100 },
-    { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policyType', width: 120 },
+    { title: t('pages.loadbalance.form.policyType'), dataIndex: 'policyType', key: 'policyType', width: 120 },
     { title: t('pages.loadbalance.form.enabled'), key: 'enabled', width: 80 },
     { title: t('pages.loadbalance.form.creator'), dataIndex: 'creator', width: 100 },
     { title: t('pages.loadbalance.form.description'), dataIndex: 'description', ellipsis: true },
@@ -210,6 +212,11 @@ const serviceOptions = ref([])
 const applicationOptions = ref([])
 const serviceNameMap = ref({})
 const applicationNameMap = ref({})
+const policyTypeMap = {
+    RANDOM: '随机策略',
+    ROUND_ROBIN: '轮询策略',
+    CUSTOM_RESPONSE: '自适应策略',
+}
 
 const SPACE_CODE_KEY = 'loadbalance_space_code'
 

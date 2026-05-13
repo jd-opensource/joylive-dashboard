@@ -221,6 +221,7 @@ export default {
     'pages.loadbalance.form.name.required': 'Policy name is required!',
     'pages.loadbalance.form.spaceCode': 'Space Code',
     'pages.loadbalance.form.spaceCode.placeholder': 'Please select a space',
+    'pages.loadbalance.form.spaceCode.required': 'Space code is required!',
     'pages.loadbalance.form.sourceApplicationId': 'Calling Application',
     'pages.loadbalance.form.sourceApplicationId.placeholder': 'Please select a source application',
     'pages.loadbalance.form.targetServiceId': 'Target Service',
