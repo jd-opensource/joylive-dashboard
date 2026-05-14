@@ -14,6 +14,8 @@ A microservice governance interface operation console serving joylive-agent. 一
 
 ![dashboard](docs/image/dashboard.jpg)
 
+![servicelist](docs/image/servicelist.png)
+
 ## 项目结构
 
 本项目采用前后端一体化架构：
