@@ -32,5 +32,20 @@
             "cwd": "${workspaceFolder}/frontend",
             "console": "integratedTerminal"
         }
+    ],
+    "compounds": [
+        {
+            "name": "Launch Full Stack (Frontend + Backend)",
+            "configurations": [
+                "Launch Backend (Go)",
+                "Launch Frontend (Vite)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "fullstack",
+                "order": 1
+            }
+        }
     ]
 }

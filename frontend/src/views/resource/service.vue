@@ -1,86 +1,101 @@
 <template>
-    <a-tabs
-        v-model:activeKey="activeTab"
-        @change="onTabChange">
-        <a-tab-pane
-            key="provider"
-            :tab="$t('pages.service.tab.provider')" />
-        <a-tab-pane
-            key="consumer"
-            :tab="$t('pages.service.tab.consumer')" />
-        <a-tab-pane
-            key="all"
-            :tab="$t('pages.service.tab.all')" />
-    </a-tabs>
-    <x-search-bar class="mb-8-2">
-        <template #default="{ gutter, colSpan }">
-            <a-form
-                :label-col="{ style: { width: '100px' } }"
-                :model="searchFormData"
-                layout="inline">
-                <a-row :gutter="gutter">
-                    <a-col v-bind="colSpan">
-                        <a-form-item
-                            :label="$t('pages.service.form.space_code')"
-                            name="space_code">
-                            <a-select
-                                :placeholder="$t('pages.service.form.space_code.placeholder')"
-                                v-model:value="searchFormData.space_code"
-                                show-search
-                                :filter-option="filterSpaceOption"
-                                @change="onSpaceChange">
-                                <a-select-option
-                                    v-for="item in spaceOptions"
-                                    :key="item.code"
-                                    :value="item.code">
-                                    {{ item.name }} ({{ item.code }})
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                    <a-col v-bind="colSpan">
-                        <a-form-item
-                            :label="$t('pages.service.form.name')"
-                            name="name">
-                            <a-input
-                                :placeholder="$t('pages.service.form.name.placeholder')"
-                                v-model:value="searchFormData.name"></a-input>
-                        </a-form-item>
-                    </a-col>
-                    <a-col
-                        class="align-right"
-                        v-bind="colSpan">
-                        <a-space>
-                            <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
-                            <a-button
-                                ghost
-                                type="primary"
-                                @click="handleSearch">
-                                {{ $t('button.search') }}
-                            </a-button>
-                        </a-space>
-                    </a-col>
-                </a-row>
-            </a-form>
-        </template>
-    </x-search-bar>
     <a-row
         :gutter="8"
         :wrap="false">
         <a-col flex="auto">
             <a-card type="flex">
-                <x-action-bar class="mb-8-2">
-                    <a-button
-                        v-if="activeTab === 'provider'"
-                        v-action="'add'"
-                        type="primary"
-                        @click="$refs.editDialogRef.handleCreate()">
-                        <template #icon>
-                            <plus-outlined></plus-outlined>
-                        </template>
-                        {{ $t('pages.service.create') }}
-                    </a-button>
-                </x-action-bar>
+                <a-row
+                    :gutter="16"
+                    align="middle"
+                    class="mb-8-2">
+                    <a-col flex="none">
+                        <a-radio-group
+                            v-model:value="activeTab"
+                            button-style="solid"
+                            @change="onTabChange">
+                            <a-radio-button value="provider">
+                                {{ $t('pages.service.tab.provider') }}
+                            </a-radio-button>
+                            <a-radio-button value="consumer">
+                                {{ $t('pages.service.tab.consumer') }}
+                            </a-radio-button>
+                            <a-radio-button value="all">
+                                {{ $t('pages.service.tab.all') }}
+                            </a-radio-button>
+                        </a-radio-group>
+                    </a-col>
+                    <a-col flex="none">
+                        <a-button
+                            v-if="activeTab === 'provider'"
+                            v-action="'add'"
+                            type="primary"
+                            @click="$refs.editDialogRef.handleCreate()">
+                            <template #icon>
+                                <plus-outlined></plus-outlined>
+                            </template>
+                            {{ $t('pages.service.create') }}
+                        </a-button>
+                    </a-col>
+                    <a-col flex="auto"></a-col>
+                    <a-col flex="none">
+                        <a-form
+                            :model="searchFormData"
+                            layout="inline">
+                            <a-form-item
+                                :label="$t('pages.service.form.space_code')"
+                                name="space_code"
+                                style="margin-bottom: 0">
+                                <a-select
+                                    :placeholder="$t('pages.service.form.space_code.placeholder')"
+                                    v-model:value="searchFormData.space_code"
+                                    show-search
+                                    :filter-option="filterSpaceOption"
+                                    @change="onSpaceChange"
+                                    style="width: 200px">
+                                    <a-select-option
+                                        v-for="item in spaceOptions"
+                                        :key="item.code"
+                                        :value="item.code">
+                                        {{ item.name }} ({{ item.code }})
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item
+                                :label="$t('pages.service.form.name')"
+                                name="name"
+                                style="margin-bottom: 0">
+                                <a-input
+                                    :placeholder="$t('pages.service.form.name.placeholder')"
+                                    v-model:value="searchFormData.name"
+                                    style="width: 200px"
+                                    @pressEnter="handleSearch"></a-input>
+                            </a-form-item>
+                            <a-form-item style="margin-bottom: 0">
+                                <a-space :size="8">
+                                    <a-tooltip :title="$t('button.reset')">
+                                        <a-button
+                                            shape="circle"
+                                            @click="handleResetSearch">
+                                            <template #icon>
+                                                <redo-outlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <a-tooltip :title="$t('button.search')">
+                                        <a-button
+                                            type="primary"
+                                            shape="circle"
+                                            @click="handleSearch">
+                                            <template #icon>
+                                                <search-outlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                </a-space>
+                            </a-form-item>
+                        </a-form>
+                    </a-col>
+                </a-row>
                 <a-table
                     :columns="columns"
                     :data-source="listData"
@@ -90,7 +105,12 @@
                     @change="onTableChange">
                     <template #bodyCell="{ column, record }">
                         <template v-if="'name' === column.key">
-                            <a @click="goToDetail(record)">{{ record.name }}</a>
+                            <a
+                                v-if="activeTab === 'provider'"
+                                @click="goToDetail(record)">
+                                {{ record.name }}
+                            </a>
+                            <span v-else>{{ record.name }}</span>
                         </template>
                         <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
@@ -183,9 +203,12 @@ import {
     ImportOutlined,
     LockOutlined,
     UnlockOutlined,
+    SearchOutlined,
+    RedoOutlined,
 } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
 
 defineOptions({
     name: 'serviceList',
@@ -208,7 +231,7 @@ const statusColorMap = {
     rejected: 'red',
 }
 const baseColumns = [
-    { title: t('pages.service.form.name'), dataIndex: 'name', key: 'name', width: 200 },
+    { title: t('pages.service.form.name'), dataIndex: 'name', key: 'name', width: 280 },
     {
         title: t('pages.service.form.registration_type'),
         dataIndex: 'registration_type',
@@ -246,8 +269,6 @@ const spaceOptions = ref([])
 const applicationOptions = ref([])
 const activeTab = ref('provider')
 
-const SPACE_CODE_KEY = 'service_space_code'
-
 function currentRole() {
     return activeTab.value === 'all' ? '' : activeTab.value
 }
@@ -268,10 +289,7 @@ async function loadSpaceOptions() {
         if (config('http.code.success') === success) {
             spaceOptions.value = data || []
             if (spaceOptions.value.length > 0) {
-                const saved = localStorage.getItem(SPACE_CODE_KEY)
-                const found = saved && spaceOptions.value.some((item) => item.code === saved)
-                searchFormData.value.space_code = found ? saved : spaceOptions.value[0].code
-                localStorage.setItem(SPACE_CODE_KEY, searchFormData.value.space_code)
+                searchFormData.value.space_code = initSpaceCode(spaceOptions.value)
                 getPageList()
             }
         }
@@ -294,7 +312,7 @@ async function loadApplicationOptions() {
 }
 
 function onSpaceChange(value) {
-    localStorage.setItem(SPACE_CODE_KEY, value)
+    setCurrentSpaceCode(value)
     resetPagination()
     getPageList()
 }
@@ -422,4 +440,91 @@ async function onOk() {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+@import '@/styles/variables.less';
+
+// Tab 按钮组样式
+:deep(.ant-radio-group) {
+    &.ant-radio-group-solid {
+        .ant-radio-button-wrapper {
+            border-color: @color-border;
+
+            &:hover {
+                color: @color-primary;
+            }
+
+            &.ant-radio-button-wrapper-checked {
+                background: @color-primary;
+                border-color: @color-primary;
+            }
+        }
+    }
+}
+
+// 搜索栏和操作按钮行
+:deep(.ant-form-inline) {
+    .ant-form-item {
+        margin-right: 16px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// 表格行悬停效果 - 轻微优化
+:deep(.ant-table-tbody > tr:hover > td) {
+    background-color: #fafafa;
+}
+
+// 服务名称链接 - 添加平滑过渡
+:deep(.ant-table-tbody) {
+    a {
+        color: @color-primary;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #0958d9;
+        }
+    }
+}
+
+// 操作按钮 - 添加悬停效果
+:deep(.x-action-button) {
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+    }
+}
+
+// 状态标签 - 轻微优化圆角
+:deep(.ant-tag) {
+    border-radius: 4px;
+}
+
+// 搜索按钮 - 添加轻微过渡
+:deep(.ant-btn) {
+    transition: all 0.2s ease;
+}
+
+// 表格单元格 - 优化间距
+:deep(.ant-table) {
+    .ant-table-tbody > tr > td {
+        padding: 12px 16px;
+    }
+
+    .ant-table-thead > tr > th {
+        padding: 12px 16px;
+        font-weight: 600;
+    }
+}
+
+// 搜索栏分隔线
+.mb-8-2 {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 16px;
+}
+</style>

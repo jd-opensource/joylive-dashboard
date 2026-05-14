@@ -1,248 +1,263 @@
 <template>
-    <a-modal
+    <a-drawer
         :open="modal.open"
         :title="modal.title"
         :width="720"
-        :confirm-loading="modal.confirmLoading"
-        :after-close="onAfterClose"
-        :cancel-text="cancelText"
-        :ok-text="okText"
-        @ok="handleOk"
-        @cancel="handleCancel">
+        placement="right"
+        :closable="true"
+        @close="handleCancel">
         <a-form
             ref="formRef"
             :model="formData"
             :rules="formRules"
             :label-col="{ style: { width: '110px' } }"
             :wrapper-col="{ flex: 1 }">
-            <!-- 规则名称 -->
-            <a-form-item
-                :label="$t('pages.permission.form.name')"
-                name="name">
-                <a-input
-                    :placeholder="$t('pages.permission.form.name.placeholder')"
-                    v-model:value="formData.name"
-                    :maxlength="60" />
-            </a-form-item>
+            <a-card class="mb-8-2">
+                <!-- 规则名称 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.name')"
+                    name="name">
+                    <a-input
+                        :placeholder="$t('pages.permission.form.name.placeholder')"
+                        v-model:value="formData.name"
+                        :maxlength="60" />
+                </a-form-item>
 
-            <!-- 服务空间 -->
-            <a-form-item
-                :label="$t('pages.permission.form.space_code')"
-                name="space_code">
-                <a-select
-                    :placeholder="$t('pages.permission.form.space_code.placeholder')"
-                    v-model:value="formData.space_code"
-                    allow-clear
-                    show-search
-                    :filter-option="filterSpaceOption">
-                    <a-select-option
-                        v-for="item in spaceOptions"
-                        :key="item.code"
-                        :value="item.code">
-                        {{ item.name }} ({{ item.code }})
-                    </a-select-option>
-                </a-select>
-            </a-form-item>
+                <!-- 服务空间 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.space_code')"
+                    name="space_code">
+                    <a-select
+                        :placeholder="$t('pages.permission.form.space_code.placeholder')"
+                        v-model:value="formData.space_code"
+                        allow-clear
+                        show-search
+                        :filter-option="filterSpaceOption">
+                        <a-select-option
+                            v-for="item in spaceOptions"
+                            :key="item.code"
+                            :value="item.code">
+                            {{ item.name }} ({{ item.code }})
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-            <!-- 调用应用 -->
-            <a-form-item
-                :label="$t('pages.permission.form.sourceApplicationId')"
-                name="source_application_id">
-                <a-select
-                    :placeholder="$t('pages.permission.form.sourceApplicationId.placeholder')"
-                    v-model:value="formData.source_application_id"
-                    allow-clear
-                    show-search
-                    :filter-option="filterAppOption">
-                    <a-select-option
-                        v-for="item in applicationOptions"
-                        :key="item.id"
-                        :value="item.id">
-                        {{ item.name }}
-                    </a-select-option>
-                </a-select>
-            </a-form-item>
+                <!-- 调用应用 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.sourceApplicationId')"
+                    name="source_application_id">
+                    <a-select
+                        :placeholder="$t('pages.permission.form.sourceApplicationId.placeholder')"
+                        v-model:value="formData.source_application_id"
+                        allow-clear
+                        show-search
+                        :filter-option="filterAppOption">
+                        <a-select-option
+                            v-for="item in applicationOptions"
+                            :key="item.id"
+                            :value="item.id">
+                            {{ item.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-            <!-- 目标服务 -->
-            <a-form-item
-                :label="$t('pages.permission.form.targetServiceId')"
-                name="target_service_id">
-                <a-select
-                    :placeholder="$t('pages.permission.form.targetServiceId.placeholder')"
-                    v-model:value="formData.target_service_id"
-                    show-search
-                    :filter-option="filterServiceOption">
-                    <a-select-option
-                        v-for="item in filteredServiceOptions"
-                        :key="item.id"
-                        :value="item.id">
-                        {{ item.name }}
-                    </a-select-option>
-                </a-select>
-            </a-form-item>
+                <!-- 目标服务 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.targetServiceId')"
+                    name="target_service_id">
+                    <a-select
+                        :placeholder="$t('pages.permission.form.targetServiceId.placeholder')"
+                        v-model:value="formData.target_service_id"
+                        show-search
+                        :filter-option="filterServiceOption">
+                        <a-select-option
+                            v-for="item in filteredServiceOptions"
+                            :key="item.id"
+                            :value="item.id">
+                            {{ item.name }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-            <!-- 当前服务分组 -->
-            <a-form-item
-                :label="$t('pages.permission.form.group')"
-                name="group">
-                <a-select
-                    :placeholder="$t('pages.permission.form.group.placeholder')"
-                    v-model:value="formData.group">
-                    <a-select-option value="default">
-                        {{ $t('pages.permission.form.group.default') }}
-                    </a-select-option>
-                </a-select>
-            </a-form-item>
+                <!-- 当前服务分组 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.group')"
+                    name="group">
+                    <a-select
+                        :placeholder="$t('pages.permission.form.group.placeholder')"
+                        v-model:value="formData.group">
+                        <a-select-option value="default">
+                            {{ $t('pages.permission.form.group.default') }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
 
-            <!-- 当前服务路径 -->
-            <a-form-item
-                :label="$t('pages.permission.form.path')"
-                name="path">
-                <a-input
-                    :placeholder="$t('pages.permission.form.path.placeholder')"
-                    v-model:value="formData.path" />
-            </a-form-item>
+                <!-- 当前服务路径 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.path')"
+                    name="path">
+                    <a-input
+                        :placeholder="$t('pages.permission.form.path.placeholder')"
+                        v-model:value="formData.path" />
+                </a-form-item>
 
-            <!-- 当前服务方法 -->
-            <a-form-item
-                :label="$t('pages.permission.form.method')"
-                name="method">
-                <a-input
-                    :placeholder="$t('pages.permission.form.method.placeholder')"
-                    v-model:value="formData.method" />
-            </a-form-item>
+                <!-- 当前服务方法 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.method')"
+                    name="method">
+                    <a-input
+                        :placeholder="$t('pages.permission.form.method.placeholder')"
+                        v-model:value="formData.method" />
+                </a-form-item>
 
-            <!-- 鉴权方式 -->
-            <a-form-item
-                :label="$t('pages.permission.form.authMethod')"
-                name="relation_type"
-                class="auth-method-form-item">
-                <div class="auth-method-section">
-                    <div class="auth-method-header">
-                        <span class="auth-method-label">{{ $t('pages.permission.form.authMethod.settingLabel') }}</span>
-                        <a-radio-group v-model:value="formData.relation_type">
-                            <a-radio value="AND">AND({{ $t('pages.permission.form.relationType.and') }})</a-radio>
-                            <a-radio value="OR">OR({{ $t('pages.permission.form.relationType.or') }})</a-radio>
-                        </a-radio-group>
-                    </div>
-
-                    <!-- 条件表格 -->
-                    <div
-                        class="conditions-table"
-                        v-if="formData.conditions && formData.conditions.length > 0">
-                        <div class="conditions-header">
-                            <div class="col-type">{{ $t('pages.permission.form.conditions.type') }}</div>
-                            <div class="col-key">{{ $t('pages.permission.form.conditions.key') }}</div>
-                            <div class="col-op">
-                                {{ $t('pages.permission.form.conditions.opType') }}
-                                <a-tooltip :title="$t('pages.permission.form.conditions.opType.tooltip')">
-                                    <question-circle-outlined style="margin-left: 4px; color: #999" />
-                                </a-tooltip>
-                            </div>
-                            <div class="col-value">{{ $t('pages.permission.form.conditions.values') }}</div>
-                            <div class="col-action">{{ $t('pages.permission.form.conditions.action') }}</div>
+                <!-- 鉴权方式 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.authMethod')"
+                    name="relation_type"
+                    class="auth-method-form-item">
+                    <div class="auth-method-section">
+                        <div class="auth-method-header">
+                            <span class="auth-method-label">{{
+                                $t('pages.permission.form.authMethod.settingLabel')
+                            }}</span>
+                            <a-radio-group v-model:value="formData.relation_type">
+                                <a-radio value="AND">AND({{ $t('pages.permission.form.relationType.and') }})</a-radio>
+                                <a-radio value="OR">OR({{ $t('pages.permission.form.relationType.or') }})</a-radio>
+                            </a-radio-group>
                         </div>
+
+                        <!-- 条件表格 -->
                         <div
-                            class="conditions-row"
-                            v-for="(condition, index) in formData.conditions"
-                            :key="index">
-                            <div class="col-type">
-                                <a-select
-                                    v-model:value="condition.type"
-                                    :placeholder="$t('pages.permission.form.conditions.type.placeholder')"
-                                    size="small">
-                                    <a-select-option value="QUERY">QUERY</a-select-option>
-                                    <a-select-option value="COOKIE">COOKIE</a-select-option>
-                                    <a-select-option value="HEADER">HEADER</a-select-option>
-                                </a-select>
+                            class="conditions-table"
+                            v-if="formData.conditions && formData.conditions.length > 0">
+                            <div class="conditions-header">
+                                <div class="col-type">{{ $t('pages.permission.form.conditions.type') }}</div>
+                                <div class="col-key">{{ $t('pages.permission.form.conditions.key') }}</div>
+                                <div class="col-op">
+                                    {{ $t('pages.permission.form.conditions.opType') }}
+                                    <a-tooltip :title="$t('pages.permission.form.conditions.opType.tooltip')">
+                                        <question-circle-outlined style="margin-left: 4px; color: #999" />
+                                    </a-tooltip>
+                                </div>
+                                <div class="col-value">{{ $t('pages.permission.form.conditions.values') }}</div>
+                                <div class="col-action">{{ $t('pages.permission.form.conditions.action') }}</div>
                             </div>
-                            <div class="col-key">
-                                <a-input
-                                    v-model:value="condition.key"
-                                    :placeholder="$t('pages.permission.form.conditions.key.placeholder')"
-                                    size="small" />
-                            </div>
-                            <div class="col-op">
-                                <a-select
-                                    v-model:value="condition.opType"
-                                    :placeholder="$t('pages.permission.form.conditions.opType.placeholder')"
-                                    size="small">
-                                    <a-select-option value="EQUAL">{{
-                                        $t('pages.permission.form.conditions.op.equal')
-                                    }}</a-select-option>
-                                    <a-select-option value="NOT_EQUAL">{{
-                                        $t('pages.permission.form.conditions.op.notEqual')
-                                    }}</a-select-option>
-                                    <a-select-option value="CONTAIN">{{
-                                        $t('pages.permission.form.conditions.op.contain')
-                                    }}</a-select-option>
-                                    <a-select-option value="NOT_CONTAIN">{{
-                                        $t('pages.permission.form.conditions.op.notContain')
-                                    }}</a-select-option>
-                                    <a-select-option value="REGEX">{{
-                                        $t('pages.permission.form.conditions.op.regex')
-                                    }}</a-select-option>
-                                    <a-select-option value="PREFIX">{{
-                                        $t('pages.permission.form.conditions.op.prefix')
-                                    }}</a-select-option>
-                                </a-select>
-                            </div>
-                            <div class="col-value">
-                                <a-select
-                                    v-model:value="condition.values"
-                                    mode="tags"
-                                    :placeholder="$t('pages.permission.form.conditions.values.placeholder')"
-                                    size="small" />
-                            </div>
-                            <div class="col-action">
-                                <minus-circle-outlined
-                                    class="condition-remove-btn"
-                                    @click="removeCondition(index)" />
+                            <div
+                                class="conditions-row"
+                                v-for="(condition, index) in formData.conditions"
+                                :key="index">
+                                <div class="col-type">
+                                    <a-select
+                                        v-model:value="condition.type"
+                                        :placeholder="$t('pages.permission.form.conditions.type.placeholder')"
+                                        size="small">
+                                        <a-select-option value="QUERY">QUERY</a-select-option>
+                                        <a-select-option value="COOKIE">COOKIE</a-select-option>
+                                        <a-select-option value="HEADER">HEADER</a-select-option>
+                                    </a-select>
+                                </div>
+                                <div class="col-key">
+                                    <a-input
+                                        v-model:value="condition.key"
+                                        :placeholder="$t('pages.permission.form.conditions.key.placeholder')"
+                                        size="small" />
+                                </div>
+                                <div class="col-op">
+                                    <a-select
+                                        v-model:value="condition.opType"
+                                        :placeholder="$t('pages.permission.form.conditions.opType.placeholder')"
+                                        size="small">
+                                        <a-select-option value="EQUAL">{{
+                                            $t('pages.permission.form.conditions.op.equal')
+                                        }}</a-select-option>
+                                        <a-select-option value="NOT_EQUAL">{{
+                                            $t('pages.permission.form.conditions.op.notEqual')
+                                        }}</a-select-option>
+                                        <a-select-option value="CONTAIN">{{
+                                            $t('pages.permission.form.conditions.op.contain')
+                                        }}</a-select-option>
+                                        <a-select-option value="NOT_CONTAIN">{{
+                                            $t('pages.permission.form.conditions.op.notContain')
+                                        }}</a-select-option>
+                                        <a-select-option value="REGEX">{{
+                                            $t('pages.permission.form.conditions.op.regex')
+                                        }}</a-select-option>
+                                        <a-select-option value="PREFIX">{{
+                                            $t('pages.permission.form.conditions.op.prefix')
+                                        }}</a-select-option>
+                                    </a-select>
+                                </div>
+                                <div class="col-value">
+                                    <a-select
+                                        v-model:value="condition.values"
+                                        mode="tags"
+                                        :placeholder="$t('pages.permission.form.conditions.values.placeholder')"
+                                        size="small" />
+                                </div>
+                                <div class="col-action">
+                                    <minus-circle-outlined
+                                        class="condition-remove-btn"
+                                        @click="removeCondition(index)" />
+                                </div>
                             </div>
                         </div>
+
+                        <a
+                            class="add-condition-link"
+                            @click="addCondition">
+                            {{ $t('pages.permission.form.conditions.add') }}
+                        </a>
                     </div>
+                </a-form-item>
 
-                    <a
-                        class="add-condition-link"
-                        @click="addCondition">
-                        {{ $t('pages.permission.form.conditions.add') }}
-                    </a>
-                </div>
-            </a-form-item>
+                <!-- 鉴权结果 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.type')"
+                    name="type">
+                    <a-radio-group v-model:value="formData.type">
+                        <a-radio value="DENY">{{ $t('pages.permission.form.type.black') }}</a-radio>
+                        <a-radio value="ALLOW">{{ $t('pages.permission.form.type.white') }}</a-radio>
+                    </a-radio-group>
+                </a-form-item>
 
-            <!-- 鉴权结果 -->
-            <a-form-item
-                :label="$t('pages.permission.form.type')"
-                name="type">
-                <a-radio-group v-model:value="formData.type">
-                    <a-radio value="DENY">{{ $t('pages.permission.form.type.black') }}</a-radio>
-                    <a-radio value="ALLOW">{{ $t('pages.permission.form.type.white') }}</a-radio>
-                </a-radio-group>
-            </a-form-item>
+                <!-- 生效状态 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.enabled')"
+                    name="enabled">
+                    <a-switch
+                        v-model:checked="enabledSwitch"
+                        :checked-children="$t('pages.permission.form.enabled.active')"
+                        :un-checked-children="$t('pages.permission.form.enabled.inactive')" />
+                </a-form-item>
 
-            <!-- 生效状态 -->
-            <a-form-item
-                :label="$t('pages.permission.form.enabled')"
-                name="enabled">
-                <a-switch
-                    v-model:checked="enabledSwitch"
-                    :checked-children="$t('pages.permission.form.enabled.active')"
-                    :un-checked-children="$t('pages.permission.form.enabled.inactive')" />
-            </a-form-item>
-
-            <!-- 描述 -->
-            <a-form-item
-                :label="$t('pages.permission.form.description')"
-                name="description">
-                <a-textarea
-                    v-model:value="formData.description"
-                    :placeholder="$t('pages.permission.form.description.placeholder')"
-                    :maxlength="255"
-                    show-count
-                    :rows="3" />
-            </a-form-item>
+                <!-- 描述 -->
+                <a-form-item
+                    :label="$t('pages.permission.form.description')"
+                    name="description">
+                    <a-textarea
+                        v-model:value="formData.description"
+                        :placeholder="$t('pages.permission.form.description.placeholder')"
+                        :maxlength="255"
+                        show-count
+                        :rows="3" />
+                </a-form-item>
+            </a-card>
         </a-form>
-    </a-modal>
+
+        <template #footer>
+            <div style="text-align: right">
+                <a-space>
+                    <a-button @click="handleCancel">{{ cancelText }}</a-button>
+                    <a-button
+                        type="primary"
+                        :loading="modal.confirmLoading"
+                        @click="handleOk">
+                        {{ okText }}
+                    </a-button>
+                </a-space>
+            </div>
+        </template>
+    </a-drawer>
 </template>
 
 <script setup>
@@ -253,6 +268,7 @@ import { config } from '@/config'
 import apis from '@/apis'
 import { useForm, useModal } from '@/hooks'
 import { QuestionCircleOutlined, MinusCircleOutlined } from '@ant-design/icons-vue'
+import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
 
 const props = defineProps({
     spaceOptions: { type: Array, default: () => [] },
@@ -290,9 +306,12 @@ const filteredServiceOptions = computed(() => {
 
 watch(
     () => formData.value.space_code,
-    (_val, oldVal) => {
+    (val, oldVal) => {
         if (oldVal !== undefined) {
             formData.value.target_service_id = undefined
+        }
+        if (val) {
+            setCurrentSpaceCode(val)
         }
     }
 )
@@ -334,6 +353,7 @@ function handleCreate() {
     formData.value.relation_type = 'AND'
     formData.value.type = 'BLACK'
     formData.value.conditions = [createEmptyCondition()]
+    formData.value.space_code = initSpaceCode(props.spaceOptions)
     showModal({
         type: 'create',
         title: t('pages.permission.add'),
@@ -408,6 +428,7 @@ function handleOk() {
 
 function handleCancel() {
     hideModal()
+    onAfterClose()
 }
 
 function onAfterClose() {

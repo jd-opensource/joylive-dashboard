@@ -1,112 +1,103 @@
 <template>
-    <x-search-bar class="mb-8-2">
-        <template #default="{ gutter }">
-            <a-form
-                :label-col="{ style: { width: '80px' } }"
-                :model="searchFormData"
-                layout="inline">
-                <a-row
-                    :gutter="gutter"
-                    style="width: 100%">
-                    <a-col
-                        :xs="24"
-                        :sm="12"
-                        :md="8"
-                        :xl="6">
-                        <a-form-item
-                            :label="$t('pages.loadbalance.form.space_code')"
-                            name="space_code">
-                            <a-select
-                                :placeholder="$t('pages.loadbalance.form.space_code.placeholder')"
-                                v-model:value="searchFormData.space_code"
-                                show-search
-                                :filter-option="filterSpaceOption"
-                                @change="onSpaceChange">
-                                <a-select-option
-                                    v-for="item in spaceOptions"
-                                    :key="item.code"
-                                    :value="item.code">
-                                    {{ item.name }} ({{ item.code }})
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col
-                        :xs="24"
-                        :sm="12"
-                        :md="8"
-                        :xl="6">
-                        <a-form-item
-                            :label="$t('pages.loadbalance.form.targetServiceId')"
-                            name="target_service_id">
-                            <a-select
-                                :placeholder="$t('pages.loadbalance.form.targetServiceId.placeholder')"
-                                v-model:value="searchFormData.target_service_id"
-                                show-search
-                                :filter-option="filterServiceOption"
-                                allow-clear>
-                                <a-select-option
-                                    v-for="item in serviceOptions"
-                                    :key="item.id"
-                                    :value="item.id">
-                                    {{ item.name }}
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col
-                        :xs="24"
-                        :sm="12"
-                        :md="8"
-                        :xl="6">
-                        <a-form-item
-                            :label="$t('pages.loadbalance.form.name')"
-                            name="name">
-                            <a-input
-                                :placeholder="$t('pages.loadbalance.form.name.placeholder')"
-                                v-model:value="searchFormData.name"></a-input>
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col
-                        :xs="24"
-                        :sm="12"
-                        :md="8"
-                        :xl="6">
-                        <a-form-item>
-                            <a-space>
-                                <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
-                                <a-button
-                                    ghost
-                                    type="primary"
-                                    @click="handleSearch">
-                                    {{ $t('button.search') }}
-                                </a-button>
-                            </a-space>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-            </a-form>
-        </template>
-    </x-search-bar>
     <a-row
         :gutter="8"
         :wrap="false">
         <a-col flex="auto">
             <a-card type="flex">
-                <x-action-bar class="mb-8-2">
-                    <a-button
-                        v-action="'add'"
-                        type="primary"
-                        @click="$refs.editDialogRef.handleCreate()">
-                        <template #icon>
-                            <plus-outlined></plus-outlined>
-                        </template>
-                        {{ $t('pages.loadbalance.add') }}
-                    </a-button>
-                </x-action-bar>
+                <a-row
+                    :gutter="16"
+                    align="middle"
+                    class="mb-8-2">
+                    <a-col flex="none">
+                        <a-button
+                            v-action="'add'"
+                            type="primary"
+                            @click="$refs.editDialogRef.handleCreate()">
+                            <template #icon>
+                                <plus-outlined></plus-outlined>
+                            </template>
+                            {{ $t('pages.loadbalance.add') }}
+                        </a-button>
+                    </a-col>
+                    <a-col flex="auto"></a-col>
+                    <a-col flex="none">
+                        <a-form
+                            :model="searchFormData"
+                            layout="inline">
+                            <a-form-item
+                                :label="$t('pages.loadbalance.form.space_code')"
+                                name="space_code"
+                                style="margin-bottom: 0">
+                                <a-select
+                                    :placeholder="$t('pages.loadbalance.form.space_code.placeholder')"
+                                    v-model:value="searchFormData.space_code"
+                                    show-search
+                                    :filter-option="filterSpaceOption"
+                                    @change="onSpaceChange"
+                                    style="width: 200px">
+                                    <a-select-option
+                                        v-for="item in spaceOptions"
+                                        :key="item.code"
+                                        :value="item.code">
+                                        {{ item.name }} ({{ item.code }})
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item
+                                :label="$t('pages.loadbalance.form.targetServiceId')"
+                                name="target_service_id"
+                                style="margin-bottom: 0">
+                                <a-select
+                                    :placeholder="$t('pages.loadbalance.form.targetServiceId.placeholder')"
+                                    v-model:value="searchFormData.target_service_id"
+                                    show-search
+                                    :filter-option="filterServiceOption"
+                                    allow-clear
+                                    style="width: 200px">
+                                    <a-select-option
+                                        v-for="item in serviceOptions"
+                                        :key="item.id"
+                                        :value="item.id">
+                                        {{ item.name }}
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item
+                                :label="$t('pages.loadbalance.form.name')"
+                                name="name"
+                                style="margin-bottom: 0">
+                                <a-input
+                                    :placeholder="$t('pages.loadbalance.form.name.placeholder')"
+                                    v-model:value="searchFormData.name"
+                                    style="width: 200px"
+                                    @pressEnter="handleSearch"></a-input>
+                            </a-form-item>
+                            <a-form-item style="margin-bottom: 0">
+                                <a-space :size="8">
+                                    <a-tooltip :title="$t('button.reset')">
+                                        <a-button
+                                            shape="circle"
+                                            @click="handleResetSearch">
+                                            <template #icon>
+                                                <redo-outlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <a-tooltip :title="$t('button.search')">
+                                        <a-button
+                                            type="primary"
+                                            shape="circle"
+                                            @click="handleSearch">
+                                            <template #icon>
+                                                <search-outlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                </a-space>
+                            </a-form-item>
+                        </a-form>
+                    </a-col>
+                </a-row>
                 <a-table
                     :columns="columns"
                     :data-source="listData"
@@ -174,8 +165,9 @@ import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
 import { usePagination } from '@/hooks'
 import EditDialog from './LoadbalanceEditDialog.vue'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined, RedoOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
 
 defineOptions({
     name: 'loadbalanceList',
@@ -217,8 +209,6 @@ const policyTypeMap = {
     CUSTOM_RESPONSE: '自适应策略',
 }
 
-const SPACE_CODE_KEY = 'loadbalance_space_code'
-
 loadSpaceOptions()
 loadServiceOptions()
 loadApplicationOptions()
@@ -231,10 +221,7 @@ async function loadSpaceOptions() {
         if (config('http.code.success') === success) {
             spaceOptions.value = data || []
             if (spaceOptions.value.length > 0) {
-                const saved = localStorage.getItem(SPACE_CODE_KEY)
-                const found = saved && spaceOptions.value.some((item) => item.code === saved)
-                searchFormData.value.space_code = found ? saved : spaceOptions.value[0].code
-                localStorage.setItem(SPACE_CODE_KEY, searchFormData.value.space_code)
+                searchFormData.value.space_code = initSpaceCode(spaceOptions.value)
                 getPageList()
             }
         }
@@ -272,7 +259,7 @@ async function loadApplicationOptions() {
 }
 
 function onSpaceChange(value) {
-    localStorage.setItem(SPACE_CODE_KEY, value)
+    setCurrentSpaceCode(value)
     resetPagination()
     getPageList()
 }
@@ -362,4 +349,61 @@ async function onOk() {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+@import '@/styles/variables.less';
+
+// 搜索栏和操作按钮行
+:deep(.ant-form-inline) {
+    .ant-form-item {
+        margin-right: 16px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// 表格行悬停效果 - 轻微优化
+:deep(.ant-table-tbody > tr:hover > td) {
+    background-color: #fafafa;
+}
+
+// 操作按钮 - 添加悬停效果
+:deep(.x-action-button) {
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+    }
+}
+
+// 状态标签 - 轻微优化圆角
+:deep(.ant-tag) {
+    border-radius: 4px;
+}
+
+// 搜索按钮 - 添加轻微过渡
+:deep(.ant-btn) {
+    transition: all 0.2s ease;
+}
+
+// 表格单元格 - 优化间距
+:deep(.ant-table) {
+    .ant-table-tbody > tr > td {
+        padding: 12px 16px;
+    }
+
+    .ant-table-thead > tr > th {
+        padding: 12px 16px;
+        font-weight: 600;
+    }
+}
+
+// 搜索栏分隔线
+.mb-8-2 {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 16px;
+}
+</style>

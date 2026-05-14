@@ -88,6 +88,8 @@ import { config } from '@/config'
 import apis from '@/apis'
 import { useForm, useModal } from '@/hooks'
 import { useI18n } from 'vue-i18n'
+import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
+import { watch } from 'vue'
 
 const props = defineProps({
     spaceOptions: {
@@ -106,7 +108,14 @@ const { t } = useI18n()
 const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 
-const SPACE_CODE_KEY = 'service_space_code'
+watch(
+    () => formData.value.space_code,
+    (val) => {
+        if (val) {
+            setCurrentSpaceCode(val)
+        }
+    }
+)
 
 function filterSpaceOption(input, option) {
     const label = option.children?.[0]?.children || ''
@@ -130,12 +139,7 @@ function handleCreate() {
         title: t('pages.service.create'),
     })
     formData.value.registration_type = 'HTTP'
-    const saved = localStorage.getItem(SPACE_CODE_KEY)
-    if (saved && props.spaceOptions.some((item) => item.code === saved)) {
-        formData.value.space_code = saved
-    } else if (props.spaceOptions.length > 0) {
-        formData.value.space_code = props.spaceOptions[0].code
-    }
+    formData.value.space_code = initSpaceCode(props.spaceOptions)
 }
 
 async function handleEdit(record = {}) {

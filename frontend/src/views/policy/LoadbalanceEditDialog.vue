@@ -136,6 +136,7 @@ import { ref, computed, watch } from 'vue'
 import { config } from '@/config'
 import apis from '@/apis'
 import { useForm, useModal } from '@/hooks'
+import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
 
 const props = defineProps({
     spaceOptions: { type: Array, default: () => [] },
@@ -172,9 +173,12 @@ const filteredServiceOptions = computed(() => {
 
 watch(
     () => formData.value.space_code,
-    (_val, oldVal) => {
+    (val, oldVal) => {
         if (oldVal !== undefined) {
             formData.value.target_service_id = undefined
+        }
+        if (val) {
+            setCurrentSpaceCode(val)
         }
     }
 )
@@ -197,6 +201,7 @@ function filterServiceOption(input, option) {
 function handleCreate() {
     formData.value.group = 'default'
     formData.value.enabled = 0
+    formData.value.space_code = initSpaceCode(props.spaceOptions)
     showModal({
         type: 'create',
         title: t('pages.loadbalance.add'),
