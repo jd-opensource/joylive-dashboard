@@ -331,6 +331,7 @@ function handleRemove({ id }) {
         title: t('pages.fault.delTip'),
         content: t('button.confirm'),
         okText: t('button.confirm'),
+        okType: 'danger',
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {

@@ -177,6 +177,7 @@ function handleDelete({ id }) {
         title: t('pages.system.user.delTip'),
         content: t('button.confirm'),
         okText: t('button.confirm'),
+        okType: 'danger',
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {

@@ -122,6 +122,7 @@ function handleDelete({ id }) {
         title: '删除提示',
         content: '确认删除？',
         okText: '确认',
+        okType: 'danger',
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {

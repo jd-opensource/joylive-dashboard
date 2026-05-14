@@ -225,6 +225,7 @@ function handleDelete({ id }) {
     Modal.confirm({
         title: '删除提示',
         content: '确认删除？',
+        okType: 'danger',
         onOk: () => {
             return new Promise((resolve, reject) => {
                 ;(async () => {
