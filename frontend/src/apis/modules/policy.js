@@ -32,5 +32,13 @@ export const delPermission = (id) => request.basic.delete(`/api/v1/policy/policy
 export const getAuthList = (params) => request.basic.get('/api/v1/policy/policy-auths', params)
 // 获取容错策略列表
 export const getFaultList = (params) => request.basic.get('/api/v1/policy/policy-faults', params)
+// 获取容错策略单条数据
+export const getFault = (id) => request.basic.get(`/api/v1/policy/policy-faults/${id}`)
+// 添加容错策略
+export const createFault = (params) => request.basic.post('/api/v1/policy/policy-faults', params)
+// 更新容错策略
+export const updateFault = (id, params) => request.basic.put(`/api/v1/policy/policy-faults/${id}`, params)
+// 删除容错策略
+export const delFault = (id) => request.basic.delete(`/api/v1/policy/policy-faults/${id}`)
 // 获取调用策略列表
 export const getInvocationList = (params) => request.basic.get('/api/v1/policy/policy-invocations', params)

@@ -35,6 +35,17 @@ export default [
                     permission: '*',
                 },
             },
+            {
+                path: 'fault',
+                name: 'faultList',
+                component: 'policy/fault.vue',
+                meta: {
+                    title: '故障注入策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
         ],
     },
 ]

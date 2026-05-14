@@ -146,6 +146,72 @@
                         "path": "/api/v1/policy/policy-permissions/{id}"
                     }
                 ]
+            },
+            {
+                "code": "faultList",
+                "name": "Fault Injection",
+                "sequence": 70,
+                "type": "page",
+                "path": "/policy/fault",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-faults"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-faults/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-faults/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-faults"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-faults/{id}"
+                    }
+                ]
             }
         ]
     },

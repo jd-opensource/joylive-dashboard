@@ -14,20 +14,20 @@
             :wrapper-col="{ flex: 1 }">
             <!-- 规则名称 -->
             <a-form-item
-                :label="$t('pages.permission.form.name')"
+                :label="$t('pages.fault.form.name')"
                 name="name">
                 <a-input
-                    :placeholder="$t('pages.permission.form.name.placeholder')"
+                    :placeholder="$t('pages.fault.form.name.placeholder')"
                     v-model:value="formData.name"
                     :maxlength="60" />
             </a-form-item>
 
             <!-- 服务空间 -->
             <a-form-item
-                :label="$t('pages.permission.form.space_code')"
+                :label="$t('pages.fault.form.space_code')"
                 name="space_code">
                 <a-select
-                    :placeholder="$t('pages.permission.form.space_code.placeholder')"
+                    :placeholder="$t('pages.fault.form.space_code.placeholder')"
                     v-model:value="formData.space_code"
                     allow-clear
                     show-search
@@ -43,10 +43,10 @@
 
             <!-- 调用应用 -->
             <a-form-item
-                :label="$t('pages.permission.form.sourceApplicationId')"
+                :label="$t('pages.fault.form.sourceApplicationId')"
                 name="source_application_id">
                 <a-select
-                    :placeholder="$t('pages.permission.form.sourceApplicationId.placeholder')"
+                    :placeholder="$t('pages.fault.form.sourceApplicationId.placeholder')"
                     v-model:value="formData.source_application_id"
                     allow-clear
                     show-search
@@ -62,10 +62,10 @@
 
             <!-- 目标服务 -->
             <a-form-item
-                :label="$t('pages.permission.form.targetServiceId')"
+                :label="$t('pages.fault.form.targetServiceId')"
                 name="target_service_id">
                 <a-select
-                    :placeholder="$t('pages.permission.form.targetServiceId.placeholder')"
+                    :placeholder="$t('pages.fault.form.targetServiceId.placeholder')"
                     v-model:value="formData.target_service_id"
                     show-search
                     :filter-option="filterServiceOption">
@@ -80,46 +80,46 @@
 
             <!-- 当前服务分组 -->
             <a-form-item
-                :label="$t('pages.permission.form.group')"
+                :label="$t('pages.fault.form.group')"
                 name="group">
                 <a-select
-                    :placeholder="$t('pages.permission.form.group.placeholder')"
+                    :placeholder="$t('pages.fault.form.group.placeholder')"
                     v-model:value="formData.group">
                     <a-select-option value="default">
-                        {{ $t('pages.permission.form.group.default') }}
+                        {{ $t('pages.fault.form.group.default') }}
                     </a-select-option>
                 </a-select>
             </a-form-item>
 
             <!-- 当前服务路径 -->
             <a-form-item
-                :label="$t('pages.permission.form.path')"
+                :label="$t('pages.fault.form.path')"
                 name="path">
                 <a-input
-                    :placeholder="$t('pages.permission.form.path.placeholder')"
+                    :placeholder="$t('pages.fault.form.path.placeholder')"
                     v-model:value="formData.path" />
             </a-form-item>
 
             <!-- 当前服务方法 -->
             <a-form-item
-                :label="$t('pages.permission.form.method')"
+                :label="$t('pages.fault.form.method')"
                 name="method">
                 <a-input
-                    :placeholder="$t('pages.permission.form.method.placeholder')"
+                    :placeholder="$t('pages.fault.form.method.placeholder')"
                     v-model:value="formData.method" />
             </a-form-item>
 
-            <!-- 鉴权方式 -->
+            <!-- 匹配方式 -->
             <a-form-item
-                :label="$t('pages.permission.form.authMethod')"
+                :label="$t('pages.fault.form.matchMethod')"
                 name="relation_type"
-                class="auth-method-form-item">
-                <div class="auth-method-section">
-                    <div class="auth-method-header">
-                        <span class="auth-method-label">{{ $t('pages.permission.form.authMethod.settingLabel') }}</span>
+                class="match-method-form-item">
+                <div class="match-method-section">
+                    <div class="match-method-header">
+                        <span class="match-method-label">{{ $t('pages.fault.form.matchMethod.settingLabel') }}</span>
                         <a-radio-group v-model:value="formData.relation_type">
-                            <a-radio value="AND">AND({{ $t('pages.permission.form.relationType.and') }})</a-radio>
-                            <a-radio value="OR">OR({{ $t('pages.permission.form.relationType.or') }})</a-radio>
+                            <a-radio value="AND">AND({{ $t('pages.fault.form.relationType.and') }})</a-radio>
+                            <a-radio value="OR">OR({{ $t('pages.fault.form.relationType.or') }})</a-radio>
                         </a-radio-group>
                     </div>
 
@@ -128,16 +128,16 @@
                         class="conditions-table"
                         v-if="formData.conditions && formData.conditions.length > 0">
                         <div class="conditions-header">
-                            <div class="col-type">{{ $t('pages.permission.form.conditions.type') }}</div>
-                            <div class="col-key">{{ $t('pages.permission.form.conditions.key') }}</div>
+                            <div class="col-type">{{ $t('pages.fault.form.conditions.type') }}</div>
+                            <div class="col-key">{{ $t('pages.fault.form.conditions.key') }}</div>
                             <div class="col-op">
-                                {{ $t('pages.permission.form.conditions.opType') }}
-                                <a-tooltip :title="$t('pages.permission.form.conditions.opType.tooltip')">
+                                {{ $t('pages.fault.form.conditions.opType') }}
+                                <a-tooltip :title="$t('pages.fault.form.conditions.opType.tooltip')">
                                     <question-circle-outlined style="margin-left: 4px; color: #999" />
                                 </a-tooltip>
                             </div>
-                            <div class="col-value">{{ $t('pages.permission.form.conditions.values') }}</div>
-                            <div class="col-action">{{ $t('pages.permission.form.conditions.action') }}</div>
+                            <div class="col-value">{{ $t('pages.fault.form.conditions.values') }}</div>
+                            <div class="col-action">{{ $t('pages.fault.form.conditions.action') }}</div>
                         </div>
                         <div
                             class="conditions-row"
@@ -146,7 +146,7 @@
                             <div class="col-type">
                                 <a-select
                                     v-model:value="condition.type"
-                                    :placeholder="$t('pages.permission.form.conditions.type.placeholder')"
+                                    :placeholder="$t('pages.fault.form.conditions.type.placeholder')"
                                     size="small">
                                     <a-select-option value="QUERY">QUERY</a-select-option>
                                     <a-select-option value="COOKIE">COOKIE</a-select-option>
@@ -156,31 +156,31 @@
                             <div class="col-key">
                                 <a-input
                                     v-model:value="condition.key"
-                                    :placeholder="$t('pages.permission.form.conditions.key.placeholder')"
+                                    :placeholder="$t('pages.fault.form.conditions.key.placeholder')"
                                     size="small" />
                             </div>
                             <div class="col-op">
                                 <a-select
                                     v-model:value="condition.opType"
-                                    :placeholder="$t('pages.permission.form.conditions.opType.placeholder')"
+                                    :placeholder="$t('pages.fault.form.conditions.opType.placeholder')"
                                     size="small">
                                     <a-select-option value="EQUAL">{{
-                                        $t('pages.permission.form.conditions.op.equal')
+                                        $t('pages.fault.form.conditions.op.equal')
                                     }}</a-select-option>
                                     <a-select-option value="NOT_EQUAL">{{
-                                        $t('pages.permission.form.conditions.op.notEqual')
+                                        $t('pages.fault.form.conditions.op.notEqual')
                                     }}</a-select-option>
                                     <a-select-option value="IN">{{
-                                        $t('pages.permission.form.conditions.op.contain')
+                                        $t('pages.fault.form.conditions.op.contain')
                                     }}</a-select-option>
                                     <a-select-option value="NOT_IN">{{
-                                        $t('pages.permission.form.conditions.op.notContain')
+                                        $t('pages.fault.form.conditions.op.notContain')
                                     }}</a-select-option>
                                     <a-select-option value="REGULAR">{{
-                                        $t('pages.permission.form.conditions.op.regex')
+                                        $t('pages.fault.form.conditions.op.regex')
                                     }}</a-select-option>
                                     <a-select-option value="PREFIX">{{
-                                        $t('pages.permission.form.conditions.op.prefix')
+                                        $t('pages.fault.form.conditions.op.prefix')
                                     }}</a-select-option>
                                 </a-select>
                             </div>
@@ -188,7 +188,7 @@
                                 <a-select
                                     v-model:value="condition.values"
                                     mode="tags"
-                                    :placeholder="$t('pages.permission.form.conditions.values.placeholder')"
+                                    :placeholder="$t('pages.fault.form.conditions.values.placeholder')"
                                     size="small" />
                             </div>
                             <div class="col-action">
@@ -202,38 +202,94 @@
                     <a
                         class="add-condition-link"
                         @click="addCondition">
-                        {{ $t('pages.permission.form.conditions.add') }}
+                        {{ $t('pages.fault.form.conditions.add') }}
                     </a>
                 </div>
             </a-form-item>
 
-            <!-- 鉴权结果 -->
+            <!-- 注入类型 -->
             <a-form-item
-                :label="$t('pages.permission.form.type')"
+                :label="$t('pages.fault.form.type')"
                 name="type">
                 <a-radio-group v-model:value="formData.type">
-                    <a-radio value="DENY">{{ $t('pages.permission.form.type.black') }}</a-radio>
-                    <a-radio value="ALLOW">{{ $t('pages.permission.form.type.white') }}</a-radio>
+                    <a-radio value="error">{{ $t('pages.fault.form.type.error') }}</a-radio>
+                    <a-radio value="delay">{{ $t('pages.fault.form.type.delay') }}</a-radio>
                 </a-radio-group>
+            </a-form-item>
+
+            <!-- 注入范围 -->
+            <a-form-item
+                :label="$t('pages.fault.form.scope')"
+                name="scope">
+                <a-radio-group v-model:value="formData.scope">
+                    <a-radio value="inbound">{{ $t('pages.fault.form.scope.inbound') }}</a-radio>
+                    <a-radio value="outbound">{{ $t('pages.fault.form.scope.outbound') }}</a-radio>
+                </a-radio-group>
+            </a-form-item>
+
+            <!-- 错误注入参数 -->
+            <template v-if="formData.type === 'error'">
+                <a-form-item
+                    :label="$t('pages.fault.form.errorCode')"
+                    name="error_code">
+                    <a-input-number
+                        :placeholder="$t('pages.fault.form.errorCode.placeholder')"
+                        v-model:value="formData.error_code"
+                        :min="0"
+                        style="width: 100%" />
+                </a-form-item>
+
+                <a-form-item
+                    :label="$t('pages.fault.form.errorMsg')"
+                    name="error_msg">
+                    <a-input
+                        :placeholder="$t('pages.fault.form.errorMsg.placeholder')"
+                        v-model:value="formData.error_msg" />
+                </a-form-item>
+            </template>
+
+            <!-- 延迟注入参数 -->
+            <template v-if="formData.type === 'delay'">
+                <a-form-item
+                    :label="$t('pages.fault.form.delayTimeMs')"
+                    name="delay_time_ms">
+                    <a-input-number
+                        :placeholder="$t('pages.fault.form.delayTimeMs.placeholder')"
+                        v-model:value="formData.delay_time_ms"
+                        :min="0"
+                        style="width: 100%" />
+                </a-form-item>
+            </template>
+
+            <!-- 注入比例 -->
+            <a-form-item
+                :label="$t('pages.fault.form.percent')"
+                name="percent">
+                <a-input-number
+                    :placeholder="$t('pages.fault.form.percent.placeholder')"
+                    v-model:value="formData.percent"
+                    :min="0"
+                    :max="100"
+                    style="width: 100%" />
             </a-form-item>
 
             <!-- 生效状态 -->
             <a-form-item
-                :label="$t('pages.permission.form.enabled')"
+                :label="$t('pages.fault.form.enabled')"
                 name="enabled">
                 <a-switch
                     v-model:checked="enabledSwitch"
-                    :checked-children="$t('pages.permission.form.enabled.active')"
-                    :un-checked-children="$t('pages.permission.form.enabled.inactive')" />
+                    :checked-children="$t('pages.fault.form.enabled.active')"
+                    :un-checked-children="$t('pages.fault.form.enabled.inactive')" />
             </a-form-item>
 
             <!-- 描述 -->
             <a-form-item
-                :label="$t('pages.permission.form.description')"
+                :label="$t('pages.fault.form.description')"
                 name="description">
                 <a-textarea
                     v-model:value="formData.description"
-                    :placeholder="$t('pages.permission.form.description.placeholder')"
+                    :placeholder="$t('pages.fault.form.description.placeholder')"
                     :maxlength="255"
                     show-count
                     :rows="3" />
@@ -280,11 +336,13 @@ const { t } = useI18n()
 const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
 formRules.value = {
-    name: { required: true, message: t('pages.permission.form.name.required') },
-    space_code: { required: true, message: t('pages.permission.form.space_code.required') },
-    target_service_id: { required: true, message: t('pages.permission.form.targetServiceId.required') },
-    relation_type: { required: true, message: t('pages.permission.form.relationType.required') },
-    type: { required: true, message: t('pages.permission.form.type.required') },
+    name: { required: true, message: t('pages.fault.form.name.required') },
+    space_code: { required: true, message: t('pages.fault.form.space_code.required') },
+    target_service_id: { required: true, message: t('pages.fault.form.targetServiceId.required') },
+    relation_type: { required: true, message: t('pages.fault.form.relationType.required') },
+    type: { required: true, message: t('pages.fault.form.type.required') },
+    scope: { required: true, message: t('pages.fault.form.scope.required') },
+    percent: { required: true, message: t('pages.fault.form.percent.required') },
 }
 
 const enabledSwitch = computed({
@@ -347,22 +405,24 @@ function handleCreate() {
     formData.value.group = 'default'
     formData.value.enabled = 0
     formData.value.relation_type = 'AND'
-    formData.value.type = 'BLACK'
+    formData.value.type = 'error'
+    formData.value.scope = 'outbound'
+    formData.value.percent = 100
     formData.value.conditions = [createEmptyCondition()]
     formData.value.space_code = initSpaceCode(props.spaceOptions)
     showModal({
         type: 'create',
-        title: t('pages.permission.add'),
+        title: t('pages.fault.add'),
     })
 }
 
 async function handleEdit(record = {}) {
     showModal({
         type: 'edit',
-        title: t('pages.permission.edit'),
+        title: t('pages.fault.edit'),
     })
 
-    const { data, success } = await apis.policy.getPermission(record.id).catch()
+    const { data, success } = await apis.policy.getFault(record.id).catch()
     if (!success) {
         message.error(t('component.message.error.save'))
         hideModal()
@@ -398,12 +458,12 @@ function handleOk() {
                 let result = null
                 switch (modal.value.type) {
                     case 'create':
-                        result = await apis.policy.createPermission(params).catch(() => {
+                        result = await apis.policy.createFault(params).catch(() => {
                             throw new Error()
                         })
                         break
                     case 'edit':
-                        result = await apis.policy.updatePermission(formData.value.id, params).catch(() => {
+                        result = await apis.policy.updateFault(formData.value.id, params).catch(() => {
                             throw new Error()
                         })
                         break
@@ -446,26 +506,26 @@ defineExpose({
     margin-top: 4px;
 }
 
-.auth-method-form-item {
+.match-method-form-item {
     :deep(.ant-form-item-control-input-content) {
         overflow: visible;
     }
 }
 
-.auth-method-section {
+.match-method-section {
     border: 1px solid #f0f0f0;
     border-radius: 6px;
     padding: 16px;
     background: #fafafa;
 }
 
-.auth-method-header {
+.match-method-header {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
 }
 
-.auth-method-label {
+.match-method-label {
     font-size: 13px;
     color: #333;
     margin-right: 8px;

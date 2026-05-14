@@ -146,6 +146,72 @@
                         "path": "/api/v1/policy/policy-permissions/{id}"
                     }
                 ]
+            },
+            {
+                "code": "faultList",
+                "name": "故障注入",
+                "sequence": 70,
+                "type": "page",
+                "path": "/policy/fault",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "增加",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-faults"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "编辑",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-faults/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "删除",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-faults/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "查询",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-faults"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-faults/{id}"
+                    }
+                ]
             }
         ]
     },

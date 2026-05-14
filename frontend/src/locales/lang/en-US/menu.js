@@ -15,6 +15,7 @@ export default {
     policy: 'Governance Policy',
     loadbalanceList: 'Load Balance',
     permissionList: 'Permission',
+    faultList: 'Fault Injection',
     serviceDetail: 'Service Detail',
     add: 'add',
     edit: 'edit',

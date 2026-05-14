@@ -15,6 +15,7 @@ export default {
     policy: '治理策略',
     loadbalanceList: '负载均衡',
     permissionList: '服务鉴权',
+    faultList: '故障注入',
     serviceDetail: '服务详情',
     'menu.account.settings': '个人设置',
     add: '添加',
