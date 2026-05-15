@@ -121,6 +121,23 @@ func (a *ApplicationService) Update(ctx context.Context, id string, formItem *sc
 	})
 }
 
+// UpdateStatus updates the status of an application service (approve/reject).
+func (a *ApplicationService) UpdateStatus(ctx context.Context, id string, status string) error {
+	applicationService, err := a.ApplicationServiceDAL.Get(ctx, id)
+	if err != nil {
+		return err
+	} else if applicationService == nil {
+		return errors.NotFound("", "Application service not found")
+	}
+
+	applicationService.Status = status
+	applicationService.UpdatedAt = time.Now()
+
+	return a.Trans.Exec(ctx, func(ctx context.Context) error {
+		return a.ApplicationServiceDAL.Update(ctx, applicationService)
+	})
+}
+
 // Delete the specified application service from the data access object.
 func (a *ApplicationService) Delete(ctx context.Context, id string) error {
 	exists, err := a.ApplicationServiceDAL.Exists(ctx, id)

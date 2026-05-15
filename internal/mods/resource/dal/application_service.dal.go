@@ -27,7 +27,14 @@ func (a *ApplicationService) Query(ctx context.Context, params schema.Applicatio
 		opt = opts[0]
 	}
 
-	db := GetApplicationServiceDB(ctx, a.DB)
+	db := GetApplicationServiceDB(ctx, a.DB).Preload("Application")
+
+	if params.ServiceId != "" {
+		db = db.Where("service_id = ?", params.ServiceId)
+	}
+	if params.Role != "" {
+		db = db.Where("role = ?", params.Role)
+	}
 
 	var list schema.ApplicationServices
 	pageResult, err := util.WrapPageQuery(ctx, db, params.PaginationParam, opt.QueryOptions, &list)
@@ -50,7 +57,7 @@ func (a *ApplicationService) Get(ctx context.Context, id string, opts ...schema.
 	}
 
 	item := new(schema.ApplicationService)
-	ok, err := util.FindOne(ctx, GetApplicationServiceDB(ctx, a.DB).Where("id=?", id), opt.QueryOptions, item)
+	ok, err := util.FindOne(ctx, GetApplicationServiceDB(ctx, a.DB).Preload("Application").Where("id=?", id), opt.QueryOptions, item)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	} else if !ok {

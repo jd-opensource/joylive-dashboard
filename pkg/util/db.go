@@ -57,14 +57,21 @@ func WrapPageQuery(ctx context.Context, db *gorm.DB, pp PaginationParam, opts Qu
 		}
 		return &PaginationResult{Total: count}, nil
 	} else if !pp.Pagination {
-		pageSize := pp.PageSize
-		if pageSize > 0 {
-			db = db.Limit(pageSize)
+		dbCtx := db.WithContext(ctx)
+		// Use a cloned session for Count to avoid corrupting the Find query
+		var count int64
+		if err := dbCtx.Session(&gorm.Session{}).Count(&count).Error; err != nil {
+			return nil, err
 		}
 
-		db = wrapQueryOptions(db, opts)
-		err := db.Find(out).Error
-		return nil, err
+		pageSize := pp.PageSize
+		if pageSize > 0 {
+			dbCtx = dbCtx.Limit(pageSize)
+		}
+
+		dbCtx = wrapQueryOptions(dbCtx, opts)
+		err := dbCtx.Find(out).Error
+		return &PaginationResult{Total: count}, err
 	}
 
 	total, err := FindPage(ctx, db, pp, opts, out)

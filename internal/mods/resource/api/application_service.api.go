@@ -112,6 +112,35 @@ func (a *ApplicationService) Update(c *gin.Context) {
 
 // @Tags ApplicationServiceAPI
 // @Security ApiKeyAuth
+// @Summary Update application service status
+// @Param id path string true "unique id"
+// @Param body body schema.ApplicationServiceStatusForm true "Request body"
+// @Success 200 {object} util.ResponseResult
+// @Failure 400 {object} util.ResponseResult
+// @Failure 401 {object} util.ResponseResult
+// @Failure 500 {object} util.ResponseResult
+// @Router /api/v1/resource/application-services/{id}/status [put]
+func (a *ApplicationService) UpdateStatus(c *gin.Context) {
+	ctx := c.Request.Context()
+	item := new(schema.ApplicationServiceStatusForm)
+	if err := util.ParseJSON(c, item); err != nil {
+		util.ResError(c, err)
+		return
+	} else if err := item.Validate(); err != nil {
+		util.ResError(c, err)
+		return
+	}
+
+	err := a.ApplicationServiceBIZ.UpdateStatus(ctx, c.Param("id"), item.Status)
+	if err != nil {
+		util.ResError(c, err)
+		return
+	}
+	util.ResOK(c)
+}
+
+// @Tags ApplicationServiceAPI
+// @Security ApiKeyAuth
 // @Summary Delete application service record by ID
 // @Param id path string true "unique id"
 // @Success 200 {object} util.ResponseResult

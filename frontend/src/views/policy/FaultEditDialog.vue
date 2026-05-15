@@ -106,7 +106,8 @@
                 name="method">
                 <a-input
                     :placeholder="$t('pages.fault.form.method.placeholder')"
-                    v-model:value="formData.method" />
+                    v-model:value="formData.method"
+                    :disabled="!formData.path" />
             </a-form-item>
 
             <!-- 匹配方式 -->
@@ -214,16 +215,6 @@
                 <a-radio-group v-model:value="formData.type">
                     <a-radio value="error">{{ $t('pages.fault.form.type.error') }}</a-radio>
                     <a-radio value="delay">{{ $t('pages.fault.form.type.delay') }}</a-radio>
-                </a-radio-group>
-            </a-form-item>
-
-            <!-- 注入范围 -->
-            <a-form-item
-                :label="$t('pages.fault.form.scope')"
-                name="scope">
-                <a-radio-group v-model:value="formData.scope">
-                    <a-radio value="inbound">{{ $t('pages.fault.form.scope.inbound') }}</a-radio>
-                    <a-radio value="outbound">{{ $t('pages.fault.form.scope.outbound') }}</a-radio>
                 </a-radio-group>
             </a-form-item>
 
@@ -341,8 +332,15 @@ formRules.value = {
     target_service_id: { required: true, message: t('pages.fault.form.targetServiceId.required') },
     relation_type: { required: true, message: t('pages.fault.form.relationType.required') },
     type: { required: true, message: t('pages.fault.form.type.required') },
-    scope: { required: true, message: t('pages.fault.form.scope.required') },
     percent: { required: true, message: t('pages.fault.form.percent.required') },
+    method: {
+        validator: (rule, value) => {
+            if (value && !formData.value.path) {
+                return Promise.reject(t('pages.fault.form.method.requirePath'))
+            }
+            return Promise.resolve()
+        },
+    },
 }
 
 const enabledSwitch = computed({
@@ -452,6 +450,7 @@ function handleOk() {
                 showLoading()
                 const params = {
                     ...values,
+                    scope: 'outbound',
                     group: formData.value.group || 'default',
                     conditions: formData.value.conditions ? JSON.stringify(formData.value.conditions) : undefined,
                 }

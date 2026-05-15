@@ -112,16 +112,10 @@
                         <template v-if="'target_service_id' === column.key">
                             {{ serviceNameMap[record.target_service_id] || record.target_service_id }}
                         </template>
-                        <template v-if="'relation_type' === column.key">
-                            {{ relationTypeMap[record.relation_type] || record.relation_type }}
-                        </template>
                         <template v-if="'type' === column.key">
                             <a-tag :color="record.type === 'error' ? 'red' : 'orange'">
                                 {{ faultTypeMap[record.type] || record.type }}
                             </a-tag>
-                        </template>
-                        <template v-if="'scope' === column.key">
-                            {{ scopeTypeMap[record.scope] || record.scope }}
                         </template>
                         <template v-if="'enabled' === column.key">
                             <a-tag :color="record.enabled === 1 ? 'green' : 'default'">
@@ -197,10 +191,8 @@ const columns = [
     },
     { title: t('pages.fault.form.path'), dataIndex: 'path', width: 150 },
     { title: t('pages.fault.form.method'), dataIndex: 'method', width: 100 },
-    { title: t('pages.fault.form.relationType'), dataIndex: 'relation_type', key: 'relation_type', width: 100 },
     { title: t('pages.fault.form.type'), dataIndex: 'type', key: 'type', width: 100 },
-    { title: t('pages.fault.form.scope'), dataIndex: 'scope', key: 'scope', width: 100 },
-    { title: t('pages.fault.form.percent'), dataIndex: 'percent', width: 100 },
+    { title: t('pages.fault.form.percent'), dataIndex: 'percent', width: 120 },
     { title: t('pages.fault.form.enabled'), key: 'enabled', width: 80 },
     { title: t('pages.fault.form.creator'), dataIndex: 'creator', width: 100 },
     { title: t('pages.fault.form.description'), dataIndex: 'description', ellipsis: true },
@@ -222,19 +214,10 @@ const serviceOptions = ref([])
 const applicationOptions = ref([])
 const serviceNameMap = ref({})
 const applicationNameMap = ref({})
-const relationTypeMap = {
-    OR: '或关系',
-    AND: '且关系',
-}
 const faultTypeMap = {
     error: '错误注入',
     delay: '延迟注入',
 }
-const scopeTypeMap = {
-    inbound: '入方向',
-    outbound: '出方向',
-}
-
 loadSpaceOptions()
 loadServiceOptions()
 loadApplicationOptions()

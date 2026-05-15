@@ -66,6 +66,7 @@ func (a *Resource) RegisterV1Routers(ctx context.Context, v1 *gin.RouterGroup) e
 		applicationService.GET(":id", a.ApplicationServiceAPI.Get)
 		applicationService.POST("", a.ApplicationServiceAPI.Create)
 		applicationService.PUT(":id", a.ApplicationServiceAPI.Update)
+		applicationService.PUT(":id/status", a.ApplicationServiceAPI.UpdateStatus)
 		applicationService.DELETE(":id", a.ApplicationServiceAPI.Delete)
 	}
 	serviceGroup := v1.Group("service-groups")

@@ -46,6 +46,11 @@ func (a *PolicyFault) Get(ctx context.Context, id string) (*schema.PolicyFault, 
 
 // Create a new policy fault in the data access object.
 func (a *PolicyFault) Create(ctx context.Context, formItem *schema.PolicyFaultForm) (*schema.PolicyFault, error) {
+	// Validate: method requires path
+	if formItem.Method != nil && *formItem.Method != "" && (formItem.Path == nil || *formItem.Path == "") {
+		return nil, errors.BadRequest("", "Service path is required when method is specified")
+	}
+
 	// Check unique key before creating.
 	sourceAppID := ""
 	if formItem.SourceApplicationID != nil {
@@ -57,9 +62,11 @@ func (a *PolicyFault) Create(ctx context.Context, formItem *schema.PolicyFaultFo
 		return nil, errors.BadRequest("", "Policy fault with the same name, space code, source application and target service already exists")
 	}
 
+	creator := util.FromUsername(ctx)
 	policyFault := &schema.PolicyFault{
 		ID:        util.NewXID(),
 		Deleted:   "0",
+		Creator:   &creator,
 		CreatedAt: time.Now(),
 	}
 
@@ -85,6 +92,11 @@ func (a *PolicyFault) Update(ctx context.Context, id string, formItem *schema.Po
 		return errors.NotFound("", "Policy fault not found")
 	}
 
+	// Validate: method requires path
+	if formItem.Method != nil && *formItem.Method != "" && (formItem.Path == nil || *formItem.Path == "") {
+		return errors.BadRequest("", "Service path is required when method is specified")
+	}
+
 	// If unique key fields changed, ensure the new combination is not occupied.
 	sourceAppID := ""
 	if formItem.SourceApplicationID != nil {
@@ -105,6 +117,9 @@ func (a *PolicyFault) Update(ctx context.Context, id string, formItem *schema.Po
 	if err := formItem.FillTo(policyFault); err != nil {
 		return err
 	}
+	modifier := util.FromUsername(ctx)
+	policyFault.Modifier = &modifier
+	policyFault.Version++
 	policyFault.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {

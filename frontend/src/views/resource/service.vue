@@ -450,8 +450,9 @@ async function onOk() {
             }
 
             &.ant-radio-button-wrapper-checked {
-                background: @color-primary;
+                background: #fff;
                 border-color: @color-primary;
+                color: @color-primary;
             }
         }
     }

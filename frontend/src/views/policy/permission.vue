@@ -112,9 +112,6 @@
                         <template v-if="'target_service_id' === column.key">
                             {{ serviceNameMap[record.target_service_id] || record.target_service_id }}
                         </template>
-                        <template v-if="'relation_type' === column.key">
-                            {{ relationTypeMap[record.relation_type] || record.relation_type }}
-                        </template>
                         <template v-if="'type' === column.key">
                             {{ permissionTypeMap[record.type] || record.type }}
                         </template>
@@ -192,7 +189,6 @@ const columns = [
     },
     { title: t('pages.permission.form.path'), dataIndex: 'path', width: 150 },
     { title: t('pages.permission.form.method'), dataIndex: 'method', width: 100 },
-    { title: t('pages.permission.form.relationType'), dataIndex: 'relation_type', key: 'relation_type', width: 100 },
     { title: t('pages.permission.form.type'), dataIndex: 'type', key: 'type', width: 100 },
     { title: t('pages.permission.form.enabled'), key: 'enabled', width: 80 },
     { title: t('pages.permission.form.creator'), dataIndex: 'creator', width: 100 },
@@ -215,10 +211,6 @@ const serviceOptions = ref([])
 const applicationOptions = ref([])
 const serviceNameMap = ref({})
 const applicationNameMap = ref({})
-const relationTypeMap = {
-    OR: '或关系',
-    AND: '且关系',
-}
 const permissionTypeMap = {
     BLACK: '黑名单',
     WHITE: '白名单',

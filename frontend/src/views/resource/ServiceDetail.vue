@@ -115,16 +115,20 @@
                             {{ formatUtcDateTime(record.updated_at) }}
                         </template>
                         <template v-if="'action' === column.key">
-                            <a-space v-if="record.id !== 'default'">
-                                <a @click="$refs.groupEditRef.handleEdit(record)">{{
-                                    $t('pages.service.group.edit')
-                                }}</a>
-                                <a
-                                    style="color: #ff4d4f"
-                                    @click="handleRemoveGroup(record)"
-                                    >{{ $t('pages.system.delete') }}</a
-                                >
-                            </a-space>
+                            <template v-if="record.id !== 'default'">
+                                <x-action-button @click="$refs.groupEditRef.handleEdit(record)">
+                                    <a-tooltip>
+                                        <template #title> {{ $t('pages.service.group.edit') }}</template>
+                                        <edit-outlined />
+                                    </a-tooltip>
+                                </x-action-button>
+                                <x-action-button @click="handleRemoveGroup(record)">
+                                    <a-tooltip>
+                                        <template #title> {{ $t('pages.system.delete') }}</template>
+                                        <delete-outlined style="color: #ff4d4f" />
+                                    </a-tooltip>
+                                </x-action-button>
+                            </template>
                         </template>
                     </template>
                 </a-table>
@@ -162,16 +166,18 @@
                             {{ formatUtcDateTime(record.updated_at) }}
                         </template>
                         <template v-if="'action' === column.key">
-                            <a-space>
-                                <a @click="$refs.aliasEditRef.handleEdit(record)">{{
-                                    $t('pages.service.alias.edit')
-                                }}</a>
-                                <a
-                                    style="color: #ff4d4f"
-                                    @click="handleRemoveAlias(record)"
-                                    >{{ $t('pages.system.delete') }}</a
-                                >
-                            </a-space>
+                            <x-action-button @click="$refs.aliasEditRef.handleEdit(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.service.alias.edit') }}</template>
+                                    <edit-outlined />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button @click="handleRemoveAlias(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.system.delete') }}</template>
+                                    <delete-outlined style="color: #ff4d4f" />
+                                </a-tooltip>
+                            </x-action-button>
                         </template>
                     </template>
                 </a-table>
@@ -226,14 +232,67 @@
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
                         <template v-if="'action' === column.key">
-                            <a-space>
-                                <a @click="$refs.memberEditRef.handleEdit(record)">{{ $t('pages.member.edit') }}</a>
-                                <a
-                                    style="color: #ff4d4f"
-                                    @click="handleRemoveMember(record)"
-                                    >{{ $t('pages.system.delete') }}</a
-                                >
-                            </a-space>
+                            <x-action-button @click="$refs.memberEditRef.handleEdit(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.member.edit') }}</template>
+                                    <edit-outlined />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button @click="handleRemoveMember(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.system.delete') }}</template>
+                                    <delete-outlined style="color: #ff4d4f" />
+                                </a-tooltip>
+                            </x-action-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+
+            <!-- 调用方 Tab 内容 -->
+            <div v-else-if="activeTab === 'consumer'">
+                <div class="group-toolbar">
+                    <div class="group-toolbar-right">
+                        <a-button @click="loadConsumerList">
+                            <template #icon><reload-outlined /></template>
+                        </a-button>
+                    </div>
+                </div>
+                <a-table
+                    :columns="consumerColumns"
+                    :data-source="consumerListData"
+                    :loading="consumerLoading"
+                    :pagination="consumerPagination"
+                    @change="onConsumerTableChange">
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="'application_name' === column.key">
+                            {{ record.application?.name || record.application_id }}
+                        </template>
+                        <template v-if="'status' === column.key">
+                            <a-tag :color="statusColorMap[record.status]">
+                                {{ statusTextMap[record.status] || record.status }}
+                            </a-tag>
+                        </template>
+                        <template v-if="'created_at' === column.key">
+                            {{ formatUtcDateTime(record.created_at) }}
+                        </template>
+                        <template v-if="'action' === column.key">
+                            <x-action-button
+                                v-if="record.status !== 'approved'"
+                                @click="handleApproveConsumer(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.service.consumer.approve') }}</template>
+                                    <check-circle-outlined style="color: #52c41a" />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button
+                                v-if="record.status !== 'rejected'"
+                                @click="handleRejectConsumer(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.service.consumer.reject') }}</template>
+                                    <close-circle-outlined style="color: #ff4d4f" />
+                                </a-tooltip>
+                            </x-action-button>
                         </template>
                     </template>
                 </a-table>
@@ -272,7 +331,13 @@
 import { ref, onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
-import { ReloadOutlined } from '@ant-design/icons-vue'
+import {
+    ReloadOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+} from '@ant-design/icons-vue'
 import apis from '@/apis'
 import { config } from '@/config'
 import { formatUtcDateTime } from '@/utils/util'
@@ -423,11 +488,57 @@ const memberColumns = [
     },
 ]
 
+// 调用方
+const consumerListData = ref([])
+const consumerLoading = ref(false)
+const consumerPagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    showTotal: (total) => `共 ${total} 条`,
+})
+
+const statusTextMap = {
+    approved: t('pages.service.form.application_service_status.approved'),
+    pending: t('pages.service.form.application_service_status.pending'),
+    rejected: t('pages.service.form.application_service_status.rejected'),
+}
+const statusColorMap = {
+    approved: 'green',
+    pending: 'orange',
+    rejected: 'red',
+}
+
+const consumerColumns = [
+    {
+        title: t('pages.service.form.application_name'),
+        key: 'application_name',
+        width: 200,
+    },
+    {
+        title: t('pages.service.form.application_service_status'),
+        key: 'status',
+        width: 100,
+    },
+    {
+        title: t('pages.member.form.created_at'),
+        key: 'created_at',
+        width: 180,
+    },
+    {
+        title: t('button.action'),
+        key: 'action',
+        width: 120,
+    },
+]
+
 onMounted(() => {
     loadServiceDetail()
     loadGroupList()
     loadAliasList()
     loadMemberList()
+    loadConsumerList()
 })
 
 async function loadServiceDetail() {
@@ -597,6 +708,91 @@ function handleRemoveMember({ id }) {
                             resolve()
                             message.success(t('component.message.success.delete'))
                             await loadMemberList()
+                        }
+                    } catch (error) {
+                        reject()
+                    }
+                })()
+            })
+        },
+    })
+}
+
+// 调用方
+async function loadConsumerList() {
+    try {
+        consumerLoading.value = true
+        const { data, success, total } = await apis.application_service
+            .getApplicationServiceList({
+                pageSize: consumerPagination.pageSize,
+                current: consumerPagination.current,
+                service_id: serviceId.value,
+                role: 'consumer',
+            })
+            .catch(() => {
+                throw new Error()
+            })
+        consumerLoading.value = false
+        if (config('http.code.success') === success) {
+            consumerListData.value = data || []
+            consumerPagination.total = total || 0
+        }
+    } catch (error) {
+        consumerLoading.value = false
+    }
+}
+
+function onConsumerTableChange({ current, pageSize }) {
+    consumerPagination.current = current
+    consumerPagination.pageSize = pageSize
+    loadConsumerList()
+}
+
+function handleApproveConsumer({ id }) {
+    Modal.confirm({
+        title: t('pages.service.consumer.approveTip'),
+        okText: t('button.confirm'),
+        onOk: () => {
+            return new Promise((resolve, reject) => {
+                ;(async () => {
+                    try {
+                        const { success } = await apis.application_service
+                            .updateApplicationServiceStatus(id, { status: 'approved' })
+                            .catch(() => {
+                                throw new Error()
+                            })
+                        if (config('http.code.success') === success) {
+                            resolve()
+                            message.success(t('component.message.success.save'))
+                            await loadConsumerList()
+                        }
+                    } catch (error) {
+                        reject()
+                    }
+                })()
+            })
+        },
+    })
+}
+
+function handleRejectConsumer({ id }) {
+    Modal.confirm({
+        title: t('pages.service.consumer.rejectTip'),
+        okText: t('button.confirm'),
+        okType: 'danger',
+        onOk: () => {
+            return new Promise((resolve, reject) => {
+                ;(async () => {
+                    try {
+                        const { success } = await apis.application_service
+                            .updateApplicationServiceStatus(id, { status: 'rejected' })
+                            .catch(() => {
+                                throw new Error()
+                            })
+                        if (config('http.code.success') === success) {
+                            resolve()
+                            message.success(t('component.message.success.save'))
+                            await loadConsumerList()
                         }
                     } catch (error) {
                         reject()

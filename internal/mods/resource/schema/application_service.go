@@ -21,6 +21,7 @@ type ApplicationService struct {
 	UpdatedAt     time.Time       `json:"updated_at,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`                    // Update timestamp
 	Deleted       string          `json:"-" gorm:"uniqueIndex:idx_name;comment:Delete flag;size:20;default:0"`                     // Delete flag
 	DeletedAt     *gorm.DeletedAt `json:"-" gorm:"comment:Delete timestamp;"`                                                      // Delete timestamp
+	Application   *Application    `json:"application" gorm:"foreignKey:ApplicationId;references:ID"`                                // Application (auto-loaded association)
 }
 
 func (a ApplicationService) TableName() string {
@@ -30,6 +31,8 @@ func (a ApplicationService) TableName() string {
 // Defining the query parameters for the `ApplicationService` struct.
 type ApplicationServiceQueryParam struct {
 	util.PaginationParam
+	ServiceId string `form:"service_id"` // Filter by service ID
+	Role      string `form:"role"`       // Filter by role (provider/consumer)
 }
 
 // Defining the query options for the `ApplicationService` struct.
@@ -53,6 +56,19 @@ type ApplicationServiceForm struct {
 	Role          string  `json:"role" binding:"required,max=20"`           // App role such as provider or consumer
 	Status        string  `json:"status" binding:"max=20"`                  // Status: approved, rejected, pending
 	Description   *string `json:"description"`                              // Details
+}
+
+// Defining the data structure for updating the status of an `ApplicationService` struct.
+type ApplicationServiceStatusForm struct {
+	Status string `json:"status" binding:"required,max=20"` // Status: approved, rejected, pending
+}
+
+// A validation function for the `ApplicationServiceStatusForm` struct.
+func (a *ApplicationServiceStatusForm) Validate() error {
+	if a.Status != "approved" && a.Status != "rejected" && a.Status != "pending" {
+		return errors.BadRequest("", "Status must be approved, rejected, or pending")
+	}
+	return nil
 }
 
 // A validation function for the `ApplicationServiceForm` struct.
