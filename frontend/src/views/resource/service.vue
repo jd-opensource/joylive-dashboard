@@ -376,12 +376,7 @@ function handleRemove({ id }) {
 }
 
 function isAuthorized(record) {
-    try {
-        const extra = record.extra ? JSON.parse(record.extra) : {}
-        return extra.authorized === 1
-    } catch {
-        return false
-    }
+    return record.authorized === 1
 }
 
 function handleToggleAuth(record) {

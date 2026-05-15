@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/mods/resource/dal"
@@ -41,6 +40,14 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam) (*
 	if err != nil {
 		return nil, err
 	}
+
+	// Populate the typed Authorized field for each service in the result.
+	for _, svc := range result.Data {
+		if extra, err := schema.ParseServiceExtra(svc.Extra); err == nil {
+			svc.Authorized = extra.Authorized
+		}
+	}
+
 	return result, nil
 }
 
@@ -60,6 +67,11 @@ func (a *Service) Get(ctx context.Context, id string) (*schema.Service, error) {
 		} else if !ok {
 			return nil, errors.NotFound("", "Service not found")
 		}
+	}
+
+	// Populate the typed Authorized field from extra so callers don't need to parse JSON.
+	if extra, err := schema.ParseServiceExtra(svc.Extra); err == nil {
+		svc.Authorized = extra.Authorized
 	}
 
 	return svc, nil
@@ -157,19 +169,15 @@ func (a *Service) ToggleAuth(ctx context.Context, id string, authorized int) err
 		return errors.NotFound("", "Service not found")
 	}
 
-	extra := make(map[string]interface{})
-	if svc.Extra != nil {
-		if err := json.Unmarshal([]byte(*svc.Extra), &extra); err != nil {
-			return errors.BadRequest("", "Invalid extra JSON")
-		}
+	extra, err := schema.ParseServiceExtra(svc.Extra)
+	if err != nil {
+		return errors.BadRequest("", "Invalid extra JSON")
 	}
-	extra["authorized"] = authorized
-	extraBytes, err := json.Marshal(extra)
+	extra.Authorized = &authorized
+	svc.Extra, err = extra.MarshalToJSON()
 	if err != nil {
 		return errors.BadRequest("", "Failed to marshal extra JSON")
 	}
-	extraStr := string(extraBytes)
-	svc.Extra = &extraStr
 	svc.Version++
 	svc.UpdatedAt = time.Now()
 
