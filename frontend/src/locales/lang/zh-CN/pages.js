@@ -120,7 +120,7 @@ export default {
     'pages.system.user.form.created_at': '创建时间',
     'pages.system.user.form.updated_at': '更新时间',
     // space
-    'pages.space.add': '添加空间',
+    'pages.space.add': '创建空间',
     'pages.space.edit': '编辑空间',
     'pages.space.delTip': '确定删除该空间吗？',
     'pages.space.form.code': '编码',

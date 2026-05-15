@@ -42,19 +42,6 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-
-                <a-row :gutter="24">
-                    <a-col :span="24">
-                        <a-form-item
-                            :label="$t('pages.space.form.metadata')"
-                            name="metadata">
-                            <a-textarea
-                                v-model:value="formData.metadata"
-                                :placeholder="$t('pages.space.form.metadata.placeholder')"
-                                :auto-size="{ minRows: 3, maxRows: 6 }"></a-textarea>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
             </a-card>
         </a-form>
     </a-modal>
@@ -99,9 +86,6 @@ async function handleEdit(record = {}) {
         hideModal()
         return
     }
-    if (data.metadata) {
-        data.metadata = typeof data.metadata === 'string' ? data.metadata : JSON.stringify(data.metadata, null, 2)
-    }
     formRecord.value = data
     formData.value = cloneDeep(data)
 }
@@ -114,13 +98,6 @@ function handleOk() {
                 showLoading()
                 const params = {
                     ...values,
-                }
-                if (params.metadata && typeof params.metadata === 'string') {
-                    try {
-                        params.metadata = JSON.parse(params.metadata)
-                    } catch (e) {
-                        // keep as string if not valid JSON
-                    }
                 }
                 let result = null
                 switch (modal.value.type) {

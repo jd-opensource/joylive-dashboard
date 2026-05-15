@@ -118,7 +118,7 @@ export default {
     'pages.system.user.form.created_at': 'Created At',
     'pages.system.user.form.updated_at': 'Updated At',
     // space
-    'pages.space.add': 'Add Space',
+    'pages.space.add': 'Create Space',
     'pages.space.edit': 'Edit Space',
     'pages.space.delTip': 'Are you sure you want to delete this space?',
     'pages.space.form.code': 'Code',
