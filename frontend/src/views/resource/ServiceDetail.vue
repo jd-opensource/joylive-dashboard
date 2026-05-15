@@ -616,11 +616,19 @@ function handleRemoveMember({ id }) {
 .info-card {
     margin-bottom: 16px;
 
+    :deep(.ant-card-head-title) {
+        font-size: 14px;
+    }
+
+    :deep(.ant-card-grid) {
+        padding: 8px 16px;
+    }
+
     .info-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        gap: 2px;
 
         .info-label {
             color: #666;
