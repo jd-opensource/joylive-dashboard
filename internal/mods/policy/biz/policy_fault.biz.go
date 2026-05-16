@@ -34,14 +34,18 @@ func (a *PolicyFault) Query(ctx context.Context, params schema.PolicyFaultQueryP
 }
 
 // Get the specified policy fault from the data access object.
-func (a *PolicyFault) Get(ctx context.Context, id string) (*schema.PolicyFault, error) {
+func (a *PolicyFault) Get(ctx context.Context, id string) (*schema.PolicyFaultForm, error) {
 	policyFault, err := a.PolicyFaultDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyFault == nil {
 		return nil, errors.NotFound("", "Policy fault not found")
 	}
-	return policyFault, nil
+	var form schema.PolicyFaultForm
+	if err := policyFault.ConvertTo(&form); err != nil {
+		return nil, err
+	}
+	return &form, nil
 }
 
 // Create a new policy fault in the data access object.

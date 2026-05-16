@@ -34,14 +34,18 @@ func (a *PolicyRouteDetail) Query(ctx context.Context, params schema.PolicyRoute
 }
 
 // Get the specified policy route detail from the data access object.
-func (a *PolicyRouteDetail) Get(ctx context.Context, id string) (*schema.PolicyRouteDetail, error) {
+func (a *PolicyRouteDetail) Get(ctx context.Context, id string) (*schema.PolicyRouteDetailForm, error) {
 	policyRouteDetail, err := a.PolicyRouteDetailDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyRouteDetail == nil {
 		return nil, errors.NotFound("", "Policy route detail not found")
 	}
-	return policyRouteDetail, nil
+	var policyRouteDetailForm schema.PolicyRouteDetailForm
+	if err := policyRouteDetail.ConvertTo(&policyRouteDetailForm); err != nil {
+		return nil, err
+	}
+	return &policyRouteDetailForm, nil
 }
 
 // Create a new policy route detail in the data access object.

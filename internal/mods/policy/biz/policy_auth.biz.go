@@ -34,14 +34,18 @@ func (a *PolicyAuth) Query(ctx context.Context, params schema.PolicyAuthQueryPar
 }
 
 // Get the specified policy auth from the data access object.
-func (a *PolicyAuth) Get(ctx context.Context, id string) (*schema.PolicyAuth, error) {
+func (a *PolicyAuth) Get(ctx context.Context, id string) (*schema.PolicyAuthForm, error) {
 	policyAuth, err := a.PolicyAuthDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyAuth == nil {
 		return nil, errors.NotFound("", "Policy auth not found")
 	}
-	return policyAuth, nil
+	var form schema.PolicyAuthForm
+	if err := policyAuth.ConvertTo(&form); err != nil {
+		return nil, err
+	}
+	return &form, nil
 }
 
 // Create a new policy auth in the data access object.

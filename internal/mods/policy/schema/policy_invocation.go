@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
+	"github.com/jd-opensource/joylive-dashboard/pkg/encoding/json"
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 	"gorm.io/gorm"
@@ -36,6 +37,36 @@ func (a PolicyInvocation) TableName() string {
 	return config.C.FormatTableName("policy_invocation")
 }
 
+// ConvertTo Convert `PolicyInvocation` to `PolicyInvocationForm` object.
+func (a PolicyInvocation) ConvertTo(form *PolicyInvocationForm) error {
+	form.ID = a.ID
+	form.Name = a.Name
+	form.SpaceCode = a.SpaceCode
+	form.SourceApplicationID = a.SourceApplicationID
+	form.TargetServiceId = a.TargetServiceId
+	if !util.IsEmptyOrBlank(a.Group) {
+		form.Group = a.Group
+	} else {
+		form.Group = DefaultGroup
+	}
+	form.Path = a.Path
+	form.Method = a.Method
+	form.Type = a.Type
+	if !util.IsNilOrEmpty(a.RetryPolicy) {
+		rp := new(RetryPolicy)
+		json.UnMarshalToObject(*a.RetryPolicy, rp)
+		form.RetryPolicy = rp
+	}
+	form.Version = a.Version
+	form.Enabled = a.Enabled
+	form.Description = a.Description
+	form.Creator = a.Creator
+	form.Modifier = a.Modifier
+	form.CreatedAt = a.CreatedAt
+	form.UpdatedAt = a.UpdatedAt
+	return nil
+}
+
 // Defining the query parameters for the `PolicyInvocation` struct.
 type PolicyInvocationQueryParam struct {
 	util.PaginationParam
@@ -60,18 +91,23 @@ type PolicyInvocations []*PolicyInvocation
 
 // Defining the data structure for creating a `PolicyInvocation` struct.
 type PolicyInvocationForm struct {
-	Name                string  `json:"name" binding:"required,max=100"`           // Policy name
-	SpaceCode           string  `json:"space_code" binding:"required,max=255"`      // Microservice space code
-	SourceApplicationID *string `json:"source_application_id"`                       // Source application ID
-	TargetServiceId     string  `json:"target_service_id" binding:"required,max=20"` // Target service ID
-	Group               string  `json:"group" binding:"required,max=255"`          // Group
-	Path                *string `json:"path"`                                      // Path or interface
-	Method              *string `json:"method"`                                    // Method
-	Type                string  `json:"type" binding:"required,max=20"`            // Invocation type (failfast | failover | failsafe)
-	RetryPolicy         *string `json:"retry_policy"`                               // Retry policy (JSON)
-	Version             int64   `json:"version"`                                   // Version
-	Enabled             int     `json:"enabled"`                                   // Enabled
-	Description         *string `json:"description"`                               // Details
+	ID                  string         `json:"id"`
+	Name                string         `json:"name" binding:"required,max=100"`           // Policy name
+	SpaceCode           string         `json:"space_code" binding:"required,max=255"`      // Microservice space code
+	SourceApplicationID *string        `json:"source_application_id"`                       // Source application ID
+	TargetServiceId     string         `json:"target_service_id" binding:"required,max=20"` // Target service ID
+	Group               string         `json:"group" binding:"required,max=255"`          // Group
+	Path                *string        `json:"path"`                                      // Path or interface
+	Method              *string        `json:"method"`                                    // Method
+	Type                string         `json:"type" binding:"required,max=20"`            // Invocation type (failfast | failover | failsafe)
+	RetryPolicy         *RetryPolicy   `json:"retry_policy"`                               // Retry policy
+	Version             int64          `json:"version"`                                   // Version
+	Enabled             int            `json:"enabled"`                                   // Enabled
+	Description         *string        `json:"description"`                               // Details
+	Creator             *string        `json:"creator,omitempty"`                           // Creator
+	Modifier            *string        `json:"modifier,omitempty"`                          // Modifier
+	CreatedAt           time.Time      `json:"created_at"`                                  // Create timestamp
+	UpdatedAt           time.Time      `json:"updated_at,omitempty"`                        // Update timestamp
 }
 
 // A validation function for the `PolicyInvocationForm` struct.
@@ -100,13 +136,20 @@ func (a *PolicyInvocationForm) FillTo(policyInvocation *PolicyInvocation) error 
 	policyInvocation.SpaceCode = a.SpaceCode
 	policyInvocation.SourceApplicationID = a.SourceApplicationID
 	policyInvocation.TargetServiceId = a.TargetServiceId
-	policyInvocation.Group = a.Group
+	if a.Group != "" {
+		policyInvocation.Group = a.Group
+	} else {
+		policyInvocation.Group = DefaultGroup
+	}
 	policyInvocation.Path = a.Path
 	policyInvocation.Method = a.Method
 	policyInvocation.Type = a.Type
-	policyInvocation.RetryPolicy = a.RetryPolicy
-	policyInvocation.Version = a.Version
+	if a.RetryPolicy != nil {
+		a.RetryPolicy.Version = time.Now().UnixMilli()
+	}
+	policyInvocation.RetryPolicy = func() *string { return json.MarshalToString(a.RetryPolicy) }()
 	policyInvocation.Enabled = a.Enabled
 	policyInvocation.Description = a.Description
+	policyInvocation.Version = time.Now().UnixMilli()
 	return nil
 }

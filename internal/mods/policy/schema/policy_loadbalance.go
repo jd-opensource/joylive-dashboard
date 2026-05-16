@@ -36,6 +36,32 @@ func (a PolicyLoadbalance) TableName() string {
 	return config.C.FormatTableName("policy_loadbalance")
 }
 
+// ConvertTo Convert `PolicyLoadbalance` to `PolicyLoadbalanceForm` object.
+func (a PolicyLoadbalance) ConvertTo(form *PolicyLoadbalanceForm) error {
+	form.ID = a.ID
+	form.Name = a.Name
+	form.SpaceCode = a.SpaceCode
+	form.SourceApplicationID = a.SourceApplicationID
+	form.TargetServiceId = a.TargetServiceId
+	if !util.IsEmptyOrBlank(a.Group) {
+		form.Group = a.Group
+	} else {
+		form.Group = DefaultGroup
+	}
+	form.Path = a.Path
+	form.Method = a.Method
+	form.PolicyType = a.PolicyType
+	form.StickyType = a.StickyType
+	form.Version = a.Version
+	form.Enabled = a.Enabled
+	form.Description = a.Description
+	form.Creator = a.Creator
+	form.Modifier = a.Modifier
+	form.CreatedAt = a.CreatedAt
+	form.UpdatedAt = a.UpdatedAt
+	return nil
+}
+
 // Defining the query parameters for the `PolicyLoadbalance` struct.
 type PolicyLoadbalanceQueryParam struct {
 	util.PaginationParam
@@ -60,6 +86,7 @@ type PolicyLoadbalances []*PolicyLoadbalance
 
 // Defining the data structure for creating a `PolicyLoadbalance` struct.
 type PolicyLoadbalanceForm struct {
+	ID                  string  `json:"id"`
 	Name                string  `json:"name" binding:"required,max=100"`             // Policy name
 	SpaceCode           *string `json:"space_code"`                                  // Microservice space code
 	SourceApplicationID *string `json:"source_application_id"`                       // Source application ID
@@ -72,6 +99,10 @@ type PolicyLoadbalanceForm struct {
 	Version             int64   `json:"version"`                                     // Version
 	Enabled             int     `json:"enabled"`                                     // Enabled
 	Description         *string `json:"description"`                                 // Details
+	Creator             *string `json:"creator,omitempty"`                           // Creator
+	Modifier            *string `json:"modifier,omitempty"`                          // Modifier
+	CreatedAt           time.Time `json:"created_at"`                                  // Create timestamp
+	UpdatedAt           time.Time `json:"updated_at,omitempty"`                        // Update timestamp
 }
 
 // A validation function for the `PolicyLoadbalanceForm` struct.
@@ -100,13 +131,17 @@ func (a *PolicyLoadbalanceForm) FillTo(policyLoadbalance *PolicyLoadbalance) err
 	policyLoadbalance.SpaceCode = a.SpaceCode
 	policyLoadbalance.SourceApplicationID = a.SourceApplicationID
 	policyLoadbalance.TargetServiceId = a.TargetServiceId
-	policyLoadbalance.Group = a.Group
+	if a.Group != "" {
+		policyLoadbalance.Group = a.Group
+	} else {
+		policyLoadbalance.Group = DefaultGroup
+	}
 	policyLoadbalance.Path = a.Path
 	policyLoadbalance.Method = a.Method
 	policyLoadbalance.PolicyType = a.PolicyType
 	policyLoadbalance.StickyType = a.StickyType
-	policyLoadbalance.Version = a.Version
 	policyLoadbalance.Enabled = a.Enabled
 	policyLoadbalance.Description = a.Description
+	policyLoadbalance.Version = time.Now().UnixMilli()
 	return nil
 }

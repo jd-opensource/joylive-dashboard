@@ -39,7 +39,7 @@ func (a *PolicyLimit) Query(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Summary Get policy limit record by ID
 // @Param id path string true "unique id"
-// @Success 200 {object} util.ResponseResult{data=schema.PolicyLimit}
+// @Success 200 {object} util.ResponseResult{data=schema.PolicyLimitForm}
 // @Failure 401 {object} util.ResponseResult
 // @Failure 500 {object} util.ResponseResult
 // @Router /api/v1/policy/policy-limits/{id} [get]

@@ -14,8 +14,34 @@ export const updateLoadbalance = (id, params) => request.basic.put(`/api/v1/poli
 export const delLoadbalance = (id) => request.basic.delete(`/api/v1/policy/policy-loadbalances/${id}`)
 // 获取路由策略列表
 export const getRouteList = (params) => request.basic.get('/api/v1/policy/policy-routes', params)
+// 获取路由策略单条数据
+export const getRoute = (id) => request.basic.get(`/api/v1/policy/policy-routes/${id}`)
+// 添加路由策略
+export const createRoute = (params) => request.basic.post('/api/v1/policy/policy-routes', params)
+// 更新路由策略
+export const updateRoute = (id, params) => request.basic.put(`/api/v1/policy/policy-routes/${id}`, params)
+// 删除路由策略
+export const delRoute = (id) => request.basic.delete(`/api/v1/policy/policy-routes/${id}`)
+// 获取路由详情列表
+export const getRouteDetailList = (params) => request.basic.get('/api/v1/policy/policy-route-details', params)
+// 获取路由详情单条数据
+export const getRouteDetail = (id) => request.basic.get(`/api/v1/policy/policy-route-details/${id}`)
+// 添加路由详情
+export const createRouteDetail = (params) => request.basic.post('/api/v1/policy/policy-route-details', params)
+// 更新路由详情
+export const updateRouteDetail = (id, params) => request.basic.put(`/api/v1/policy/policy-route-details/${id}`, params)
+// 删除路由详情
+export const delRouteDetail = (id) => request.basic.delete(`/api/v1/policy/policy-route-details/${id}`)
 // 获取限流策略列表
 export const getLimitList = (params) => request.basic.get('/api/v1/policy/policy-limits', params)
+// 获取限流策略单条数据
+export const getLimit = (id) => request.basic.get(`/api/v1/policy/policy-limits/${id}`)
+// 添加限流策略
+export const createLimit = (params) => request.basic.post('/api/v1/policy/policy-limits', params)
+// 更新限流策略
+export const updateLimit = (id, params) => request.basic.put(`/api/v1/policy/policy-limits/${id}`, params)
+// 删除限流策略
+export const delLimit = (id) => request.basic.delete(`/api/v1/policy/policy-limits/${id}`)
 // 获取熔断策略列表
 export const getCircuitBreakList = (params) => request.basic.get('/api/v1/policy/policy-circuit-breaks', params)
 // 获取权限策略列表

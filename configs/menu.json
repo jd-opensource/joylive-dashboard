@@ -212,6 +212,150 @@
                         "path": "/api/v1/policy/policy-faults/{id}"
                     }
                 ]
+            },
+            {
+                "code": "routeList",
+                "name": "Tag Route",
+                "sequence": 60,
+                "type": "page",
+                "path": "/policy/route",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-routes"
+                            },
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-route-details"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-routes/{id}"
+                            },
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-route-details/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-routes/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-routes"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-routes/{id}"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-route-details"
+                    }
+                ]
+            },
+            {
+                "code": "limitList",
+                "name": "Rate Limit",
+                "sequence": 50,
+                "type": "page",
+                "path": "/policy/limit",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "Add",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-limits"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "Edit",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-limits/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "Delete",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-limits/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "Search",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-limits"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-limits/{id}"
+                    }
+                ]
             }
         ]
     },

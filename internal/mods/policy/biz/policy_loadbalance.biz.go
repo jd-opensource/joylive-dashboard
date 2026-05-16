@@ -34,14 +34,18 @@ func (a *PolicyLoadbalance) Query(ctx context.Context, params schema.PolicyLoadb
 }
 
 // Get the specified policy loadbalance from the data access object.
-func (a *PolicyLoadbalance) Get(ctx context.Context, id string) (*schema.PolicyLoadbalance, error) {
+func (a *PolicyLoadbalance) Get(ctx context.Context, id string) (*schema.PolicyLoadbalanceForm, error) {
 	policyLoadbalance, err := a.PolicyLoadbalanceDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyLoadbalance == nil {
 		return nil, errors.NotFound("", "Policy loadbalance not found")
 	}
-	return policyLoadbalance, nil
+	var form schema.PolicyLoadbalanceForm
+	if err := policyLoadbalance.ConvertTo(&form); err != nil {
+		return nil, err
+	}
+	return &form, nil
 }
 
 // Create a new policy loadbalance in the data access object.

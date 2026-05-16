@@ -34,14 +34,18 @@ func (a *PolicyInvocation) Query(ctx context.Context, params schema.PolicyInvoca
 }
 
 // Get the specified policy invocation from the data access object.
-func (a *PolicyInvocation) Get(ctx context.Context, id string) (*schema.PolicyInvocation, error) {
+func (a *PolicyInvocation) Get(ctx context.Context, id string) (*schema.PolicyInvocationForm, error) {
 	policyInvocation, err := a.PolicyInvocationDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyInvocation == nil {
 		return nil, errors.NotFound("", "Policy invocation not found")
 	}
-	return policyInvocation, nil
+	var form schema.PolicyInvocationForm
+	if err := policyInvocation.ConvertTo(&form); err != nil {
+		return nil, err
+	}
+	return &form, nil
 }
 
 // Create a new policy invocation in the data access object.

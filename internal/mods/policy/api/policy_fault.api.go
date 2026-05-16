@@ -39,7 +39,7 @@ func (a *PolicyFault) Query(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Summary Get policy fault record by ID
 // @Param id path string true "unique id"
-// @Success 200 {object} util.ResponseResult{data=schema.PolicyFault}
+// @Success 200 {object} util.ResponseResult{data=schema.PolicyFaultForm}
 // @Failure 401 {object} util.ResponseResult
 // @Failure 500 {object} util.ResponseResult
 // @Router /api/v1/policy/policy-faults/{id} [get]

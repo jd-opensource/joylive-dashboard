@@ -46,6 +46,28 @@ export default [
                     permission: '*',
                 },
             },
+            {
+                path: 'route',
+                name: 'routeList',
+                component: 'policy/tagRoute.vue',
+                meta: {
+                    title: '标签路由策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
+            {
+                path: 'limit',
+                name: 'limitList',
+                component: 'policy/tagLimit.vue',
+                meta: {
+                    title: '限流策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
         ],
     },
 ]

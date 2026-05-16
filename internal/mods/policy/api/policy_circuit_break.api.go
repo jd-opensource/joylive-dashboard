@@ -39,7 +39,7 @@ func (a *PolicyCircuitBreak) Query(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Summary Get policy circuit break record by ID
 // @Param id path string true "unique id"
-// @Success 200 {object} util.ResponseResult{data=schema.PolicyCircuitBreak}
+// @Success 200 {object} util.ResponseResult{data=schema.PolicyCircuitBreakForm}
 // @Failure 401 {object} util.ResponseResult
 // @Failure 500 {object} util.ResponseResult
 // @Router /api/v1/policy/policy-circuit-breaks/{id} [get]

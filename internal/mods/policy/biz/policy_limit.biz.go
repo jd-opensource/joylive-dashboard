@@ -34,14 +34,18 @@ func (a *PolicyLimit) Query(ctx context.Context, params schema.PolicyLimitQueryP
 }
 
 // Get the specified policy limit from the data access object.
-func (a *PolicyLimit) Get(ctx context.Context, id string) (*schema.PolicyLimit, error) {
+func (a *PolicyLimit) Get(ctx context.Context, id string) (*schema.PolicyLimitForm, error) {
 	policyLimit, err := a.PolicyLimitDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyLimit == nil {
 		return nil, errors.NotFound("", "Policy limit not found")
 	}
-	return policyLimit, nil
+	var policyLimitForm schema.PolicyLimitForm
+	if err := policyLimit.ConvertTo(&policyLimitForm); err != nil {
+		return nil, err
+	}
+	return &policyLimitForm, nil
 }
 
 // Create a new policy limit in the data access object.

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
+	"github.com/jd-opensource/joylive-dashboard/pkg/encoding/json"
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 	"gorm.io/gorm"
@@ -55,6 +56,75 @@ func (a PolicyCircuitBreak) TableName() string {
 	return config.C.FormatTableName("policy_circuit_break")
 }
 
+// ConvertTo Convert `PolicyCircuitBreak` to `PolicyCircuitBreakForm` object.
+func (a PolicyCircuitBreak) ConvertTo(form *PolicyCircuitBreakForm) error {
+	form.ID = a.ID
+	form.Name = a.Name
+	form.SpaceCode = a.SpaceCode
+	form.SourceApplicationID = a.SourceApplicationID
+	form.TargetServiceId = a.TargetServiceId
+	if !util.IsEmptyOrBlank(a.Group) {
+		form.Group = a.Group
+	} else {
+		form.Group = DefaultGroup
+	}
+	form.Path = a.Path
+	form.Method = a.Method
+	form.Level = a.Level
+	form.SlidingWindowType = a.SlidingWindowType
+	form.SlidingWindowSize = a.SlidingWindowSize
+	form.MinCallsThreshold = a.MinCallsThreshold
+	if !util.IsNilOrEmpty(a.CodePolicy) {
+		cp := new(ErrorParserPolicy)
+		json.UnMarshalToObject(*a.CodePolicy, cp)
+		form.CodePolicy = cp
+	}
+	if !util.IsNilOrEmpty(a.ErrorCodes) {
+		ec := make([]string, 0)
+		json.UnMarshalToObject(*a.ErrorCodes, &ec)
+		form.ErrorCodes = ec
+	}
+	if !util.IsNilOrEmpty(a.MessagePolicy) {
+		mp := new(ErrorParserPolicy)
+		json.UnMarshalToObject(*a.MessagePolicy, mp)
+		form.MessagePolicy = mp
+	}
+	if !util.IsNilOrEmpty(a.ErrorMessages) {
+		em := make([]string, 0)
+		json.UnMarshalToObject(*a.ErrorMessages, &em)
+		form.ErrorMessages = em
+	}
+	if !util.IsNilOrEmpty(a.Exceptions) {
+		ex := make([]string, 0)
+		json.UnMarshalToObject(*a.Exceptions, &ex)
+		form.Exceptions = ex
+	}
+	form.FailureRateThreshold = a.FailureRateThreshold
+	form.SlowCallRateThreshold = a.SlowCallRateThreshold
+	form.SlowCallDurationThreshold = a.SlowCallDurationThreshold
+	form.WaitDurationInOpenState = a.WaitDurationInOpenState
+	form.OutlierMaxPercent = a.OutlierMaxPercent
+	form.AllowedCallsInHalfOpenState = a.AllowedCallsInHalfOpenState
+	form.ForceOpen = a.ForceOpen
+	form.RecoveryEnabled = a.RecoveryEnabled
+	form.RecoveryDuration = a.RecoveryDuration
+	form.RecoveryPhase = a.RecoveryPhase
+	if !util.IsNilOrEmpty(a.DegradeConfig) {
+		dc := new(DegradeConfig)
+		json.UnMarshalToObject(*a.DegradeConfig, dc)
+		form.DegradeConfig = dc
+	}
+	form.RealizeType = a.RealizeType
+	form.Version = a.Version
+	form.Enabled = a.Enabled
+	form.Description = a.Description
+	form.Creator = a.Creator
+	form.Modifier = a.Modifier
+	form.CreatedAt = a.CreatedAt
+	form.UpdatedAt = a.UpdatedAt
+	return nil
+}
+
 // Defining the query parameters for the `PolicyCircuitBreak` struct.
 type PolicyCircuitBreakQueryParam struct {
 	util.PaginationParam
@@ -79,37 +149,42 @@ type PolicyCircuitBreaks []*PolicyCircuitBreak
 
 // Defining the data structure for creating a `PolicyCircuitBreak` struct.
 type PolicyCircuitBreakForm struct {
-	Name                        string  `json:"name" binding:"required,max=100"`             // Policy name
-	SpaceCode                   string  `json:"space_code" binding:"required,max=255"`        // Microservice space code
-	SourceApplicationID         *string `json:"source_application_id"`                         // Source application ID
-	TargetServiceId             string  `json:"target_service_id" binding:"required,max=20"`   // Target service ID
-	Group                       string  `json:"group" binding:"required,max=255"`            // Group
-	Path                        *string `json:"path"`                                        // Path or interface
-	Method                      *string `json:"method"`                                      // Method
-	Level                       string  `json:"level" binding:"required,max=20"`             // Policy level
-	SlidingWindowType           string  `json:"sliding_window_type" binding:"required,max=20"` // Sliding window type
-	SlidingWindowSize           int     `json:"sliding_window_size"`                           // Sliding window size
-	MinCallsThreshold           int     `json:"min_calls_threshold"`                           // Min calls threshold
-	CodePolicy                  *string `json:"code_policy"`                                  // Code policy (JSON)
-	ErrorCodes                  *string `json:"error_codes"`                                  // Error codes (JSON)
-	MessagePolicy               *string `json:"message_policy"`                               // Message policy (JSON)
-	ErrorMessages               *string `json:"error_messages"`                               // Error messages (JSON)
-	Exceptions                  *string `json:"exceptions"`                                  // Exceptions (JSON)
-	FailureRateThreshold        int     `json:"failure_rate_threshold"`                        // Failure rate threshold
-	SlowCallRateThreshold       int     `json:"slow_call_rate_threshold"`                       // Slow call rate threshold
-	SlowCallDurationThreshold   int     `json:"slow_call_duration_threshold"`                   // Slow call duration threshold
-	WaitDurationInOpenState     int     `json:"wait_duration_in_open_state"`                     // Wait duration in open state
-	OutlierMaxPercent           *int    `json:"outlier_max_percent"`                           // Outlier max percent
-	AllowedCallsInHalfOpenState int     `json:"allowed_calls_in_half_open_state"`                 // Allowed calls in half open state
-	ForceOpen                   int     `json:"force_open"`                                   // Force open
-	RecoveryEnabled             int     `json:"recovery_enabled"`                             // Recovery enabled
-	RecoveryDuration            int     `json:"recovery_duration"`                            // Recovery duration (ms)
-	RecoveryPhase               int     `json:"recovery_phase"`                               // Recovery phase
-	DegradeConfig               *string `json:"degrade_config"`                               // Degrade config (JSON)
-	RealizeType                 string  `json:"realize_type" binding:"required,max=20"`       // Realize type
-	Version                     int64   `json:"version"`                                     // Version
-	Enabled                     int     `json:"enabled"`                                     // Enabled
-	Description                 *string `json:"description"`                                 // Details
+	ID                          string              `json:"id"`
+	Name                        string              `json:"name" binding:"required,max=100"`             // Policy name
+	SpaceCode                   string              `json:"space_code" binding:"required,max=255"`        // Microservice space code
+	SourceApplicationID         *string             `json:"source_application_id"`                         // Source application ID
+	TargetServiceId             string              `json:"target_service_id" binding:"required,max=20"`   // Target service ID
+	Group                       string              `json:"group" binding:"required,max=255"`            // Group
+	Path                        *string             `json:"path"`                                        // Path or interface
+	Method                      *string             `json:"method"`                                      // Method
+	Level                       string              `json:"level" binding:"required,max=20"`             // Policy level
+	SlidingWindowType           string              `json:"sliding_window_type" binding:"required,max=20"` // Sliding window type
+	SlidingWindowSize           int                 `json:"sliding_window_size"`                           // Sliding window size
+	MinCallsThreshold           int                 `json:"min_calls_threshold"`                           // Min calls threshold
+	CodePolicy                  *ErrorParserPolicy  `json:"code_policy"`                                  // Code policy
+	ErrorCodes                  []string            `json:"error_codes"`                                  // Error codes
+	MessagePolicy               *ErrorParserPolicy  `json:"message_policy"`                               // Message policy
+	ErrorMessages               []string            `json:"error_messages"`                               // Error messages
+	Exceptions                  []string            `json:"exceptions"`                                  // Exceptions
+	FailureRateThreshold        int                 `json:"failure_rate_threshold"`                        // Failure rate threshold
+	SlowCallRateThreshold       int                 `json:"slow_call_rate_threshold"`                       // Slow call rate threshold
+	SlowCallDurationThreshold   int                 `json:"slow_call_duration_threshold"`                   // Slow call duration threshold
+	WaitDurationInOpenState     int                 `json:"wait_duration_in_open_state"`                     // Wait duration in open state
+	OutlierMaxPercent           *int                `json:"outlier_max_percent"`                           // Outlier max percent
+	AllowedCallsInHalfOpenState int                 `json:"allowed_calls_in_half_open_state"`                 // Allowed calls in half open state
+	ForceOpen                   int                 `json:"force_open"`                                   // Force open
+	RecoveryEnabled             int                 `json:"recovery_enabled"`                             // Recovery enabled
+	RecoveryDuration            int                 `json:"recovery_duration"`                            // Recovery duration (ms)
+	RecoveryPhase               int                 `json:"recovery_phase"`                               // Recovery phase
+	DegradeConfig               *DegradeConfig      `json:"degrade_config"`                               // Degrade config
+	RealizeType                 string              `json:"realize_type" binding:"required,max=20"`       // Realize type
+	Version                     int64               `json:"version"`                                     // Version
+	Enabled                     int                 `json:"enabled"`                                     // Enabled
+	Description                 *string             `json:"description"`                                 // Details
+	Creator                     *string             `json:"creator,omitempty"`                           // Creator
+	Modifier                    *string             `json:"modifier,omitempty"`                          // Modifier
+	CreatedAt                   time.Time           `json:"created_at"`                                  // Create timestamp
+	UpdatedAt                   time.Time           `json:"updated_at,omitempty"`                        // Update timestamp
 }
 
 // A validation function for the `PolicyCircuitBreakForm` struct.
@@ -144,18 +219,22 @@ func (a *PolicyCircuitBreakForm) FillTo(policyCircuitBreak *PolicyCircuitBreak) 
 	policyCircuitBreak.SpaceCode = a.SpaceCode
 	policyCircuitBreak.SourceApplicationID = a.SourceApplicationID
 	policyCircuitBreak.TargetServiceId = a.TargetServiceId
-	policyCircuitBreak.Group = a.Group
+	if a.Group != "" {
+		policyCircuitBreak.Group = a.Group
+	} else {
+		policyCircuitBreak.Group = DefaultGroup
+	}
 	policyCircuitBreak.Path = a.Path
 	policyCircuitBreak.Method = a.Method
 	policyCircuitBreak.Level = a.Level
 	policyCircuitBreak.SlidingWindowType = a.SlidingWindowType
 	policyCircuitBreak.SlidingWindowSize = a.SlidingWindowSize
 	policyCircuitBreak.MinCallsThreshold = a.MinCallsThreshold
-	policyCircuitBreak.CodePolicy = a.CodePolicy
-	policyCircuitBreak.ErrorCodes = a.ErrorCodes
-	policyCircuitBreak.MessagePolicy = a.MessagePolicy
-	policyCircuitBreak.ErrorMessages = a.ErrorMessages
-	policyCircuitBreak.Exceptions = a.Exceptions
+	policyCircuitBreak.CodePolicy = func() *string { return json.MarshalToString(a.CodePolicy) }()
+	policyCircuitBreak.ErrorCodes = func() *string { return json.MarshalToString(a.ErrorCodes) }()
+	policyCircuitBreak.MessagePolicy = func() *string { return json.MarshalToString(a.MessagePolicy) }()
+	policyCircuitBreak.ErrorMessages = func() *string { return json.MarshalToString(a.ErrorMessages) }()
+	policyCircuitBreak.Exceptions = func() *string { return json.MarshalToString(a.Exceptions) }()
 	policyCircuitBreak.FailureRateThreshold = a.FailureRateThreshold
 	policyCircuitBreak.SlowCallRateThreshold = a.SlowCallRateThreshold
 	policyCircuitBreak.SlowCallDurationThreshold = a.SlowCallDurationThreshold
@@ -166,10 +245,10 @@ func (a *PolicyCircuitBreakForm) FillTo(policyCircuitBreak *PolicyCircuitBreak) 
 	policyCircuitBreak.RecoveryEnabled = a.RecoveryEnabled
 	policyCircuitBreak.RecoveryDuration = a.RecoveryDuration
 	policyCircuitBreak.RecoveryPhase = a.RecoveryPhase
-	policyCircuitBreak.DegradeConfig = a.DegradeConfig
+	policyCircuitBreak.DegradeConfig = func() *string { return json.MarshalToString(a.DegradeConfig) }()
 	policyCircuitBreak.RealizeType = a.RealizeType
-	policyCircuitBreak.Version = a.Version
 	policyCircuitBreak.Enabled = a.Enabled
 	policyCircuitBreak.Description = a.Description
+	policyCircuitBreak.Version = time.Now().UnixMilli()
 	return nil
 }

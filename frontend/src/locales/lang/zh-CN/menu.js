@@ -16,6 +16,8 @@ export default {
     loadbalanceList: '负载均衡',
     permissionList: '服务鉴权',
     faultList: '故障注入',
+    routeList: '标签路由',
+    limitList: '限流',
     serviceDetail: '服务详情',
     'menu.account.settings': '个人设置',
     add: '添加',

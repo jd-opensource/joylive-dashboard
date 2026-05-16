@@ -34,14 +34,18 @@ func (a *PolicyPermission) Query(ctx context.Context, params schema.PolicyPermis
 }
 
 // Get the specified policy permission from the data access object.
-func (a *PolicyPermission) Get(ctx context.Context, id string) (*schema.PolicyPermission, error) {
+func (a *PolicyPermission) Get(ctx context.Context, id string) (*schema.PolicyPermissionForm, error) {
 	policyPermission, err := a.PolicyPermissionDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyPermission == nil {
 		return nil, errors.NotFound("", "Policy permission not found")
 	}
-	return policyPermission, nil
+	var form schema.PolicyPermissionForm
+	if err := policyPermission.ConvertTo(&form); err != nil {
+		return nil, err
+	}
+	return &form, nil
 }
 
 // Create a new policy permission in the data access object.

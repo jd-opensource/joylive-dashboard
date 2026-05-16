@@ -34,6 +34,7 @@ data/
 # binary directories
 bin/
 joylivedashboard
+gen/
 
 # ai
 .claude/

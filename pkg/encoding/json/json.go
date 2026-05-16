@@ -2,6 +2,7 @@ package json
 
 import (
 	"fmt"
+	"reflect"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -15,11 +16,30 @@ var (
 	NewEncoder    = json.NewEncoder
 )
 
-func MarshalToString(v interface{}) string {
+func MarshalToString(v interface{}) *string {
+	if v == nil || reflect.ValueOf(v).IsNil() {
+		return nil
+	}
 	s, err := jsoniter.MarshalToString(v)
 	if err != nil {
 		fmt.Println("Failed to marshal json string: " + err.Error())
-		return ""
+		return nil
 	}
-	return s
+	return &s
+}
+
+func UnMarshalToObject(v string, obj interface{}) {
+	err := jsoniter.UnmarshalFromString(v, obj)
+	if err != nil {
+		fmt.Println("Failed to marshal json string: " + err.Error())
+	}
+}
+
+func UnMarshalToMap(v string) (map[string]string, error) {
+	m := make(map[string]string)
+	err := json.Unmarshal([]byte(v), &m)
+	if err != nil {
+		return nil, err
+	}
+	return m, nil
 }

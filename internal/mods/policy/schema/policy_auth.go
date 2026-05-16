@@ -32,6 +32,24 @@ func (a PolicyAuth) TableName() string {
 	return config.C.FormatTableName("policy_auth")
 }
 
+// ConvertTo Convert `PolicyAuth` to `PolicyAuthForm` object.
+func (a PolicyAuth) ConvertTo(form *PolicyAuthForm) error {
+	form.ID = a.ID
+	form.SpaceCode = a.SpaceCode
+	form.SourceApplicationID = a.SourceApplicationID
+	form.TargetServiceId = a.TargetServiceId
+	form.Type = a.Type
+	form.Params = a.Params
+	form.Version = a.Version
+	form.Enabled = a.Enabled
+	form.Description = a.Description
+	form.Creator = a.Creator
+	form.Modifier = a.Modifier
+	form.CreatedAt = a.CreatedAt
+	form.UpdatedAt = a.UpdatedAt
+	return nil
+}
+
 // Defining the query parameters for the `PolicyAuth` struct.
 type PolicyAuthQueryParam struct {
 	util.PaginationParam
@@ -55,14 +73,19 @@ type PolicyAuths []*PolicyAuth
 
 // Defining the data structure for creating a `PolicyAuth` struct.
 type PolicyAuthForm struct {
-	SpaceCode           string  `json:"space_code" binding:"required,max=255"`       // Microservice space code
-	SourceApplicationID *string `json:"source_application_id"`                       // Source application ID
-	TargetServiceId     string  `json:"target_service_id" binding:"required,max=20"` // Target service ID
-	Type                string  `json:"type" binding:"required,max=20"`              // Auth type
-	Params              *string `json:"params"`                                      // Parameters (JSON)
-	Version             int64   `json:"version"`                                     // Version
-	Enabled             int     `json:"enabled"`                                     // Enabled
-	Description         *string `json:"description"`                                 // Details
+	ID                  string    `json:"id"`
+	SpaceCode           string    `json:"space_code" binding:"required,max=255"`       // Microservice space code
+	SourceApplicationID *string   `json:"source_application_id"`                       // Source application ID
+	TargetServiceId     string    `json:"target_service_id" binding:"required,max=20"` // Target service ID
+	Type                string    `json:"type" binding:"required,max=20"`              // Auth type
+	Params              *string   `json:"params"`                                      // Parameters (JSON)
+	Version             int64     `json:"version"`                                     // Version
+	Enabled             int       `json:"enabled"`                                     // Enabled
+	Description         *string   `json:"description"`                                 // Details
+	Creator             *string   `json:"creator,omitempty"`                           // Creator
+	Modifier            *string   `json:"modifier,omitempty"`                          // Modifier
+	CreatedAt           time.Time `json:"created_at"`                                  // Create timestamp
+	UpdatedAt           time.Time `json:"updated_at,omitempty"`                        // Update timestamp
 }
 
 // A validation function for the `PolicyAuthForm` struct.
@@ -86,8 +109,8 @@ func (a *PolicyAuthForm) FillTo(policyAuth *PolicyAuth) error {
 	policyAuth.TargetServiceId = a.TargetServiceId
 	policyAuth.Type = a.Type
 	policyAuth.Params = a.Params
-	policyAuth.Version = a.Version
 	policyAuth.Enabled = a.Enabled
 	policyAuth.Description = a.Description
+	policyAuth.Version = time.Now().UnixMilli()
 	return nil
 }

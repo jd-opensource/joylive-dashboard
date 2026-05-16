@@ -16,6 +16,8 @@ export default {
     loadbalanceList: 'Load Balance',
     permissionList: 'Permission',
     faultList: 'Fault Injection',
+    routeList: 'Tag Route',
+    limitList: 'Rate Limit',
     serviceDetail: 'Service Detail',
     add: 'add',
     edit: 'edit',

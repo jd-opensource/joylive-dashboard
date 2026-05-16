@@ -125,7 +125,11 @@ func ParseUserCache(s string) UserCache {
 }
 
 func (a UserCache) String() string {
-	return json.MarshalToString(a)
+	s := json.MarshalToString(a)
+	if s == nil {
+		return ""
+	}
+	return *s
 }
 
 func NewUserCache(ctx context.Context, userCache UserCache) context.Context {

@@ -34,14 +34,18 @@ func (a *PolicyCircuitBreak) Query(ctx context.Context, params schema.PolicyCirc
 }
 
 // Get the specified policy circuit break from the data access object.
-func (a *PolicyCircuitBreak) Get(ctx context.Context, id string) (*schema.PolicyCircuitBreak, error) {
+func (a *PolicyCircuitBreak) Get(ctx context.Context, id string) (*schema.PolicyCircuitBreakForm, error) {
 	policyCircuitBreak, err := a.PolicyCircuitBreakDAL.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	} else if policyCircuitBreak == nil {
 		return nil, errors.NotFound("", "Policy circuit break not found")
 	}
-	return policyCircuitBreak, nil
+	var form schema.PolicyCircuitBreakForm
+	if err := policyCircuitBreak.ConvertTo(&form); err != nil {
+		return nil, err
+	}
+	return &form, nil
 }
 
 // Create a new policy circuit break in the data access object.

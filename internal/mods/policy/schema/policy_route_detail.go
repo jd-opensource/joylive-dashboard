@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jd-opensource/joylive-dashboard/internal/config"
+	"github.com/jd-opensource/joylive-dashboard/pkg/encoding/json"
 	"github.com/jd-opensource/joylive-dashboard/pkg/errors"
 	"github.com/jd-opensource/joylive-dashboard/pkg/util"
 	"gorm.io/gorm"
@@ -19,6 +20,8 @@ type PolicyRouteDetail struct {
 	Order        int             `json:"order" gorm:"not null;default:0;comment:Sort order;"`                       // Sort order
 	Enabled      int             `json:"enabled" gorm:"not null;default:0;comment:Enabled;"`                        // Enabled
 	Description  *string         `json:"description,omitempty" gorm:"size:255;comment:Details;"`                    // Details
+	Creator      *string         `json:"creator,omitempty" gorm:"size:255;comment:Creator;"`                        // Creator
+	Modifier     *string         `json:"modifier,omitempty" gorm:"size:255;comment:Modifier;"`                      // Modifier
 	CreatedAt    time.Time       `json:"created_at" gorm:"autoCreateTime;comment:Create timestamp;"`                // Create timestamp
 	UpdatedAt    time.Time       `json:"updated_at,omitempty" gorm:"autoUpdateTime;comment:Update timestamp;"`      // Update timestamp
 	Deleted      string          `json:"-" gorm:"index:idx_routeid;size:20;default:0;comment:Delete flag;"`         // Delete flag
@@ -29,10 +32,38 @@ func (a PolicyRouteDetail) TableName() string {
 	return config.C.FormatTableName("policy_route_detail")
 }
 
+// ConvertTo Convert `PolicyRouteDetail` to `PolicyRouteDetailForm` object.
+func (a PolicyRouteDetail) ConvertTo(detail *PolicyRouteDetailForm) error {
+	if len(a.ID) > 0 {
+		detail.ID = a.ID
+	}
+	detail.RouteId = a.RouteId
+	detail.RelationType = a.RelationType
+	conditions := make([]TagCondition, 0)
+	if !util.IsNilOrEmpty(a.Conditions) {
+		json.UnMarshalToObject(*a.Conditions, &conditions)
+	}
+	detail.Conditions = &conditions
+	destinations := make([]TagDestination, 0)
+	if !util.IsNilOrEmpty(a.Destinations) {
+		json.UnMarshalToObject(*a.Destinations, &destinations)
+	}
+	detail.Destinations = &destinations
+	detail.Order = a.Order
+	detail.Enabled = a.Enabled
+	detail.Description = a.Description
+	detail.Creator = a.Creator
+	detail.Modifier = a.Modifier
+	detail.CreatedAt = a.CreatedAt
+	detail.UpdatedAt = a.UpdatedAt
+	return nil
+}
+
 // Defining the query parameters for the `PolicyRouteDetail` struct.
 type PolicyRouteDetailQueryParam struct {
 	util.PaginationParam
-	RouteId string `form:"route_id"` // Route ID
+	RouteId  string   `form:"route_id"`  // Route ID
+	RouteIds []string `form:"route_ids"` // Multi route id
 }
 
 // Defining the query options for the `PolicyRouteDetail` struct.
@@ -51,13 +82,18 @@ type PolicyRouteDetails []*PolicyRouteDetail
 
 // Defining the data structure for creating a `PolicyRouteDetail` struct.
 type PolicyRouteDetailForm struct {
-	RouteId      string  `json:"route_id" binding:"required,max=20"`      // Route ID
-	RelationType string  `json:"relation_type" binding:"required,max=20"` // Relation type
-	Conditions   *string `json:"conditions"`                              // Match conditions (JSON)
-	Destinations *string `json:"destinations"`                            // Destination rules (JSON)
-	Order        int     `json:"order"`                                   // Sort order
-	Enabled      int     `json:"enabled"`                                 // Enabled
-	Description  *string `json:"description"`                             // Details
+	ID           string            `json:"id,omitempty"`
+	RouteId      string            `json:"route_id" binding:"required,max=20"`      // Route ID
+	RelationType string            `json:"relation_type" binding:"required,max=20"` // Relation type
+	Conditions   *[]TagCondition   `json:"conditions"`                              // Match conditions
+	Destinations *[]TagDestination `json:"destinations"`                            // Destination rules
+	Order        int               `json:"order"`                                   // Sort order
+	Enabled      int               `json:"enabled"`                                 // Enabled
+	Description  *string           `json:"description"`                             // Details
+	Creator      *string           `json:"creator,omitempty"`                       // Creator
+	Modifier     *string           `json:"modifier,omitempty"`                      // Modifier
+	CreatedAt    time.Time         `json:"created_at"`                              // Create timestamp
+	UpdatedAt    time.Time         `json:"updated_at,omitempty"`                    // Update timestamp
 }
 
 // A validation function for the `PolicyRouteDetailForm` struct.
@@ -71,12 +107,15 @@ func (a *PolicyRouteDetailForm) Validate() error {
 	return nil
 }
 
-// Convert `PolicyRouteDetailForm` to `PolicyRouteDetail` object.
+// FillTo Convert `PolicyRouteDetailForm` to `PolicyRouteDetail` object.
 func (a *PolicyRouteDetailForm) FillTo(policyRouteDetail *PolicyRouteDetail) error {
+	if len(a.ID) > 0 {
+		policyRouteDetail.ID = a.ID
+	}
 	policyRouteDetail.RouteId = a.RouteId
 	policyRouteDetail.RelationType = a.RelationType
-	policyRouteDetail.Conditions = a.Conditions
-	policyRouteDetail.Destinations = a.Destinations
+	policyRouteDetail.Conditions = func() *string { return json.MarshalToString(a.Conditions) }()
+	policyRouteDetail.Destinations = func() *string { return json.MarshalToString(a.Destinations) }()
 	policyRouteDetail.Order = a.Order
 	policyRouteDetail.Enabled = a.Enabled
 	policyRouteDetail.Description = a.Description
