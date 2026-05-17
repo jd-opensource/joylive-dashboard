@@ -66,9 +66,20 @@ func (a *PolicyRoute) Create(ctx context.Context, formItem *schema.PolicyRouteFo
 		Deleted:   "0",
 		CreatedAt: time.Now(),
 	}
+	
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyRoute.Creator = &username
+	}
 
 	if err := formItem.FillTo(policyRoute); err != nil {
 		return nil, err
+	}
+
+	if username != "" && policyRoute.Details != nil {
+		for _, detail := range *policyRoute.Details {
+			detail.Creator = &username
+		}
 	}
 
 	err := a.Trans.Exec(ctx, func(ctx context.Context) error {
@@ -110,6 +121,16 @@ func (a *PolicyRoute) Update(ctx context.Context, id string, formItem *schema.Po
 		return err
 	}
 	policyRoute.UpdatedAt = time.Now()
+	
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyRoute.Modifier = &username
+		if policyRoute.Details != nil {
+			for _, detail := range *policyRoute.Details {
+				detail.Modifier = &username
+			}
+		}
+	}
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
 		return a.PolicyRouteDAL.Update(ctx, policyRoute)

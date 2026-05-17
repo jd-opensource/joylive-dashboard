@@ -1200,7 +1200,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyAuth"
+                                            "$ref": "#/definitions/schema.PolicyAuthForm"
                                         }
                                     }
                                 }
@@ -1457,7 +1457,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyCircuitBreak"
+                                            "$ref": "#/definitions/schema.PolicyCircuitBreakForm"
                                         }
                                     }
                                 }
@@ -1714,7 +1714,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyFault"
+                                            "$ref": "#/definitions/schema.PolicyFaultForm"
                                         }
                                     }
                                 }
@@ -1971,7 +1971,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyInvocation"
+                                            "$ref": "#/definitions/schema.PolicyInvocationForm"
                                         }
                                     }
                                 }
@@ -2228,7 +2228,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyLimit"
+                                            "$ref": "#/definitions/schema.PolicyLimitForm"
                                         }
                                     }
                                 }
@@ -2485,7 +2485,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyLoadbalance"
+                                            "$ref": "#/definitions/schema.PolicyLoadbalanceForm"
                                         }
                                     }
                                 }
@@ -2742,7 +2742,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyPermission"
+                                            "$ref": "#/definitions/schema.PolicyPermissionForm"
                                         }
                                     }
                                 }
@@ -2999,7 +2999,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyRouteDetail"
+                                            "$ref": "#/definitions/schema.PolicyRouteDetailForm"
                                         }
                                     }
                                 }
@@ -3256,7 +3256,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/schema.PolicyRoute"
+                                            "$ref": "#/definitions/schema.PolicyRouteForm"
                                         }
                                     }
                                 }
@@ -3611,6 +3611,63 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/resource/application-services/{id}/status": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ApplicationServiceAPI"
+                ],
+                "summary": "Update application service status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unique id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.ApplicationServiceStatusForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/util.ResponseResult"
                         }
@@ -5747,7 +5804,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "errors.Error": {
+        "github_com_jd-opensource_joylive-dashboard_pkg_errors.Error": {
             "type": "object",
             "properties": {
                 "code": {
@@ -5849,6 +5906,14 @@ const docTemplate = `{
         "schema.ApplicationService": {
             "type": "object",
             "properties": {
+                "application": {
+                    "description": "Application (auto-loaded association)",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.Application"
+                        }
+                    ]
+                },
                 "application_id": {
                     "description": "ApplicationId",
                     "type": "string"
@@ -5910,6 +5975,19 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 20
                 },
+                "status": {
+                    "description": "Status: approved, rejected, pending",
+                    "type": "string",
+                    "maxLength": 20
+                }
+            }
+        },
+        "schema.ApplicationServiceStatusForm": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
                 "status": {
                     "description": "Status: approved, rejected, pending",
                     "type": "string",
@@ -6009,6 +6087,34 @@ const docTemplate = `{
                     "description": "User",
                     "type": "string",
                     "maxLength": 50
+                }
+            }
+        },
+        "schema.DegradeConfig": {
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "responseBody": {
+                    "type": "string"
+                },
+                "responseCode": {
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.ErrorParserPolicy": {
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "type": "string"
+                },
+                "parser": {
+                    "type": "string"
                 }
             }
         },
@@ -6269,6 +6375,25 @@ const docTemplate = `{
                 }
             }
         },
+        "schema.OpType": {
+            "type": "string",
+            "enum": [
+                "EQUAL",
+                "NOT_EQUAL",
+                "IN",
+                "NOT_IN",
+                "REGULAR",
+                "PREFIX"
+            ],
+            "x-enum-varnames": [
+                "OpType_EQUAL",
+                "OpType_NOT_EQUAL",
+                "OpType_IN",
+                "OpType_NOT_IN",
+                "OpType_REGULAR",
+                "OpType_PREFIX"
+            ]
+        },
         "schema.PolicyAuth": {
             "type": "object",
             "properties": {
@@ -6334,6 +6459,14 @@ const docTemplate = `{
                 "type"
             ],
             "properties": {
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
                 "description": {
                     "description": "Details",
                     "type": "string"
@@ -6341,6 +6474,13 @@ const docTemplate = `{
                 "enabled": {
                     "description": "Enabled",
                     "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
                 },
                 "params": {
                     "description": "Parameters (JSON)",
@@ -6364,6 +6504,10 @@ const docTemplate = `{
                     "description": "Auth type",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 },
                 "version": {
                     "description": "Version",
@@ -6537,12 +6681,28 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "code_policy": {
-                    "description": "Code policy (JSON)",
+                    "description": "Code policy",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.ErrorParserPolicy"
+                        }
+                    ]
+                },
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
                     "type": "string"
                 },
                 "degrade_config": {
-                    "description": "Degrade config (JSON)",
-                    "type": "string"
+                    "description": "Degrade config",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.DegradeConfig"
+                        }
+                    ]
                 },
                 "description": {
                     "description": "Details",
@@ -6553,16 +6713,25 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "error_codes": {
-                    "description": "Error codes (JSON)",
-                    "type": "string"
+                    "description": "Error codes",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "error_messages": {
-                    "description": "Error messages (JSON)",
-                    "type": "string"
+                    "description": "Error messages",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "exceptions": {
-                    "description": "Exceptions (JSON)",
-                    "type": "string"
+                    "description": "Exceptions",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "failure_rate_threshold": {
                     "description": "Failure rate threshold",
@@ -6577,14 +6746,21 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
+                "id": {
+                    "type": "string"
+                },
                 "level": {
                     "description": "Policy level",
                     "type": "string",
                     "maxLength": 20
                 },
                 "message_policy": {
-                    "description": "Message policy (JSON)",
-                    "type": "string"
+                    "description": "Message policy",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.ErrorParserPolicy"
+                        }
+                    ]
                 },
                 "method": {
                     "description": "Method",
@@ -6593,6 +6769,10 @@ const docTemplate = `{
                 "min_calls_threshold": {
                     "description": "Min calls threshold",
                     "type": "integer"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
                 },
                 "name": {
                     "description": "Policy name",
@@ -6654,6 +6834,10 @@ const docTemplate = `{
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 },
                 "version": {
                     "description": "Version",
@@ -6775,7 +6959,18 @@ const docTemplate = `{
             ],
             "properties": {
                 "conditions": {
-                    "description": "Match conditions (JSON)",
+                    "description": "Match conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.TagCondition"
+                    }
+                },
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
                     "type": "string"
                 },
                 "delay_time_ms": {
@@ -6783,7 +6978,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "description": {
-                    "description": "Details",
+                    "description": "Description",
                     "type": "string"
                 },
                 "enabled": {
@@ -6803,8 +6998,15 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
+                "id": {
+                    "type": "string"
+                },
                 "method": {
                     "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "name": {
@@ -6848,6 +7050,10 @@ const docTemplate = `{
                     "description": "Fault injection type (error | delay)",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 },
                 "version": {
                     "description": "Version",
@@ -6938,6 +7144,14 @@ const docTemplate = `{
                 "type"
             ],
             "properties": {
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
                 "description": {
                     "description": "Details",
                     "type": "string"
@@ -6951,8 +7165,15 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
+                "id": {
+                    "type": "string"
+                },
                 "method": {
                     "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "name": {
@@ -6965,8 +7186,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "retry_policy": {
-                    "description": "Retry policy (JSON)",
-                    "type": "string"
+                    "description": "Retry policy",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.RetryPolicy"
+                        }
+                    ]
                 },
                 "source_application_id": {
                     "description": "Source application ID",
@@ -6986,6 +7211,10 @@ const docTemplate = `{
                     "description": "Invocation type (failfast | failover | failsafe)",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 },
                 "version": {
                     "description": "Version",
@@ -7112,15 +7341,29 @@ const docTemplate = `{
             "properties": {
                 "action_parameters": {
                     "description": "Action parameters (JSON)",
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
                 },
                 "conditions": {
                     "description": "Match conditions (JSON)",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.TagCondition"
+                    }
                 },
                 "cpu_usage": {
                     "description": "Max CPU usage",
                     "type": "integer"
+                },
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
                 },
                 "description": {
                     "description": "Details",
@@ -7134,6 +7377,9 @@ const docTemplate = `{
                     "description": "Group",
                     "type": "string",
                     "maxLength": 255
+                },
+                "id": {
+                    "type": "string"
                 },
                 "load_usage": {
                     "description": "Max system load",
@@ -7149,6 +7395,10 @@ const docTemplate = `{
                 },
                 "method": {
                     "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "name": {
@@ -7172,7 +7422,10 @@ const docTemplate = `{
                 },
                 "sliding_windows": {
                     "description": "Sliding windows (JSON)",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.SlidingWindow"
+                    }
                 },
                 "source_application_id": {
                     "description": "Source application ID",
@@ -7192,6 +7445,10 @@ const docTemplate = `{
                     "description": "Limit policy type (Rate, Concurrency, Load)",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 },
                 "version": {
                     "description": "Version",
@@ -7281,6 +7538,14 @@ const docTemplate = `{
                 "target_service_id"
             ],
             "properties": {
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
                 "description": {
                     "description": "Details",
                     "type": "string"
@@ -7294,8 +7559,15 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
+                "id": {
+                    "type": "string"
+                },
                 "method": {
                     "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "name": {
@@ -7328,6 +7600,10 @@ const docTemplate = `{
                     "description": "Target service ID",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 },
                 "version": {
                     "description": "Version",
@@ -7424,7 +7700,18 @@ const docTemplate = `{
             ],
             "properties": {
                 "conditions": {
-                    "description": "Match conditions (JSON)",
+                    "description": "Match conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.TagCondition"
+                    }
+                },
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
                     "type": "string"
                 },
                 "description": {
@@ -7440,8 +7727,15 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
+                "id": {
+                    "type": "string"
+                },
                 "method": {
                     "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "name": {
@@ -7477,6 +7771,10 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 20
                 },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
                 "version": {
                     "description": "Version",
                     "type": "integer"
@@ -7497,6 +7795,12 @@ const docTemplate = `{
                 "description": {
                     "description": "Details",
                     "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.PolicyRouteDetail"
+                    }
                 },
                 "enabled": {
                     "description": "Enabled",
@@ -7563,6 +7867,10 @@ const docTemplate = `{
                     "description": "Create timestamp",
                     "type": "string"
                 },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
                 "description": {
                     "description": "Details",
                     "type": "string"
@@ -7577,6 +7885,10 @@ const docTemplate = `{
                 },
                 "id": {
                     "description": "Unique ID",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "order": {
@@ -7605,7 +7917,18 @@ const docTemplate = `{
             ],
             "properties": {
                 "conditions": {
-                    "description": "Match conditions (JSON)",
+                    "description": "Match conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.TagCondition"
+                    }
+                },
+                "created_at": {
+                    "description": "Create timestamp",
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
                     "type": "string"
                 },
                 "description": {
@@ -7613,12 +7936,22 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "destinations": {
-                    "description": "Destination rules (JSON)",
-                    "type": "string"
+                    "description": "Destination rules",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.TagDestination"
+                    }
                 },
                 "enabled": {
                     "description": "Enabled",
                     "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
+                    "type": "string"
                 },
                 "order": {
                     "description": "Sort order",
@@ -7633,6 +7966,10 @@ const docTemplate = `{
                     "description": "Route ID",
                     "type": "string",
                     "maxLength": 20
+                },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
                 }
             }
         },
@@ -7645,9 +7982,24 @@ const docTemplate = `{
                 "target_service_id"
             ],
             "properties": {
-                "description": {
-                    "description": "Details",
+                "created_at": {
+                    "description": "Create timestamp",
                     "type": "string"
+                },
+                "creator": {
+                    "description": "Creator",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description",
+                    "type": "string"
+                },
+                "details": {
+                    "description": "RouteDetail",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.PolicyRouteDetailForm"
+                    }
                 },
                 "enabled": {
                     "description": "Enabled",
@@ -7658,8 +8010,16 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255
                 },
+                "id": {
+                    "description": "Unique ID",
+                    "type": "string"
+                },
                 "method": {
                     "description": "Method",
+                    "type": "string"
+                },
+                "modifier": {
+                    "description": "Modifier",
                     "type": "string"
                 },
                 "name": {
@@ -7689,8 +8049,76 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 20
                 },
+                "updated_at": {
+                    "description": "Update timestamp",
+                    "type": "string"
+                },
                 "version": {
                     "description": "Version",
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.RelationType": {
+            "type": "string",
+            "enum": [
+                "AND",
+                "OR"
+            ],
+            "x-enum-varnames": [
+                "RelationType_AND",
+                "RelationType_OR"
+            ]
+        },
+        "schema.RetryPolicy": {
+            "type": "object",
+            "properties": {
+                "codePolicy": {
+                    "$ref": "#/definitions/schema.ErrorParserPolicy"
+                },
+                "errorCodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "errorMessages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exceptions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "interval": {
+                    "type": "integer"
+                },
+                "messagePolicy": {
+                    "$ref": "#/definitions/schema.ErrorParserPolicy"
+                },
+                "methodPrefixes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "retry": {
+                    "type": "integer"
+                },
+                "timeout": {
+                    "type": "integer"
+                },
+                "version": {
                     "type": "integer"
                 }
             }
@@ -7821,6 +8249,10 @@ const docTemplate = `{
                 "application_service_status": {
                     "description": "Application service status (virtual field, read-only)",
                     "type": "string"
+                },
+                "authorized": {
+                    "description": "Parsed from Extra.authorized; not stored directly",
+                    "type": "integer"
                 },
                 "created_at": {
                     "description": "Create time",
@@ -8066,6 +8498,17 @@ const docTemplate = `{
                 }
             }
         },
+        "schema.SlidingWindow": {
+            "type": "object",
+            "properties": {
+                "threshold": {
+                    "type": "integer"
+                },
+                "timeWindowInMs": {
+                    "type": "integer"
+                }
+            }
+        },
         "schema.Space": {
             "type": "object",
             "properties": {
@@ -8131,6 +8574,43 @@ const docTemplate = `{
                     "description": "Name",
                     "type": "string",
                     "maxLength": 255
+                }
+            }
+        },
+        "schema.TagCondition": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "opType": {
+                    "$ref": "#/definitions/schema.OpType"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "schema.TagDestination": {
+            "type": "object",
+            "properties": {
+                "conditions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.TagCondition"
+                    }
+                },
+                "relationType": {
+                    "$ref": "#/definitions/schema.RelationType"
+                },
+                "weight": {
+                    "type": "integer"
                 }
             }
         },
@@ -8317,7 +8797,7 @@ const docTemplate = `{
             "properties": {
                 "data": {},
                 "error": {
-                    "$ref": "#/definitions/errors.Error"
+                    "$ref": "#/definitions/github_com_jd-opensource_joylive-dashboard_pkg_errors.Error"
                 },
                 "success": {
                     "type": "boolean"

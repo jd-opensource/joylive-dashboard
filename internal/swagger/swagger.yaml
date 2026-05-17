@@ -1,5 +1,5 @@
 definitions:
-  errors.Error:
+  github_com_jd-opensource_joylive-dashboard_pkg_errors.Error:
     properties:
       code:
         type: integer
@@ -72,6 +72,10 @@ definitions:
     type: object
   schema.ApplicationService:
     properties:
+      application:
+        allOf:
+        - $ref: '#/definitions/schema.Application'
+        description: Application (auto-loaded association)
       application_id:
         description: ApplicationId
         type: string
@@ -122,6 +126,15 @@ definitions:
     - application_id
     - role
     - service_id
+    type: object
+  schema.ApplicationServiceStatusForm:
+    properties:
+      status:
+        description: 'Status: approved, rejected, pending'
+        maxLength: 20
+        type: string
+    required:
+    - status
     type: object
   schema.Captcha:
     properties:
@@ -193,6 +206,24 @@ definitions:
     - tenant
     - type
     - user
+    type: object
+  schema.DegradeConfig:
+    properties:
+      attributes:
+        additionalProperties:
+          type: string
+        type: object
+      responseBody:
+        type: string
+      responseCode:
+        type: integer
+    type: object
+  schema.ErrorParserPolicy:
+    properties:
+      expression:
+        type: string
+      parser:
+        type: string
     type: object
   schema.Logger:
     properties:
@@ -383,6 +414,22 @@ definitions:
         description: Update time
         type: string
     type: object
+  schema.OpType:
+    enum:
+    - EQUAL
+    - NOT_EQUAL
+    - IN
+    - NOT_IN
+    - REGULAR
+    - PREFIX
+    type: string
+    x-enum-varnames:
+    - OpType_EQUAL
+    - OpType_NOT_EQUAL
+    - OpType_IN
+    - OpType_NOT_IN
+    - OpType_REGULAR
+    - OpType_PREFIX
   schema.PolicyAuth:
     properties:
       created_at:
@@ -427,12 +474,23 @@ definitions:
     type: object
   schema.PolicyAuthForm:
     properties:
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
+        type: string
       description:
         description: Details
         type: string
       enabled:
         description: Enabled
         type: integer
+      id:
+        type: string
+      modifier:
+        description: Modifier
+        type: string
       params:
         description: Parameters (JSON)
         type: string
@@ -450,6 +508,9 @@ definitions:
       type:
         description: Auth type
         maxLength: 20
+        type: string
+      updated_at:
+        description: Update timestamp
         type: string
       version:
         description: Version
@@ -576,11 +637,19 @@ definitions:
         description: Allowed calls in half open state
         type: integer
       code_policy:
-        description: Code policy (JSON)
+        allOf:
+        - $ref: '#/definitions/schema.ErrorParserPolicy'
+        description: Code policy
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
         type: string
       degrade_config:
-        description: Degrade config (JSON)
-        type: string
+        allOf:
+        - $ref: '#/definitions/schema.DegradeConfig'
+        description: Degrade config
       description:
         description: Details
         type: string
@@ -588,14 +657,20 @@ definitions:
         description: Enabled
         type: integer
       error_codes:
-        description: Error codes (JSON)
-        type: string
+        description: Error codes
+        items:
+          type: string
+        type: array
       error_messages:
-        description: Error messages (JSON)
-        type: string
+        description: Error messages
+        items:
+          type: string
+        type: array
       exceptions:
-        description: Exceptions (JSON)
-        type: string
+        description: Exceptions
+        items:
+          type: string
+        type: array
       failure_rate_threshold:
         description: Failure rate threshold
         type: integer
@@ -606,19 +681,25 @@ definitions:
         description: Group
         maxLength: 255
         type: string
+      id:
+        type: string
       level:
         description: Policy level
         maxLength: 20
         type: string
       message_policy:
-        description: Message policy (JSON)
-        type: string
+        allOf:
+        - $ref: '#/definitions/schema.ErrorParserPolicy'
+        description: Message policy
       method:
         description: Method
         type: string
       min_calls_threshold:
         description: Min calls threshold
         type: integer
+      modifier:
+        description: Modifier
+        type: string
       name:
         description: Policy name
         maxLength: 100
@@ -665,6 +746,9 @@ definitions:
       target_service_id:
         description: Target service ID
         maxLength: 20
+        type: string
+      updated_at:
+        description: Update timestamp
         type: string
       version:
         description: Version
@@ -756,13 +840,21 @@ definitions:
   schema.PolicyFaultForm:
     properties:
       conditions:
-        description: Match conditions (JSON)
+        description: Match conditions
+        items:
+          $ref: '#/definitions/schema.TagCondition'
+        type: array
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
         type: string
       delay_time_ms:
         description: Delay time (ms)
         type: integer
       description:
-        description: Details
+        description: Description
         type: string
       enabled:
         description: Enabled
@@ -777,8 +869,13 @@ definitions:
         description: Group
         maxLength: 255
         type: string
+      id:
+        type: string
       method:
         description: Method
+        type: string
+      modifier:
+        description: Modifier
         type: string
       name:
         description: Policy name
@@ -812,6 +909,9 @@ definitions:
       type:
         description: Fault injection type (error | delay)
         maxLength: 20
+        type: string
+      updated_at:
+        description: Update timestamp
         type: string
       version:
         description: Version
@@ -881,6 +981,12 @@ definitions:
     type: object
   schema.PolicyInvocationForm:
     properties:
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
+        type: string
       description:
         description: Details
         type: string
@@ -891,8 +997,13 @@ definitions:
         description: Group
         maxLength: 255
         type: string
+      id:
+        type: string
       method:
         description: Method
+        type: string
+      modifier:
+        description: Modifier
         type: string
       name:
         description: Policy name
@@ -902,8 +1013,9 @@ definitions:
         description: Path or interface
         type: string
       retry_policy:
-        description: Retry policy (JSON)
-        type: string
+        allOf:
+        - $ref: '#/definitions/schema.RetryPolicy'
+        description: Retry policy
       source_application_id:
         description: Source application ID
         type: string
@@ -918,6 +1030,9 @@ definitions:
       type:
         description: Invocation type (failfast | failover | failsafe)
         maxLength: 20
+        type: string
+      updated_at:
+        description: Update timestamp
         type: string
       version:
         description: Version
@@ -1010,14 +1125,24 @@ definitions:
   schema.PolicyLimitForm:
     properties:
       action_parameters:
+        additionalProperties:
+          type: string
         description: Action parameters (JSON)
-        type: string
+        type: object
       conditions:
         description: Match conditions (JSON)
-        type: string
+        items:
+          $ref: '#/definitions/schema.TagCondition'
+        type: array
       cpu_usage:
         description: Max CPU usage
         type: integer
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
+        type: string
       description:
         description: Details
         type: string
@@ -1027,6 +1152,8 @@ definitions:
       group:
         description: Group
         maxLength: 255
+        type: string
+      id:
         type: string
       load_usage:
         description: Max system load
@@ -1039,6 +1166,9 @@ definitions:
         type: integer
       method:
         description: Method
+        type: string
+      modifier:
+        description: Modifier
         type: string
       name:
         description: Policy name
@@ -1057,7 +1187,9 @@ definitions:
         type: string
       sliding_windows:
         description: Sliding windows (JSON)
-        type: string
+        items:
+          $ref: '#/definitions/schema.SlidingWindow'
+        type: array
       source_application_id:
         description: Source application ID
         type: string
@@ -1072,6 +1204,9 @@ definitions:
       type:
         description: Limit policy type (Rate, Concurrency, Load)
         maxLength: 20
+        type: string
+      updated_at:
+        description: Update timestamp
         type: string
       version:
         description: Version
@@ -1141,6 +1276,12 @@ definitions:
     type: object
   schema.PolicyLoadbalanceForm:
     properties:
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
+        type: string
       description:
         description: Details
         type: string
@@ -1151,8 +1292,13 @@ definitions:
         description: Group
         maxLength: 255
         type: string
+      id:
+        type: string
       method:
         description: Method
+        type: string
+      modifier:
+        description: Modifier
         type: string
       name:
         description: Policy name
@@ -1177,6 +1323,9 @@ definitions:
       target_service_id:
         description: Target service ID
         maxLength: 20
+        type: string
+      updated_at:
+        description: Update timestamp
         type: string
       version:
         description: Version
@@ -1247,7 +1396,15 @@ definitions:
   schema.PolicyPermissionForm:
     properties:
       conditions:
-        description: Match conditions (JSON)
+        description: Match conditions
+        items:
+          $ref: '#/definitions/schema.TagCondition'
+        type: array
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
         type: string
       description:
         description: Details
@@ -1259,8 +1416,13 @@ definitions:
         description: Group
         maxLength: 255
         type: string
+      id:
+        type: string
       method:
         description: Method
+        type: string
+      modifier:
+        description: Modifier
         type: string
       name:
         description: Policy name
@@ -1288,6 +1450,9 @@ definitions:
         description: Permission type
         maxLength: 20
         type: string
+      updated_at:
+        description: Update timestamp
+        type: string
       version:
         description: Version
         type: integer
@@ -1310,6 +1475,10 @@ definitions:
       description:
         description: Details
         type: string
+      details:
+        items:
+          $ref: '#/definitions/schema.PolicyRouteDetail'
+        type: array
       enabled:
         description: Enabled
         type: integer
@@ -1358,6 +1527,9 @@ definitions:
       created_at:
         description: Create timestamp
         type: string
+      creator:
+        description: Creator
+        type: string
       description:
         description: Details
         type: string
@@ -1369,6 +1541,9 @@ definitions:
         type: integer
       id:
         description: Unique ID
+        type: string
+      modifier:
+        description: Modifier
         type: string
       order:
         description: Sort order
@@ -1386,17 +1561,32 @@ definitions:
   schema.PolicyRouteDetailForm:
     properties:
       conditions:
-        description: Match conditions (JSON)
+        description: Match conditions
+        items:
+          $ref: '#/definitions/schema.TagCondition'
+        type: array
+      created_at:
+        description: Create timestamp
+        type: string
+      creator:
+        description: Creator
         type: string
       description:
         description: Details
         type: string
       destinations:
-        description: Destination rules (JSON)
-        type: string
+        description: Destination rules
+        items:
+          $ref: '#/definitions/schema.TagDestination'
+        type: array
       enabled:
         description: Enabled
         type: integer
+      id:
+        type: string
+      modifier:
+        description: Modifier
+        type: string
       order:
         description: Sort order
         type: integer
@@ -1408,15 +1598,29 @@ definitions:
         description: Route ID
         maxLength: 20
         type: string
+      updated_at:
+        description: Update timestamp
+        type: string
     required:
     - relation_type
     - route_id
     type: object
   schema.PolicyRouteForm:
     properties:
-      description:
-        description: Details
+      created_at:
+        description: Create timestamp
         type: string
+      creator:
+        description: Creator
+        type: string
+      description:
+        description: Description
+        type: string
+      details:
+        description: RouteDetail
+        items:
+          $ref: '#/definitions/schema.PolicyRouteDetailForm'
+        type: array
       enabled:
         description: Enabled
         type: integer
@@ -1424,8 +1628,14 @@ definitions:
         description: Group
         maxLength: 255
         type: string
+      id:
+        description: Unique ID
+        type: string
       method:
         description: Method
+        type: string
+      modifier:
+        description: Modifier
         type: string
       name:
         description: Policy name
@@ -1448,6 +1658,9 @@ definitions:
         description: Target service ID
         maxLength: 20
         type: string
+      updated_at:
+        description: Update timestamp
+        type: string
       version:
         description: Version
         type: integer
@@ -1456,6 +1669,49 @@ definitions:
     - name
     - space_code
     - target_service_id
+    type: object
+  schema.RelationType:
+    enum:
+    - AND
+    - OR
+    type: string
+    x-enum-varnames:
+    - RelationType_AND
+    - RelationType_OR
+  schema.RetryPolicy:
+    properties:
+      codePolicy:
+        $ref: '#/definitions/schema.ErrorParserPolicy'
+      errorCodes:
+        items:
+          type: string
+        type: array
+      errorMessages:
+        items:
+          type: string
+        type: array
+      exceptions:
+        items:
+          type: string
+        type: array
+      interval:
+        type: integer
+      messagePolicy:
+        $ref: '#/definitions/schema.ErrorParserPolicy'
+      methodPrefixes:
+        items:
+          type: string
+        type: array
+      methods:
+        items:
+          type: string
+        type: array
+      retry:
+        type: integer
+      timeout:
+        type: integer
+      version:
+        type: integer
     type: object
   schema.Role:
     properties:
@@ -1550,6 +1806,9 @@ definitions:
       application_service_status:
         description: Application service status (virtual field, read-only)
         type: string
+      authorized:
+        description: Parsed from Extra.authorized; not stored directly
+        type: integer
       created_at:
         description: Create time
         type: string
@@ -1731,6 +1990,13 @@ definitions:
     - name
     - service_id
     type: object
+  schema.SlidingWindow:
+    properties:
+      threshold:
+        type: integer
+      timeWindowInMs:
+        type: integer
+    type: object
   schema.Space:
     properties:
       code:
@@ -1780,6 +2046,30 @@ definitions:
     required:
     - code
     - name
+    type: object
+  schema.TagCondition:
+    properties:
+      key:
+        type: string
+      opType:
+        $ref: '#/definitions/schema.OpType'
+      type:
+        type: string
+      values:
+        items:
+          type: string
+        type: array
+    type: object
+  schema.TagDestination:
+    properties:
+      conditions:
+        items:
+          $ref: '#/definitions/schema.TagCondition'
+        type: array
+      relationType:
+        $ref: '#/definitions/schema.RelationType'
+      weight:
+        type: integer
     type: object
   schema.UpdateCurrentUser:
     properties:
@@ -1917,7 +2207,7 @@ definitions:
     properties:
       data: {}
       error:
-        $ref: '#/definitions/errors.Error'
+        $ref: '#/definitions/github_com_jd-opensource_joylive-dashboard_pkg_errors.Error'
       success:
         type: boolean
       total:
@@ -2659,7 +2949,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyAuth'
+                  $ref: '#/definitions/schema.PolicyAuthForm'
               type: object
         "401":
           description: Unauthorized
@@ -2812,7 +3102,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyCircuitBreak'
+                  $ref: '#/definitions/schema.PolicyCircuitBreakForm'
               type: object
         "401":
           description: Unauthorized
@@ -2965,7 +3255,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyFault'
+                  $ref: '#/definitions/schema.PolicyFaultForm'
               type: object
         "401":
           description: Unauthorized
@@ -3118,7 +3408,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyInvocation'
+                  $ref: '#/definitions/schema.PolicyInvocationForm'
               type: object
         "401":
           description: Unauthorized
@@ -3271,7 +3561,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyLimit'
+                  $ref: '#/definitions/schema.PolicyLimitForm'
               type: object
         "401":
           description: Unauthorized
@@ -3424,7 +3714,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyLoadbalance'
+                  $ref: '#/definitions/schema.PolicyLoadbalanceForm'
               type: object
         "401":
           description: Unauthorized
@@ -3577,7 +3867,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyPermission'
+                  $ref: '#/definitions/schema.PolicyPermissionForm'
               type: object
         "401":
           description: Unauthorized
@@ -3730,7 +4020,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyRouteDetail'
+                  $ref: '#/definitions/schema.PolicyRouteDetailForm'
               type: object
         "401":
           description: Unauthorized
@@ -3883,7 +4173,7 @@ paths:
             - $ref: '#/definitions/util.ResponseResult'
             - properties:
                 data:
-                  $ref: '#/definitions/schema.PolicyRoute'
+                  $ref: '#/definitions/schema.PolicyRouteForm'
               type: object
         "401":
           description: Unauthorized
@@ -4084,6 +4374,42 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update application service record by ID
+      tags:
+      - ApplicationServiceAPI
+  /api/v1/resource/application-services/{id}/status:
+    put:
+      parameters:
+      - description: unique id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.ApplicationServiceStatusForm'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.ResponseResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update application service status
       tags:
       - ApplicationServiceAPI
   /api/v1/resource/data-permissions:

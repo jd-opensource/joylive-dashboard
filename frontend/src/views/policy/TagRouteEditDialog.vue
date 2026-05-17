@@ -135,49 +135,25 @@
 
         <!-- 路由规则列表 (RouteDetail 1:n) -->
         <div class="details-section">
-            <div class="details-section-header">
-                <span class="details-section-title">{{ $t('pages.tagRoute.form.details.title') }}</span>
-                <a-button
-                    type="primary"
-                    size="small"
-                    @click="addDetail">
-                    <template #icon><plus-outlined /></template>
-                    {{ $t('pages.tagRoute.form.details.add') }}
-                </a-button>
-            </div>
-
-            <a-collapse
-                v-model:activeKey="activeDetailKeys"
-                :bordered="false">
-                <a-collapse-panel
-                    v-for="(detail, rIndex) in formData.details"
-                    :key="String(rIndex)"
-                    :header="$t('pages.tagRoute.form.details.rule') + ' #' + (rIndex + 1)"
-                    :collapsible="'header'">
-                    <template #extra>
-                        <delete-outlined
-                            class="detail-remove-btn"
-                            @click.stop="removeDetail(rIndex)" />
-                    </template>
-
-                    <!-- 排序 -->
-                    <div class="detail-field">
-                        <label class="detail-field-label">{{ $t('pages.tagRoute.form.order') }}</label>
-                        <a-input-number
-                            v-model:value="detail.order"
-                            :min="0"
-                            size="small"
-                            style="width: 150px" />
-                    </div>
-
+            <div
+                class="rule-card"
+                v-for="(detail, rIndex) in formData.details"
+                :key="String(rIndex)">
+                <div class="rule-card-header">
+                    <span class="rule-card-title">{{ $t('pages.tagRoute.form.details.rule') + (rIndex + 1) }}</span>
+                    <close-outlined
+                        class="rule-remove-btn"
+                        @click.stop="removeDetail(rIndex)" />
+                </div>
+                <div class="rule-card-body">
                     <!-- 匹配条件 -->
-                    <div class="detail-field">
-                        <label class="detail-field-label">{{ $t('pages.tagRoute.form.matchMethod') }}</label>
-                        <div class="match-method-section">
-                            <div class="match-method-header">
-                                <span class="match-method-label">{{
-                                    $t('pages.tagRoute.form.matchMethod.settingLabel')
-                                }}</span>
+                    <div class="rule-field">
+                        <div class="rule-field-label required">
+                            {{ $t('pages.tagRoute.form.matchMethod.settingLabel') || '请求条件' }}
+                        </div>
+                        <div class="rule-field-content">
+                            <div class="relation-row">
+                                <span>流量请求条件满足设置：</span>
                                 <a-radio-group
                                     v-model:value="detail.relationType"
                                     size="small">
@@ -185,11 +161,10 @@
                                     <a-radio value="OR">OR({{ $t('pages.tagRoute.form.relationType.or') }})</a-radio>
                                 </a-radio-group>
                             </div>
-
                             <div
-                                class="conditions-table"
+                                class="rule-table"
                                 v-if="detail.conditions && detail.conditions.length > 0">
-                                <div class="conditions-header">
+                                <div class="rule-table-header">
                                     <div class="col-type">{{ $t('pages.tagRoute.form.conditions.type') }}</div>
                                     <div class="col-key">{{ $t('pages.tagRoute.form.conditions.key') }}</div>
                                     <div class="col-op">
@@ -202,14 +177,15 @@
                                     <div class="col-action">{{ $t('pages.tagRoute.form.conditions.action') }}</div>
                                 </div>
                                 <div
-                                    class="conditions-row"
+                                    class="rule-table-row"
                                     v-for="(condition, cIndex) in detail.conditions"
                                     :key="cIndex">
                                     <div class="col-type">
                                         <a-select
                                             v-model:value="condition.type"
                                             :placeholder="$t('pages.tagRoute.form.conditions.type.placeholder')"
-                                            size="small">
+                                            size="small"
+                                            style="width: 100%">
                                             <a-select-option value="HEADER">HEADER</a-select-option>
                                             <a-select-option value="QUERY">QUERY</a-select-option>
                                             <a-select-option value="COOKIE">COOKIE</a-select-option>
@@ -219,13 +195,15 @@
                                         <a-input
                                             v-model:value="condition.key"
                                             :placeholder="$t('pages.tagRoute.form.conditions.key.placeholder')"
-                                            size="small" />
+                                            size="small"
+                                            style="width: 100%" />
                                     </div>
                                     <div class="col-op">
                                         <a-select
                                             v-model:value="condition.opType"
                                             :placeholder="$t('pages.tagRoute.form.conditions.opType.placeholder')"
-                                            size="small">
+                                            size="small"
+                                            style="width: 100%">
                                             <a-select-option value="EQUAL">{{
                                                 $t('pages.tagRoute.form.conditions.op.equal')
                                             }}</a-select-option>
@@ -251,161 +229,164 @@
                                             v-model:value="condition.values"
                                             mode="tags"
                                             :placeholder="$t('pages.tagRoute.form.conditions.values.placeholder')"
-                                            size="small" />
+                                            size="small"
+                                            style="width: 100%" />
                                     </div>
                                     <div class="col-action">
                                         <minus-circle-outlined
-                                            class="condition-remove-btn"
+                                            class="icon-btn"
                                             @click="removeCondition(rIndex, cIndex)" />
+                                        <plus-circle-outlined
+                                            class="icon-btn"
+                                            @click="addCondition(rIndex)" />
                                     </div>
                                 </div>
                             </div>
-                            <a
-                                class="add-condition-link"
-                                @click="addCondition(rIndex)">
-                                {{ $t('pages.tagRoute.form.conditions.add') }}
-                            </a>
                         </div>
                     </div>
 
-                    <!-- 路由目标 -->
-                    <div class="detail-field">
-                        <label class="detail-field-label">{{ $t('pages.tagRoute.form.destinations') }}</label>
-                        <div class="destinations-section">
+                    <!-- 目的地标签 -->
+                    <div class="rule-field">
+                        <div class="rule-field-label required">
+                            {{ $t('pages.tagRoute.form.destinations') }}
+                            <a-tooltip
+                                :title="
+                                    $t('pages.tagRoute.form.destinations.tooltip') ||
+                                    '目地标签规则中若有多个键值，默认采用AND逻辑关系'
+                                ">
+                                <question-circle-outlined style="margin-left: 4px; color: #999" />
+                            </a-tooltip>
+                        </div>
+                        <div class="rule-field-content">
                             <div
-                                class="destination-card"
+                                class="dest-item"
                                 v-for="(destination, dIndex) in detail.destinations"
                                 :key="dIndex">
-                                <div class="destination-card-header">
-                                    <span class="destination-card-title">{{
-                                        $t('pages.tagRoute.form.destinations.title') + ' #' + (dIndex + 1)
-                                    }}</span>
-                                    <minus-circle-outlined
-                                        class="destination-remove-btn"
-                                        @click="removeDestination(rIndex, dIndex)" />
-                                </div>
-                                <div class="destination-card-body">
-                                    <div class="destination-field">
-                                        <label class="destination-field-label">{{
-                                            $t('pages.tagRoute.form.destinations.weight')
-                                        }}</label>
+                                <div class="dest-box">
+                                    <div
+                                        class="dest-conditions-table"
+                                        v-if="destination.conditions && destination.conditions.length > 0">
+                                        <div
+                                            class="dest-condition-row"
+                                            v-for="(dc, dcIndex) in destination.conditions"
+                                            :key="dcIndex">
+                                            <div class="dest-col-key">
+                                                <a-input
+                                                    v-model:value="dc.key"
+                                                    :placeholder="$t('pages.tagRoute.form.conditions.key.placeholder')"
+                                                    size="small"
+                                                    style="width: 100%" />
+                                            </div>
+                                            <div class="dest-col-op">
+                                                <a-select
+                                                    v-model:value="dc.opType"
+                                                    :placeholder="
+                                                        $t('pages.tagRoute.form.conditions.opType.placeholder')
+                                                    "
+                                                    size="small"
+                                                    style="width: 100%">
+                                                    <a-select-option value="EQUAL">{{
+                                                        $t('pages.tagRoute.form.conditions.op.equal')
+                                                    }}</a-select-option>
+                                                    <a-select-option value="NOT_EQUAL">{{
+                                                        $t('pages.tagRoute.form.conditions.op.notEqual')
+                                                    }}</a-select-option>
+                                                    <a-select-option value="IN">{{
+                                                        $t('pages.tagRoute.form.conditions.op.contain')
+                                                    }}</a-select-option>
+                                                    <a-select-option value="NOT_IN">{{
+                                                        $t('pages.tagRoute.form.conditions.op.notContain')
+                                                    }}</a-select-option>
+                                                    <a-select-option value="REGULAR">{{
+                                                        $t('pages.tagRoute.form.conditions.op.regex')
+                                                    }}</a-select-option>
+                                                    <a-select-option value="PREFIX">{{
+                                                        $t('pages.tagRoute.form.conditions.op.prefix')
+                                                    }}</a-select-option>
+                                                </a-select>
+                                            </div>
+                                            <div class="dest-col-value">
+                                                <a-select
+                                                    v-model:value="dc.values"
+                                                    mode="tags"
+                                                    :placeholder="
+                                                        $t('pages.tagRoute.form.conditions.values.placeholder')
+                                                    "
+                                                    size="small"
+                                                    style="width: 100%" />
+                                            </div>
+                                            <div class="dest-col-action">
+                                                <minus-circle-outlined
+                                                    class="icon-btn"
+                                                    @click="removeDestCondition(rIndex, dIndex, dcIndex)" />
+                                                <plus-circle-outlined
+                                                    class="icon-btn"
+                                                    @click="addDestCondition(rIndex, dIndex)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dest-weight-row">
+                                        <span
+                                            class="required"
+                                            style="margin-right: 8px">
+                                            {{ $t('pages.tagRoute.form.destinations.weight') }}
+                                            <a-tooltip
+                                                :title="
+                                                    $t('pages.tagRoute.form.destinations.weight.tooltip') ||
+                                                    '输入权重后，多个目的地会按权重比例下发流量'
+                                                ">
+                                                <question-circle-outlined style="margin-left: 4px; color: #999" />
+                                            </a-tooltip>
+                                        </span>
                                         <a-input-number
                                             v-model:value="destination.weight"
-                                            :placeholder="$t('pages.tagRoute.form.destinations.weight.placeholder')"
                                             :min="0"
                                             size="small"
                                             style="width: 150px" />
                                     </div>
-                                    <div class="destination-field">
-                                        <label class="destination-field-label">{{
-                                            $t('pages.tagRoute.form.destinations.relationType')
-                                        }}</label>
-                                        <a-radio-group
-                                            v-model:value="destination.relationType"
-                                            size="small">
-                                            <a-radio value="AND"
-                                                >AND({{ $t('pages.tagRoute.form.relationType.and') }})</a-radio
-                                            >
-                                            <a-radio value="OR"
-                                                >OR({{ $t('pages.tagRoute.form.relationType.or') }})</a-radio
-                                            >
-                                        </a-radio-group>
-                                    </div>
-                                    <div class="destination-field">
-                                        <label class="destination-field-label">{{
-                                            $t('pages.tagRoute.form.destinations.conditions')
-                                        }}</label>
-                                        <div class="dest-conditions-table">
-                                            <div class="dest-conditions-header">
-                                                <div class="dest-col-key">
-                                                    {{ $t('pages.tagRoute.form.conditions.key') }}
-                                                </div>
-                                                <div class="dest-col-op">
-                                                    {{ $t('pages.tagRoute.form.conditions.opType') }}
-                                                </div>
-                                                <div class="dest-col-value">
-                                                    {{ $t('pages.tagRoute.form.conditions.values') }}
-                                                </div>
-                                                <div class="dest-col-action">
-                                                    {{ $t('pages.tagRoute.form.conditions.action') }}
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="dest-conditions-row"
-                                                v-for="(dc, dcIndex) in destination.conditions"
-                                                :key="dcIndex">
-                                                <div class="dest-col-key">
-                                                    <a-input
-                                                        v-model:value="dc.key"
-                                                        :placeholder="
-                                                            $t('pages.tagRoute.form.conditions.key.placeholder')
-                                                        "
-                                                        size="small" />
-                                                </div>
-                                                <div class="dest-col-op">
-                                                    <a-select
-                                                        v-model:value="dc.opType"
-                                                        :placeholder="
-                                                            $t('pages.tagRoute.form.conditions.opType.placeholder')
-                                                        "
-                                                        size="small">
-                                                        <a-select-option value="EQUAL">{{
-                                                            $t('pages.tagRoute.form.conditions.op.equal')
-                                                        }}</a-select-option>
-                                                        <a-select-option value="NOT_EQUAL">{{
-                                                            $t('pages.tagRoute.form.conditions.op.notEqual')
-                                                        }}</a-select-option>
-                                                        <a-select-option value="IN">{{
-                                                            $t('pages.tagRoute.form.conditions.op.contain')
-                                                        }}</a-select-option>
-                                                        <a-select-option value="NOT_IN">{{
-                                                            $t('pages.tagRoute.form.conditions.op.notContain')
-                                                        }}</a-select-option>
-                                                        <a-select-option value="REGULAR">{{
-                                                            $t('pages.tagRoute.form.conditions.op.regex')
-                                                        }}</a-select-option>
-                                                        <a-select-option value="PREFIX">{{
-                                                            $t('pages.tagRoute.form.conditions.op.prefix')
-                                                        }}</a-select-option>
-                                                    </a-select>
-                                                </div>
-                                                <div class="dest-col-value">
-                                                    <a-select
-                                                        v-model:value="dc.values"
-                                                        mode="tags"
-                                                        :placeholder="
-                                                            $t('pages.tagRoute.form.conditions.values.placeholder')
-                                                        "
-                                                        size="small" />
-                                                </div>
-                                                <div class="dest-col-action">
-                                                    <minus-circle-outlined
-                                                        class="condition-remove-btn"
-                                                        @click="removeDestCondition(rIndex, dIndex, dcIndex)" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <a
-                                            class="add-condition-link"
-                                            @click="addDestCondition(rIndex, dIndex)">
-                                            {{ $t('pages.tagRoute.form.conditions.add') }}
-                                        </a>
-                                    </div>
+                                </div>
+                                <div class="dest-outer-action">
+                                    <minus-circle-outlined
+                                        class="icon-btn"
+                                        @click="removeDestination(rIndex, dIndex)" />
+                                    <plus-circle-outlined
+                                        class="icon-btn"
+                                        @click="addDestination(rIndex)" />
                                 </div>
                             </div>
-                            <a-button
-                                type="dashed"
-                                block
-                                size="small"
-                                @click="addDestination(rIndex)"
-                                style="margin-top: 8px">
-                                <template #icon><plus-outlined /></template>
-                                {{ $t('pages.tagRoute.form.destinations.add') }}
-                            </a-button>
                         </div>
                     </div>
-                </a-collapse-panel>
-            </a-collapse>
+
+                    <!-- 优先级 -->
+                    <div class="rule-field">
+                        <div class="rule-field-label required">
+                            {{ $t('pages.tagRoute.form.order') }}
+                            <a-tooltip
+                                :title="
+                                    $t('pages.tagRoute.form.order.tooltip') || '优先级数字设置越小，匹配顺序越靠前'
+                                ">
+                                <question-circle-outlined style="margin-left: 4px; color: #999" />
+                            </a-tooltip>
+                        </div>
+                        <div class="rule-field-content">
+                            <a-input-number
+                                v-model:value="detail.order"
+                                :min="1"
+                                size="small"
+                                style="width: 150px" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a-button
+                type="link"
+                size="small"
+                @click="addDetail"
+                class="add-rule-btn">
+                <template #icon><plus-outlined /></template>
+                {{ $t('pages.tagRoute.form.details.add') || '添加规则' }}
+            </a-button>
         </div>
 
         <template #footer>
@@ -431,7 +412,13 @@ import { ref, computed, watch } from 'vue'
 import { config } from '@/config'
 import apis from '@/apis'
 import { useForm, useModal } from '@/hooks'
-import { QuestionCircleOutlined, MinusCircleOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {
+    QuestionCircleOutlined,
+    MinusCircleOutlined,
+    PlusOutlined,
+    CloseOutlined,
+    PlusCircleOutlined,
+} from '@ant-design/icons-vue'
 import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
 
 const props = defineProps({
@@ -779,161 +766,33 @@ defineExpose({
 <style lang="less" scoped>
 .details-section {
     margin-top: 16px;
-    border-top: 1px solid #f0f0f0;
-    padding-top: 16px;
 }
 
-.details-section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.details-section-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-}
-
-.detail-remove-btn {
-    font-size: 16px;
-    color: #999;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-        color: #ff4d4f;
-    }
-}
-
-:deep(.ant-collapse) {
-    background: transparent;
-}
-
-:deep(.ant-collapse-item) {
-    margin-bottom: 8px;
+.rule-card {
     border: 1px solid #e8e8e8;
-    border-radius: 6px;
-    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    background: #fff;
 }
 
-:deep(.ant-collapse-header) {
-    font-weight: 500;
-    background: #fafafa;
-}
-
-:deep(.ant-collapse-content) {
-    border-top: 1px solid #f0f0f0;
-}
-
-:deep(.ant-collapse-content-box) {
-    padding: 12px;
-}
-
-.detail-field {
-    margin-bottom: 12px;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
-
-.detail-field-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 6px;
-}
-
-.match-method-section {
-    border: 1px solid #f0f0f0;
-    border-radius: 6px;
-    padding: 12px;
-    background: #fafafa;
-}
-
-.match-method-header {
+.rule-card-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-}
-
-.match-method-label {
-    font-size: 13px;
-    color: #333;
-    margin-right: 8px;
-    white-space: nowrap;
-}
-
-.conditions-table {
-    margin-bottom: 8px;
-}
-
-.conditions-header {
-    display: flex;
-    align-items: center;
-    padding: 6px 0;
+    padding: 12px 16px;
+    background: #fafafa;
     border-bottom: 1px solid #e8e8e8;
+    border-radius: 4px 4px 0 0;
+}
+
+.rule-card-title {
     font-weight: 500;
-    font-size: 12px;
-    color: #666;
-    gap: 6px;
+    color: #333;
 }
 
-.conditions-row {
-    display: flex;
-    align-items: center;
-    padding: 6px 0;
-    border-bottom: 1px solid #f0f0f0;
-    gap: 6px;
-
-    &:last-child {
-        border-bottom: none;
-    }
-}
-
-.col-type {
-    flex: 0 0 90px;
-}
-
-.col-key {
-    flex: 0 0 110px;
-}
-
-.col-op {
-    flex: 0 0 90px;
-    display: flex;
-    align-items: center;
-}
-
-.col-value {
-    flex: 1;
-    min-width: 0;
-}
-
-.col-action {
-    flex: 0 0 30px;
-    text-align: center;
-}
-
-.condition-remove-btn {
-    font-size: 16px;
-    color: #999;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-        color: #ff4d4f;
-    }
-}
-
-.add-condition-link {
-    display: inline-block;
-    margin-top: 6px;
+.rule-remove-btn {
+    font-size: 14px;
     color: #1890ff;
-    font-size: 13px;
     cursor: pointer;
 
     &:hover {
@@ -941,56 +800,130 @@ defineExpose({
     }
 }
 
-.destinations-section {
-    border: 1px solid #f0f0f0;
-    border-radius: 6px;
-    padding: 12px;
-    background: #fafafa;
+.rule-card-body {
+    padding: 16px;
 }
 
-.destination-card {
-    border: 1px solid #e8e8e8;
-    border-radius: 6px;
-    background: #fff;
-    margin-bottom: 10px;
+.rule-field {
+    display: flex;
+    margin-bottom: 16px;
 
-    &:last-of-type {
-        margin-bottom: 8px;
+    &:last-child {
+        margin-bottom: 0;
     }
 }
 
-.destination-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 10px;
-    border-bottom: 1px solid #f0f0f0;
-    background: #fafafa;
-    border-radius: 6px 6px 0 0;
-}
-
-.destination-card-title {
+.rule-field-label {
+    width: 100px;
+    flex-shrink: 0;
+    color: #333;
     font-size: 13px;
     font-weight: 500;
+
+    &.required::before {
+        display: inline-block;
+        margin-right: 4px;
+        color: #ff4d4f;
+        font-size: 14px;
+        font-family: SimSun, sans-serif;
+        line-height: 1;
+        content: '*';
+    }
+}
+
+.rule-field-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.relation-row {
+    margin-bottom: 12px;
     color: #333;
 }
 
-.destination-remove-btn {
-    font-size: 16px;
-    color: #999;
-    cursor: pointer;
-    transition: color 0.2s;
+.rule-table {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+}
 
-    &:hover {
-        color: #ff4d4f;
+.rule-table-header {
+    display: flex;
+    padding: 8px 12px;
+    background: #fafafa;
+    border-bottom: 1px solid #e8e8e8;
+    font-weight: 500;
+    color: #333;
+    gap: 12px;
+}
+
+.rule-table-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e8e8e8;
+    gap: 12px;
+
+    &:last-child {
+        border-bottom: none;
     }
 }
 
-.destination-card-body {
-    padding: 10px;
+.col-type {
+    flex: 0 0 100px;
+}
+.col-key {
+    flex: 0 0 120px;
+}
+.col-op {
+    flex: 0 0 100px;
+    display: flex;
+    align-items: center;
+}
+.col-value {
+    flex: 1;
+}
+.col-action {
+    flex: 0 0 60px;
+    text-align: center;
 }
 
-.destination-field {
+.icon-btn {
+    font-size: 16px;
+    color: #666;
+    cursor: pointer;
+    margin: 0 4px;
+
+    &:hover {
+        color: #1890ff;
+    }
+}
+
+.dest-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.dest-box {
+    flex: 1;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    padding: 12px;
+    background: #fff;
+}
+
+.dest-conditions-table {
+    margin-bottom: 12px;
+}
+
+.dest-condition-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 8px;
 
     &:last-child {
@@ -998,58 +931,45 @@ defineExpose({
     }
 }
 
-.destination-field-label {
-    display: block;
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 4px;
+.dest-col-key {
+    flex: 0 0 150px;
+}
+.dest-col-op {
+    flex: 0 0 120px;
+}
+.dest-col-value {
+    flex: 1;
+}
+.dest-col-action {
+    flex: 0 0 60px;
+    text-align: center;
 }
 
-.dest-conditions-table {
-    border: 1px solid #f0f0f0;
-    border-radius: 4px;
-    background: #fafafa;
-    padding: 6px;
-}
-
-.dest-conditions-header {
+.dest-weight-row {
     display: flex;
     align-items: center;
-    padding: 4px 0;
-    border-bottom: 1px solid #e8e8e8;
-    font-weight: 500;
-    font-size: 12px;
-    color: #666;
-    gap: 6px;
-}
+    margin-top: 12px;
+    color: #333;
 
-.dest-conditions-row {
-    display: flex;
-    align-items: center;
-    padding: 4px 0;
-    border-bottom: 1px solid #f0f0f0;
-    gap: 6px;
-
-    &:last-child {
-        border-bottom: none;
+    .required::before {
+        display: inline-block;
+        margin-right: 4px;
+        color: #ff4d4f;
+        font-size: 14px;
+        font-family: SimSun, sans-serif;
+        line-height: 1;
+        content: '*';
     }
 }
 
-.dest-col-key {
-    flex: 0 0 110px;
-}
-
-.dest-col-op {
-    flex: 0 0 90px;
-}
-
-.dest-col-value {
-    flex: 1;
-    min-width: 0;
-}
-
-.dest-col-action {
-    flex: 0 0 30px;
+.dest-outer-action {
+    flex: 0 0 60px;
     text-align: center;
+    margin-top: 12px;
+}
+
+.add-rule-btn {
+    padding-left: 0;
+    margin-top: 8px;
 }
 </style>

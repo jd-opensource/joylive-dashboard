@@ -11,6 +11,7 @@ import (
 
 // ConvertTo Convert `PolicyRoute` to `PolicyRouteForm` object.
 func (a PolicyRoute) ConvertTo(route *PolicyRouteForm) error {
+	route.ID = a.ID
 	route.Name = a.Name
 	route.SpaceCode = a.SpaceCode
 	route.SourceApplicationID = a.SourceApplicationID
@@ -96,6 +97,7 @@ type PolicyRoutes []*PolicyRoute
 
 // Defining the data structure for creating a `PolicyRoute` struct.
 type PolicyRouteForm struct {
+	ID                  string                  `json:"id"`                                        // Unique ID
 	Name                string                  `json:"name" binding:"required,max=100"`             // Policy name
 	SpaceCode           string                  `json:"space_code" binding:"required,max=255"`       // Microservice space code
 	SourceApplicationID *string                 `json:"source_application_id"`                       // Source application ID

@@ -66,8 +66,8 @@
                     key="alias"
                     :tab="$t('pages.service.detail.tab.alias')" />
                 <a-tab-pane
-                    key="interface"
-                    :tab="$t('pages.service.detail.tab.interface')" />
+                    key="provider"
+                    :tab="$t('pages.service.detail.tab.provider')" />
                 <a-tab-pane
                     key="consumer"
                     :tab="$t('pages.service.detail.tab.consumer')" />
@@ -273,6 +273,9 @@
                                 {{ statusTextMap[record.status] || record.status }}
                             </a-tag>
                         </template>
+                        <template v-if="'creator' === column.key">
+                            {{ record.application?.creator || '-' }}
+                        </template>
                         <template v-if="'created_at' === column.key">
                             {{ formatUtcDateTime(record.created_at) }}
                         </template>
@@ -293,6 +296,38 @@
                                     <close-circle-outlined style="color: #ff4d4f" />
                                 </a-tooltip>
                             </x-action-button>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+
+            <!-- 提供方 Tab 内容 -->
+            <div v-else-if="activeTab === 'provider'">
+                <div class="group-toolbar">
+                    <div class="group-toolbar-right">
+                        <a-button @click="loadProviderList">
+                            <template #icon><reload-outlined /></template>
+                        </a-button>
+                    </div>
+                </div>
+                <a-table
+                    :columns="providerColumns"
+                    :data-source="providerListData"
+                    :loading="providerLoading"
+                    :pagination="providerPagination"
+                    @change="onProviderTableChange">
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="'application_name' === column.key">
+                            {{ record.application?.name || record.application_id }}
+                        </template>
+                        <template v-if="'language' === column.key">
+                            {{ record.application?.language || '-' }}
+                        </template>
+                        <template v-if="'creator' === column.key">
+                            {{ record.application?.creator || '-' }}
+                        </template>
+                        <template v-if="'created_at' === column.key">
+                            {{ formatUtcDateTime(record.created_at) }}
                         </template>
                     </template>
                 </a-table>
@@ -522,6 +557,11 @@ const consumerColumns = [
         width: 100,
     },
     {
+        title: t('pages.application.form.creator'),
+        key: 'creator',
+        width: 120,
+    },
+    {
         title: t('pages.member.form.created_at'),
         key: 'created_at',
         width: 180,
@@ -533,12 +573,47 @@ const consumerColumns = [
     },
 ]
 
+// 提供方
+const providerListData = ref([])
+const providerLoading = ref(false)
+const providerPagination = reactive({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    showTotal: (total) => `共 ${total} 条`,
+})
+
+const providerColumns = [
+    {
+        title: t('pages.service.form.application_name'),
+        key: 'application_name',
+        width: 200,
+    },
+    {
+        title: t('pages.application.form.language'),
+        key: 'language',
+        width: 120,
+    },
+    {
+        title: t('pages.application.form.creator'),
+        key: 'creator',
+        width: 120,
+    },
+    {
+        title: t('pages.member.form.created_at'),
+        key: 'created_at',
+        width: 180,
+    },
+]
+
 onMounted(() => {
     loadServiceDetail()
     loadGroupList()
     loadAliasList()
     loadMemberList()
     loadConsumerList()
+    loadProviderList()
 })
 
 async function loadServiceDetail() {
@@ -801,6 +876,36 @@ function handleRejectConsumer({ id }) {
             })
         },
     })
+}
+
+// 提供方
+async function loadProviderList() {
+    try {
+        providerLoading.value = true
+        const { data, success, total } = await apis.application_service
+            .getApplicationServiceList({
+                pageSize: providerPagination.pageSize,
+                current: providerPagination.current,
+                service_id: serviceId.value,
+                role: 'provider',
+            })
+            .catch(() => {
+                throw new Error()
+            })
+        providerLoading.value = false
+        if (config('http.code.success') === success) {
+            providerListData.value = data || []
+            providerPagination.total = total || 0
+        }
+    } catch (error) {
+        providerLoading.value = false
+    }
+}
+
+function onProviderTableChange({ current, pageSize }) {
+    providerPagination.current = current
+    providerPagination.pageSize = pageSize
+    loadProviderList()
 }
 </script>
 

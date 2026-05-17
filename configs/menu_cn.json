@@ -293,7 +293,7 @@
             },
             {
                 "code": "limitList",
-                "name": "限流",
+                "name": "服务限流",
                 "sequence": 50,
                 "type": "page",
                 "path": "/policy/limit",

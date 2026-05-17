@@ -62,6 +62,11 @@ func (a *PolicyLimit) Create(ctx context.Context, formItem *schema.PolicyLimitFo
 		Deleted:   "0",
 		CreatedAt: time.Now(),
 	}
+	
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyLimit.Creator = &username
+	}
 
 	if err := formItem.FillTo(policyLimit); err != nil {
 		return nil, err
@@ -98,6 +103,11 @@ func (a *PolicyLimit) Update(ctx context.Context, id string, formItem *schema.Po
 		return err
 	}
 	policyLimit.UpdatedAt = time.Now()
+	
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyLimit.Modifier = &username
+	}
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
 		return a.PolicyLimitDAL.Update(ctx, policyLimit)

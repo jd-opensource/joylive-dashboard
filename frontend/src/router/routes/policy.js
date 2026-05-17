@@ -60,7 +60,7 @@ export default [
             {
                 path: 'limit',
                 name: 'limitList',
-                component: 'policy/tagLimit.vue',
+                component: 'policy/limit.vue',
                 meta: {
                     title: '限流策略',
                     isMenu: true,

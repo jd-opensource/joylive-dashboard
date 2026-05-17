@@ -164,7 +164,7 @@ import apis from '@/apis'
 import { formatUtcDateTime } from '@/utils/util'
 import { config } from '@/config'
 import { usePagination } from '@/hooks'
-import EditDialog from './TagLimitEditDialog.vue'
+import EditDialog from './LimitEditDialog.vue'
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined, RedoOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
@@ -212,9 +212,9 @@ const applicationOptions = ref([])
 const serviceNameMap = ref({})
 const applicationNameMap = ref({})
 const limitTypeMap = {
-    Rate: '限流',
-    Concurrency: '并发',
-    Load: '负载',
+    Rate: 'QPS限流',
+    Concurrency: '并发限流',
+    Load: '负载限流',
 }
 const limitTypeColorMap = {
     Rate: 'orange',
