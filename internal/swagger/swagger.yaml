@@ -1681,36 +1681,49 @@ definitions:
   schema.RetryPolicy:
     properties:
       codePolicy:
-        $ref: '#/definitions/schema.ErrorParserPolicy'
+        allOf:
+        - $ref: '#/definitions/schema.ErrorParserPolicy'
+        description: Code policy
       errorCodes:
+        description: Error codes
         items:
           type: string
         type: array
       errorMessages:
+        description: Error messages
         items:
           type: string
         type: array
       exceptions:
+        description: Exceptions
         items:
           type: string
         type: array
       interval:
+        description: Retry interval
         type: integer
       messagePolicy:
-        $ref: '#/definitions/schema.ErrorParserPolicy'
+        allOf:
+        - $ref: '#/definitions/schema.ErrorParserPolicy'
+        description: Message policy
       methodPrefixes:
+        description: Method prefixes to retry
         items:
           type: string
         type: array
       methods:
+        description: Methods to retry
         items:
           type: string
         type: array
       retry:
+        description: Retry count
         type: integer
       timeout:
+        description: Total timeout
         type: integer
       version:
+        description: Version
         type: integer
     type: object
   schema.Role:

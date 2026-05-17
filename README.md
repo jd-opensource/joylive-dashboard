@@ -16,6 +16,8 @@ A microservice governance interface operation console serving joylive-agent. 一
 
 ![servicelist](docs/image/servicelist.jpg)
 
+![circuitBreak](docs/image/circuit_break.jpg)
+
 ## 项目结构
 
 本项目采用前后端一体化架构：
@@ -195,9 +197,6 @@ make start
 ### 代码生成
 
 ```bash
-# 生成代码
-make gen-code-config
-
 # 生成Swagger文档
 make swagger
 

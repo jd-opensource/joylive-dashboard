@@ -8074,51 +8074,70 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "codePolicy": {
-                    "$ref": "#/definitions/schema.ErrorParserPolicy"
+                    "description": "Code policy",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.ErrorParserPolicy"
+                        }
+                    ]
                 },
                 "errorCodes": {
+                    "description": "Error codes",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "errorMessages": {
+                    "description": "Error messages",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "exceptions": {
+                    "description": "Exceptions",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "interval": {
+                    "description": "Retry interval",
                     "type": "integer"
                 },
                 "messagePolicy": {
-                    "$ref": "#/definitions/schema.ErrorParserPolicy"
+                    "description": "Message policy",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/schema.ErrorParserPolicy"
+                        }
+                    ]
                 },
                 "methodPrefixes": {
+                    "description": "Method prefixes to retry",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "methods": {
+                    "description": "Methods to retry",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "retry": {
+                    "description": "Retry count",
                     "type": "integer"
                 },
                 "timeout": {
+                    "description": "Total timeout",
                     "type": "integer"
                 },
                 "version": {
+                    "description": "Version",
                     "type": "integer"
                 }
             }
