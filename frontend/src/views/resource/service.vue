@@ -147,6 +147,14 @@
                                 </x-action-button>
                                 <x-action-button
                                     v-if="activeTab === 'provider'"
+                                    @click="$refs.wizardDialogRef.show(record)">
+                                    <a-tooltip>
+                                        <template #title>接入向导</template>
+                                        <api-outlined />
+                                    </a-tooltip>
+                                </x-action-button>
+                                <x-action-button
+                                    v-if="activeTab === 'provider'"
                                     @click="handleToggleAuth(record)">
                                     <a-tooltip>
                                         <template #title>
@@ -185,6 +193,7 @@
         ref="applyDialogRef"
         :application-options="applicationOptions"
         @ok="onOk"></apply-dialog>
+    <wizard-dialog ref="wizardDialogRef"></wizard-dialog>
 </template>
 
 <script setup>
@@ -196,6 +205,7 @@ import { config } from '@/config'
 import { usePagination } from '@/hooks'
 import EditDialog from './ServiceEditDialog.vue'
 import ApplyDialog from './ServiceApplyDialog.vue'
+import WizardDialog from './ServiceWizardDialog.vue'
 import {
     PlusOutlined,
     EditOutlined,
@@ -205,6 +215,7 @@ import {
     UnlockOutlined,
     SearchOutlined,
     RedoOutlined,
+    ApiOutlined,
 } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -265,6 +276,7 @@ const columns = computed(() => {
 const { listData, loading, showLoading, hideLoading, paginationState, searchFormData, resetPagination } =
     usePagination()
 const editDialogRef = ref()
+const wizardDialogRef = ref()
 const spaceOptions = ref([])
 const applicationOptions = ref([])
 const activeTab = ref('provider')

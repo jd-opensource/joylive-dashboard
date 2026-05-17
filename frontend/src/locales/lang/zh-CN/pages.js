@@ -212,6 +212,18 @@ export default {
     'pages.service.auth.disable': '关闭认证',
     'pages.service.auth.enableTip': '确定开启该服务的认证吗？',
     'pages.service.auth.disableTip': '确定关闭该服务的认证吗？',
+    'pages.service.wizard.title': '服务接入',
+    'pages.service.wizard.group': '服务分组',
+    'pages.service.wizard.agentRegistration': 'Agent注册发现',
+    'pages.service.wizard.agentConfig': 'Agent自动配置',
+    'pages.service.wizard.grayLane': '灰度泳道',
+    'pages.service.wizard.grayLaneTip':
+        '泳道为相同版本应用定义的一套隔离环境。系统将为部署到该灰度泳道的服务实例自动打上灰度泳道标识，支持灰度泳道流量闭环能力。',
+    'pages.service.wizard.deployTarget': '部署目标',
+    'pages.service.wizard.deployTarget.k8s': 'K8S集群',
+    'pages.service.wizard.deployTarget.vm': '虚拟机',
+    'pages.service.wizard.labels': '服务标签',
+    'pages.service.wizard.labelsTip': '请复制标签模板中内容到服务deploy的.metadata.labels中',
     // service detail
     'pages.service.detail.basicInfo': '基本信息',
     'pages.service.detail.instanceCount': '实例数',
