@@ -769,10 +769,9 @@ defineExpose({
 }
 
 .rule-card {
-    border: 1px solid #e8e8e8;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 4px;
     margin-bottom: 16px;
-    background: #fff;
 }
 
 .rule-card-header {
@@ -780,14 +779,13 @@ defineExpose({
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background: #fafafa;
-    border-bottom: 1px solid #e8e8e8;
+
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 4px 4px 0 0;
 }
 
 .rule-card-title {
     font-weight: 500;
-    color: #333;
 }
 
 .rule-remove-btn {
@@ -816,7 +814,7 @@ defineExpose({
 .rule-field-label {
     width: 100px;
     flex-shrink: 0;
-    color: #333;
+
     font-size: 13px;
     font-weight: 500;
 
@@ -838,21 +836,20 @@ defineExpose({
 
 .relation-row {
     margin-bottom: 12px;
-    color: #333;
 }
 
 .rule-table {
-    border: 1px solid #e8e8e8;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 4px;
 }
 
 .rule-table-header {
     display: flex;
     padding: 8px 12px;
-    background: #fafafa;
-    border-bottom: 1px solid #e8e8e8;
+
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
     font-weight: 500;
-    color: #333;
+
     gap: 12px;
 }
 
@@ -860,7 +857,7 @@ defineExpose({
     display: flex;
     align-items: center;
     padding: 8px 12px;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
     gap: 12px;
 
     &:last-child {
@@ -889,7 +886,7 @@ defineExpose({
 
 .icon-btn {
     font-size: 16px;
-    color: #666;
+    opacity: 0.6;
     cursor: pointer;
     margin: 0 4px;
 
@@ -910,10 +907,9 @@ defineExpose({
 
 .dest-box {
     flex: 1;
-    border: 1px solid #e8e8e8;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 4px;
     padding: 12px;
-    background: #fff;
 }
 
 .dest-conditions-table {
@@ -949,7 +945,6 @@ defineExpose({
     display: flex;
     align-items: center;
     margin-top: 12px;
-    color: #333;
 
     .required::before {
         display: inline-block;

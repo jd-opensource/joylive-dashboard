@@ -375,10 +375,6 @@ async function onOk() {
     }
 }
 
-:deep(.ant-table-tbody > tr:hover > td) {
-    background-color: #fafafa;
-}
-
 :deep(.x-action-button) {
     transition: all 0.2s ease;
 
@@ -409,7 +405,7 @@ async function onOk() {
 
 .mb-8-2 {
     padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
+    /* removed border-bottom for dark mode */
     margin-bottom: 16px;
 }
 </style>

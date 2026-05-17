@@ -371,11 +371,6 @@ async function onOk() {
     }
 }
 
-// 表格行悬停效果 - 轻微优化
-:deep(.ant-table-tbody > tr:hover > td) {
-    background-color: #fafafa;
-}
-
 // 操作按钮 - 添加悬停效果
 :deep(.x-action-button) {
     transition: all 0.2s ease;
@@ -411,7 +406,7 @@ async function onOk() {
 // 搜索栏分隔线
 .mb-8-2 {
     padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
+    /* removed border-bottom for dark mode */
     margin-bottom: 16px;
 }
 </style>

@@ -222,11 +222,13 @@ function handleConfig() {
     }
 
     &--light {
-        background: #fff;
+        background: v-bind('token.colorBgContainer');
+        color: v-bind('token.colorText');
     }
 
     &--dark {
         color: #fff;
+        background: #001529;
 
         :deep(.action-btn) {
             &:hover {

@@ -439,25 +439,6 @@ async function onOk() {
 <style lang="less" scoped>
 @import '@/styles/variables.less';
 
-// Tab 按钮组样式
-:deep(.ant-radio-group) {
-    &.ant-radio-group-solid {
-        .ant-radio-button-wrapper {
-            border-color: @color-border;
-
-            &:hover {
-                color: @color-primary;
-            }
-
-            &.ant-radio-button-wrapper-checked {
-                background: #fff;
-                border-color: @color-primary;
-                color: @color-primary;
-            }
-        }
-    }
-}
-
 // 搜索栏和操作按钮行
 :deep(.ant-form-inline) {
     .ant-form-item {
@@ -467,11 +448,6 @@ async function onOk() {
             margin-right: 0;
         }
     }
-}
-
-// 表格行悬停效果 - 轻微优化
-:deep(.ant-table-tbody > tr:hover > td) {
-    background-color: #fafafa;
 }
 
 // 服务名称链接 - 添加平滑过渡
@@ -521,7 +497,7 @@ async function onOk() {
 // 搜索栏分隔线
 .mb-8-2 {
     padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
+    /* removed border-bottom for dark mode */
     margin-bottom: 16px;
 }
 </style>

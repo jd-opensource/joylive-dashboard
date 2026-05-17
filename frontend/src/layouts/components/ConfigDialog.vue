@@ -30,6 +30,16 @@
                     @change="onChange"></a-select>
             </a-form-item>
             <a-form-item
+                :label="$t('app.setting.theme')"
+                class="mb-8-2"
+                :label-col="{ flex: 'auto' }"
+                :wrapper-col="{ style: { flex: '0 0 auto' } }">
+                <a-select
+                    v-model:value="config.theme"
+                    :options="themeList"
+                    @change="onChange"></a-select>
+            </a-form-item>
+            <a-form-item
                 :label="$t('app.setting.topBottom')"
                 class="mb-8-2"
                 :label-col="{ flex: 'auto' }"

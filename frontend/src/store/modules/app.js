@@ -11,6 +11,7 @@ const defaultConfig = {
     headerHeight: 60,
     sideTheme: 'dark', // 侧边菜单主题【dark=暗色，light=亮色】
     headerTheme: 'light', // 侧边菜单主题【dark=暗色，light=亮色】
+    theme: 'light', // 整体主题【dark=暗色，light=亮色】
     multiTab: true,
     multiTabHeight: 48,
     mainMargin: 16,
@@ -18,10 +19,13 @@ const defaultConfig = {
 
 const useAppStore = defineStore('app', {
     name: 'useAppStore',
-    state: () => ({
-        complete: false,
-        config: storage.session.getItem(config('storage.config'), defaultConfig),
-    }),
+    state: () => {
+        const storedConfig = storage.session.getItem(config('storage.config'), null)
+        return {
+            complete: false,
+            config: { ...defaultConfig, ...(storedConfig || {}) },
+        }
+    },
     getters: {
         mainOffsetTop: (state) => {
             const multiTabHeight = state.config?.multiTab ? `${state.config.multiTabHeight}px` : '0px'

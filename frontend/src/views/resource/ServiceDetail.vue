@@ -952,12 +952,11 @@ function onProviderTableChange({ current, pageSize }) {
         gap: 2px;
 
         .info-label {
-            color: #666;
+            opacity: 0.6;
             font-size: 13px;
         }
 
         .info-value {
-            color: #333;
             font-size: 14px;
             font-weight: 500;
         }

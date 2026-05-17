@@ -79,6 +79,7 @@ import { storeToRefs } from 'pinia'
 import { CloseOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 import { useMultiTabStore, useAppStore } from '@/store'
 import { useMultiTab } from '@/hooks'
+import { theme as antTheme } from 'ant-design-vue'
 
 defineOptions({
     name: 'MultiTab',
@@ -96,6 +97,7 @@ const {
 } = useMultiTab()
 
 const { config } = storeToRefs(appStore)
+const { token } = antTheme.useToken()
 const spin = ref(false)
 const multiTabRef = ref()
 
@@ -143,7 +145,7 @@ function initDragSort() {
 
 <style lang="less" scoped>
 .multi-tab {
-    background: #fff;
+    background: v-bind('token.colorBgContainer');
     position: sticky;
     top: v-bind('config.headerHeight + "px"');
     z-index: 100;

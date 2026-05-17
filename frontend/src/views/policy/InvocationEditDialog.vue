@@ -599,10 +599,9 @@ defineExpose({
 }
 
 .error-condition-section {
-    border: 1px solid #f0f0f0;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 6px;
     padding: 16px;
-    background: #fafafa;
 }
 
 .condition-row {
@@ -618,7 +617,7 @@ defineExpose({
 
 .condition-label {
     font-size: 13px;
-    color: #333;
+
     white-space: nowrap;
     min-width: 70px;
     display: flex;
@@ -627,13 +626,13 @@ defineExpose({
 
 .condition-prefix {
     font-size: 13px;
-    color: #666;
+    opacity: 0.6;
     white-space: nowrap;
 }
 
 .condition-suffix {
     font-size: 13px;
-    color: #666;
+    opacity: 0.6;
     white-space: nowrap;
 }
 
@@ -642,13 +641,13 @@ defineExpose({
     align-items: center;
     gap: 4px;
     font-size: 13px;
-    color: #666;
+    opacity: 0.6;
     white-space: nowrap;
 }
 
 .jsonpath-label {
     font-size: 13px;
-    color: #666;
+    opacity: 0.6;
 }
 
 .jsonpath-input {
@@ -656,10 +655,9 @@ defineExpose({
 }
 
 .retry-policy-section {
-    border: 1px solid #f0f0f0;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 6px;
     padding: 16px;
-    background: #fafafa;
 }
 
 .scheme-row {
@@ -674,7 +672,7 @@ defineExpose({
 
 .scheme-label {
     font-size: 13px;
-    color: #333;
+
     white-space: nowrap;
     margin-right: 12px;
     min-width: 100px;
@@ -695,7 +693,7 @@ defineExpose({
 }
 
 .scheme-unit {
-    color: #666;
+    opacity: 0.6;
     font-size: 13px;
     white-space: nowrap;
 }

@@ -890,10 +890,9 @@ defineExpose({
 }
 
 .match-method-section {
-    border: 1px solid #f0f0f0;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 6px;
     padding: 16px;
-    background: #fafafa;
 }
 
 .match-method-header {
@@ -904,7 +903,7 @@ defineExpose({
 
 .match-method-label {
     font-size: 13px;
-    color: #333;
+
     margin-right: 8px;
     white-space: nowrap;
 }
@@ -917,10 +916,10 @@ defineExpose({
     display: flex;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
     font-weight: 500;
     font-size: 13px;
-    color: #333;
+
     gap: 8px;
 }
 
@@ -928,7 +927,7 @@ defineExpose({
     display: flex;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+    /* removed border-bottom for dark mode */
     gap: 8px;
 
     &:last-child {
@@ -991,20 +990,19 @@ defineExpose({
 }
 
 .limit-rules-section {
-    border: 1px solid #f0f0f0;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 6px;
     padding: 16px;
-    background: #fafafa;
 }
 
 .limit-rules-header {
     display: flex;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
     font-weight: 500;
     font-size: 13px;
-    color: #333;
+
     gap: 8px;
 }
 
@@ -1012,7 +1010,7 @@ defineExpose({
     display: flex;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+    /* removed border-bottom for dark mode */
     gap: 8px;
 
     &:last-child {
@@ -1041,7 +1039,7 @@ defineExpose({
 }
 
 .threshold-unit {
-    color: #666;
+    opacity: 0.6;
     font-size: 13px;
     white-space: nowrap;
 }
@@ -1062,7 +1060,7 @@ defineExpose({
 
 .scheme-label {
     font-size: 13px;
-    color: #333;
+
     white-space: nowrap;
     margin-right: 12px;
     min-width: 80px;
@@ -1083,10 +1081,10 @@ defineExpose({
     display: inline-block;
     padding: 4px 16px;
     border: 1px solid #d9d9d9;
-    background: #fff;
+
     cursor: pointer;
     font-size: 13px;
-    color: #333;
+
     transition: all 0.2s;
     margin-left: -1px;
 
@@ -1122,7 +1120,7 @@ defineExpose({
 }
 
 .scheme-unit {
-    color: #666;
+    opacity: 0.6;
     font-size: 13px;
 }
 </style>

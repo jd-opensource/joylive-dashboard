@@ -7,6 +7,8 @@
 <script setup>
 import * as echarts from 'echarts'
 import { markRaw, onBeforeMount, onMounted, ref, watch } from 'vue'
+import { useAppStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 defineOptions({
     name: 'XChart',
@@ -37,6 +39,18 @@ const emit = defineEmits(['init'])
 
 const chart = ref(null)
 const chartRef = ref()
+const appStore = useAppStore()
+const { config } = storeToRefs(appStore)
+
+watch(
+    () => config.value.theme,
+    () => {
+        if (chart.value) {
+            chart.value.dispose()
+        }
+        init()
+    }
+)
 
 watch(
     () => props.options,
@@ -75,7 +89,7 @@ function init() {
     })
 
     chart.value = markRaw(
-        echarts.init(chartRef.value, 'chart', {
+        echarts.init(chartRef.value, config.value.theme === 'dark' ? 'dark' : 'chart', {
             width: props.width,
             height: props.height,
         })
