@@ -95,7 +95,11 @@ export function formatRoutes(routes = [], parent = {}) {
                     layout: localRoute?.meta?.layout || parent?.meta?.layout || 'BasicLayout',
                     openKeys: isLink
                         ? []
-                        : [...(parent?.meta?.openKeys ?? []), localRoute?.meta?.active ?? localRoute?.name],
+                        : localRoute?.meta?.openKeys
+                          ? Array.isArray(localRoute.meta.openKeys)
+                              ? localRoute.meta.openKeys
+                              : [localRoute.meta.openKeys]
+                          : [...(parent?.meta?.openKeys ?? []), localRoute?.meta?.active ?? localRoute?.name],
                     isLink,
                     isIframe,
                     actions: item?.meta?.actions ?? ['*'],

@@ -239,7 +239,7 @@ const baseColumns = [
         width: 120,
     },
     { title: t('pages.service.form.creator'), dataIndex: 'creator', width: 120 },
-    { title: t('pages.service.form.version'), dataIndex: 'version', width: 80 },
+    { title: t('pages.service.form.version'), dataIndex: 'version', width: 150 },
     { title: t('pages.service.form.description'), dataIndex: 'description', ellipsis: true },
     { title: t('pages.service.form.created_at'), key: 'created_at', fixed: 'right', width: 180 },
     { title: t('button.action'), key: 'action', fixed: 'right', width: 180 },

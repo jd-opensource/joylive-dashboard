@@ -220,6 +220,8 @@ export default {
     'pages.service.detail.belongApplication': '所属应用',
     'pages.service.detail.registrationType': '服务注册粒度',
     'pages.service.detail.createdAt': '创建时间',
+    'pages.service.detail.creator': '创建者',
+    'pages.service.detail.version': '版本号',
     'pages.service.detail.tab.instance': '服务实例',
     'pages.service.detail.tab.group': '服务分组',
     'pages.service.detail.tab.provider': '提供方',

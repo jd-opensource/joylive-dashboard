@@ -48,23 +48,10 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 		}
 	}
 
-	// For consumer role, use a fresh query with JOINs (no Preload to avoid conflict)
+	// For consumer role, query services then manually populate virtual fields via JOIN
 	if params.Role == "consumer" {
-		appSvcTable := config.C.FormatTableName("application_service")
-		appTable := config.C.FormatTableName("application")
 		db := util.GetDB(ctx, a.DB).Model(new(schema.Service)).
-			Where(tableName+".deleted = '0'").
-			Select(
-				tableName+".*, "+
-					appSvcTable+".status as application_service_status, "+
-					appSvcTable+".application_id as application_id, "+
-					appTable+".name as application_name",
-			).Joins(
-			"LEFT JOIN "+appSvcTable+" ON "+appSvcTable+".service_id = "+tableName+".id AND "+appSvcTable+".role = ? AND "+appSvcTable+".deleted = '0'",
-			params.Role,
-		).Joins(
-			"LEFT JOIN " + appTable + " ON " + appTable + ".id = " + appSvcTable + ".application_id AND " + appTable + ".deleted = '0'",
-		)
+			Where(tableName+".deleted = '0'")
 		if v := params.LikeName; len(v) > 0 {
 			db = db.Where(tableName+".name LIKE ?", "%"+v+"%")
 		}
@@ -79,6 +66,54 @@ func (a *Service) Query(ctx context.Context, params schema.ServiceQueryParam, op
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
+
+		// Populate virtual fields (application_service_status, application_id, application_name) via batch query
+		if len(list) > 0 {
+			ids := make([]string, len(list))
+			for i, item := range list {
+				ids[i] = item.ID
+			}
+			appSvcTable := config.C.FormatTableName("application_service")
+			appTable := config.C.FormatTableName("application")
+			var appInfos []struct {
+				ServiceID               string
+				ApplicationID           string
+				ApplicationName         string
+				ApplicationServiceStatus string
+			}
+			if err := util.GetDB(ctx, a.DB).
+				Table(appSvcTable).
+				Select(appSvcTable+".service_id, "+appSvcTable+".application_id, "+appTable+".name as application_name, "+appSvcTable+".status as application_service_status").
+				Joins("LEFT JOIN "+appTable+" ON "+appTable+".id = "+appSvcTable+".application_id AND "+appTable+".deleted = '0'").
+				Where(appSvcTable+".service_id IN ? AND "+appSvcTable+".role = ? AND "+appSvcTable+".deleted = '0'", ids, params.Role).
+				Scan(&appInfos).Error; err != nil {
+				return nil, errors.WithStack(err)
+			}
+			infoMap := make(map[string]*struct {
+				ApplicationID           string
+				ApplicationName         string
+				ApplicationServiceStatus string
+			}, len(appInfos))
+			for i := range appInfos {
+				infoMap[appInfos[i].ServiceID] = &struct {
+					ApplicationID           string
+					ApplicationName         string
+					ApplicationServiceStatus string
+				}{
+					ApplicationID:           appInfos[i].ApplicationID,
+					ApplicationName:         appInfos[i].ApplicationName,
+					ApplicationServiceStatus: appInfos[i].ApplicationServiceStatus,
+				}
+			}
+			for _, item := range list {
+				if info, ok := infoMap[item.ID]; ok {
+					item.ApplicationId = info.ApplicationID
+					item.ApplicationName = info.ApplicationName
+					item.ApplicationServiceStatus = info.ApplicationServiceStatus
+				}
+			}
+		}
+
 		return &schema.ServiceQueryResult{
 			PageResult: pageResult,
 			Data:       list,

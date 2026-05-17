@@ -106,9 +106,9 @@ type Service struct {
 	UpdatedAt                time.Time       `json:"updated_at" gorm:"index;"`                                    // Update time
 	Deleted                  string          `json:"-" gorm:"size:20;uniqueIndex:uniq_svc_name;default:0"`        // Logical delete flag
 	DeletedAt                *gorm.DeletedAt `json:"-" gorm:"comment:Delete time;"`                               // Delete time
-	ApplicationServiceStatus string          `json:"application_service_status,omitempty" gorm:"->"`              // Application service status (virtual field, read-only)
-	ApplicationName          string          `json:"application_name,omitempty" gorm:"->"`                        // Application name (virtual field, read-only)
-	ApplicationId            string          `json:"application_id,omitempty" gorm:"->"`                          // Application ID (virtual field, read-only)
+	ApplicationServiceStatus string          `json:"application_service_status,omitempty" gorm:"-"`               // Application service status (virtual field, read-only, populated via JOIN)
+	ApplicationName          string          `json:"application_name,omitempty" gorm:"-"`                         // Application name (virtual field, read-only, populated via JOIN)
+	ApplicationId            string          `json:"application_id,omitempty" gorm:"-"`                           // Application ID (virtual field, read-only, populated via JOIN)
 }
 
 func (a *Service) TableName() string {

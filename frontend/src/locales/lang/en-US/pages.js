@@ -218,6 +218,8 @@ export default {
     'pages.service.detail.belongApplication': 'Application',
     'pages.service.detail.registrationType': 'Registration Type',
     'pages.service.detail.createdAt': 'Created At',
+    'pages.service.detail.creator': 'Creator',
+    'pages.service.detail.version': 'Version',
     'pages.service.detail.tab.instance': 'Instances',
     'pages.service.detail.tab.group': 'Groups',
     'pages.service.detail.tab.provider': 'Providers',

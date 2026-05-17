@@ -5,13 +5,13 @@
             :title="$t('pages.service.detail.basicInfo')"
             class="info-card"
             :bordered="false">
-            <a-card-grid style="width: 33.33%; text-align: center">
+            <a-card-grid style="width: 25%; text-align: center">
                 <div class="info-item">
                     <span class="info-label">{{ $t('pages.service.detail.instanceCount') }}</span>
                     <span class="info-value">{{ serviceData.instanceCount || 0 }}</span>
                 </div>
             </a-card-grid>
-            <a-card-grid style="width: 33.33%; text-align: center">
+            <a-card-grid style="width: 25%; text-align: center">
                 <div class="info-item">
                     <span class="info-label">{{ $t('pages.service.detail.belongSpace') }}</span>
                     <span class="info-value">{{
@@ -21,19 +21,19 @@
                     }}</span>
                 </div>
             </a-card-grid>
-            <a-card-grid style="width: 33.33%; text-align: center">
+            <a-card-grid style="width: 25%; text-align: center">
                 <div class="info-item">
                     <span class="info-label">{{ $t('pages.service.detail.belongApplication') }}</span>
                     <span class="info-value">{{ serviceData.application_name || '--' }}</span>
                 </div>
             </a-card-grid>
-            <a-card-grid style="width: 33.33%; text-align: center">
+            <a-card-grid style="width: 25%; text-align: center">
                 <div class="info-item">
                     <span class="info-label">{{ $t('pages.service.detail.belongService') }}</span>
                     <span class="info-value">{{ serviceData.name || '--' }}</span>
                 </div>
             </a-card-grid>
-            <a-card-grid style="width: 33.33%; text-align: center">
+            <a-card-grid style="width: 25%; text-align: center">
                 <div class="info-item">
                     <span class="info-label">{{ $t('pages.service.detail.registrationType') }}</span>
                     <span class="info-value">{{
@@ -41,7 +41,19 @@
                     }}</span>
                 </div>
             </a-card-grid>
-            <a-card-grid style="width: 33.33%; text-align: center">
+            <a-card-grid style="width: 25%; text-align: center">
+                <div class="info-item">
+                    <span class="info-label">{{ $t('pages.service.detail.creator') }}</span>
+                    <span class="info-value">{{ serviceData.creator || '--' }}</span>
+                </div>
+            </a-card-grid>
+            <a-card-grid style="width: 25%; text-align: center">
+                <div class="info-item">
+                    <span class="info-label">{{ $t('pages.service.detail.version') }}</span>
+                    <span class="info-value">{{ serviceData.version || '--' }}</span>
+                </div>
+            </a-card-grid>
+            <a-card-grid style="width: 25%; text-align: center">
                 <div class="info-item">
                     <span class="info-label">{{ $t('pages.service.detail.createdAt') }}</span>
                     <span class="info-value">{{ formatUtcDateTime(serviceData.created_at) || '--' }}</span>
@@ -363,7 +375,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
 import {
@@ -614,6 +626,14 @@ onMounted(() => {
     loadMemberList()
     loadConsumerList()
     loadProviderList()
+})
+
+watch(activeTab, (tab) => {
+    if (tab === 'consumer') {
+        loadConsumerList()
+    } else if (tab === 'provider') {
+        loadProviderList()
+    }
 })
 
 async function loadServiceDetail() {

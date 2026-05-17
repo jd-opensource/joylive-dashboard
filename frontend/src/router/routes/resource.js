@@ -45,6 +45,7 @@ export default [
                     keepAlive: false,
                     permission: '*',
                     active: 'serviceList',
+                    openKeys: ['resource'],
                     breadcrumb: [
                         { name: 'resource', meta: { title: '基础资源' } },
                         { name: 'serviceList', meta: { title: '服务管理' } },
