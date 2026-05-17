@@ -125,7 +125,6 @@ func (a *PolicyLoadbalance) Update(ctx context.Context, id string, formItem *sch
 	}
 	modifier := util.FromUsername(ctx)
 	policyLoadbalance.Modifier = &modifier
-	policyLoadbalance.Version++
 	policyLoadbalance.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {

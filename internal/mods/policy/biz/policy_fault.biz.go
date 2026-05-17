@@ -123,7 +123,6 @@ func (a *PolicyFault) Update(ctx context.Context, id string, formItem *schema.Po
 	}
 	modifier := util.FromUsername(ctx)
 	policyFault.Modifier = &modifier
-	policyFault.Version++
 	policyFault.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {

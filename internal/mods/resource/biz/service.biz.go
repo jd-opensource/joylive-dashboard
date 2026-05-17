@@ -89,7 +89,7 @@ func (a *Service) Create(ctx context.Context, formItem *schema.ServiceForm) (*sc
 		ID:        util.NewXID(),
 		Tenant:    util.FromTenant(ctx),
 		Creator:   util.FromUsername(ctx),
-		Version:   1,
+		Version:   time.Now().UnixMilli(),
 		CreatedAt: time.Now(),
 	}
 	if err := formItem.FillTo(svc); err != nil {
@@ -135,7 +135,7 @@ func (a *Service) Update(ctx context.Context, id string, formItem *schema.Servic
 	if err := formItem.FillTo(svc); err != nil {
 		return err
 	}
-	svc.Version++
+	svc.Version = time.Now().UnixMilli()
 	svc.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
@@ -178,7 +178,7 @@ func (a *Service) ToggleAuth(ctx context.Context, id string, authorized int) err
 	if err != nil {
 		return errors.BadRequest("", "Failed to marshal extra JSON")
 	}
-	svc.Version++
+	svc.Version = time.Now().UnixMilli()
 	svc.UpdatedAt = time.Now()
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
