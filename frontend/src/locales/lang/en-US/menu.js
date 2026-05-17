@@ -18,6 +18,8 @@ export default {
     faultList: 'Fault Injection',
     routeList: 'Tag Route',
     limitList: 'Rate Limit',
+    invocationList: 'Invocation',
+    circuitBreakList: 'Circuit Breaker',
     serviceDetail: 'Service Detail',
     add: 'add',
     edit: 'edit',

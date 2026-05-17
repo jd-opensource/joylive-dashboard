@@ -71,6 +71,11 @@ func (a *PolicyCircuitBreak) Create(ctx context.Context, formItem *schema.Policy
 		return nil, err
 	}
 
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyCircuitBreak.Creator = &username
+	}
+
 	err := a.Trans.Exec(ctx, func(ctx context.Context) error {
 		return a.PolicyCircuitBreakDAL.Create(ctx, policyCircuitBreak)
 	})
@@ -110,6 +115,11 @@ func (a *PolicyCircuitBreak) Update(ctx context.Context, id string, formItem *sc
 		return err
 	}
 	policyCircuitBreak.UpdatedAt = time.Now()
+
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyCircuitBreak.Modifier = &username
+	}
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
 		return a.PolicyCircuitBreakDAL.Update(ctx, policyCircuitBreak)

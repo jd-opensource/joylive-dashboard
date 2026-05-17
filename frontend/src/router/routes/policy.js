@@ -68,6 +68,28 @@ export default [
                     permission: '*',
                 },
             },
+            {
+                path: 'invocation',
+                name: 'invocationList',
+                component: 'policy/invocation.vue',
+                meta: {
+                    title: '调用容错策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
+            {
+                path: 'circuit-break',
+                name: 'circuitBreakList',
+                component: 'policy/circuitBreak.vue',
+                meta: {
+                    title: '熔断降级策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
         ],
     },
 ]

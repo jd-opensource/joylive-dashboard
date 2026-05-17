@@ -18,6 +18,8 @@ export default {
     faultList: '故障注入',
     routeList: '标签路由',
     limitList: '服务限流',
+    invocationList: '调用容错',
+    circuitBreakList: '熔断降级',
     serviceDetail: '服务详情',
     'menu.account.settings': '个人设置',
     add: '添加',

@@ -44,6 +44,15 @@ export const updateLimit = (id, params) => request.basic.put(`/api/v1/policy/pol
 export const delLimit = (id) => request.basic.delete(`/api/v1/policy/policy-limits/${id}`)
 // 获取熔断策略列表
 export const getCircuitBreakList = (params) => request.basic.get('/api/v1/policy/policy-circuit-breaks', params)
+// 获取熔断策略单条数据
+export const getCircuitBreak = (id) => request.basic.get(`/api/v1/policy/policy-circuit-breaks/${id}`)
+// 添加熔断策略
+export const createCircuitBreak = (params) => request.basic.post('/api/v1/policy/policy-circuit-breaks', params)
+// 更新熔断策略
+export const updateCircuitBreak = (id, params) =>
+    request.basic.put(`/api/v1/policy/policy-circuit-breaks/${id}`, params)
+// 删除熔断策略
+export const delCircuitBreak = (id) => request.basic.delete(`/api/v1/policy/policy-circuit-breaks/${id}`)
 // 获取权限策略列表
 export const getPermissionList = (params) => request.basic.get('/api/v1/policy/policy-permissions', params)
 // 获取权限策略单条数据
@@ -66,5 +75,13 @@ export const createFault = (params) => request.basic.post('/api/v1/policy/policy
 export const updateFault = (id, params) => request.basic.put(`/api/v1/policy/policy-faults/${id}`, params)
 // 删除容错策略
 export const delFault = (id) => request.basic.delete(`/api/v1/policy/policy-faults/${id}`)
-// 获取调用策略列表
+// 获取调用容错策略列表
 export const getInvocationList = (params) => request.basic.get('/api/v1/policy/policy-invocations', params)
+// 获取调用容错策略单条数据
+export const getInvocation = (id) => request.basic.get(`/api/v1/policy/policy-invocations/${id}`)
+// 添加调用容错策略
+export const createInvocation = (params) => request.basic.post('/api/v1/policy/policy-invocations', params)
+// 更新调用容错策略
+export const updateInvocation = (id, params) => request.basic.put(`/api/v1/policy/policy-invocations/${id}`, params)
+// 删除调用容错策略
+export const delInvocation = (id) => request.basic.delete(`/api/v1/policy/policy-invocations/${id}`)

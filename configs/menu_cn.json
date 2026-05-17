@@ -356,6 +356,138 @@
                         "path": "/api/v1/policy/policy-limits/{id}"
                     }
                 ]
+            },
+            {
+                "code": "invocationList",
+                "name": "调用容错",
+                "sequence": 40,
+                "type": "page",
+                "path": "/policy/invocation",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "增加",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-invocations"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "编辑",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-invocations/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "删除",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-invocations/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "查询",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-invocations"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-invocations/{id}"
+                    }
+                ]
+            },
+            {
+                "code": "circuitBreakList",
+                "name": "熔断降级",
+                "sequence": 30,
+                "type": "page",
+                "path": "/policy/circuit-break",
+                "status": "enabled",
+                "children": [
+                    {
+                        "code": "add",
+                        "name": "增加",
+                        "sequence": 9,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "POST",
+                                "path": "/api/v1/policy/policy-circuit-breaks"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "edit",
+                        "name": "编辑",
+                        "sequence": 8,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "PUT",
+                                "path": "/api/v1/policy/policy-circuit-breaks/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "delete",
+                        "name": "删除",
+                        "sequence": 7,
+                        "type": "button",
+                        "status": "enabled",
+                        "resources": [
+                            {
+                                "method": "DELETE",
+                                "path": "/api/v1/policy/policy-circuit-breaks/{id}"
+                            }
+                        ]
+                    },
+                    {
+                        "code": "search",
+                        "name": "查询",
+                        "sequence": 6,
+                        "type": "button",
+                        "status": "enabled"
+                    }
+                ],
+                "resources": [
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-circuit-breaks"
+                    },
+                    {
+                        "method": "GET",
+                        "path": "/api/v1/policy/policy-circuit-breaks/{id}"
+                    }
+                ]
             }
         ]
     },

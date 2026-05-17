@@ -75,17 +75,17 @@ type DegradeConfig struct {
 
 // RetryPolicy represents a retry policy configuration.
 type RetryPolicy struct {
-	Retry          int                `json:"retry"`
-	Interval       int                `json:"interval"`
-	Timeout        int                `json:"timeout"`
-	ErrorCodes     []string           `json:"errorCodes"`
-	CodePolicy     *ErrorParserPolicy `json:"codePolicy"`
-	ErrorMessages  []string           `json:"errorMessages"`
-	MessagePolicy  *ErrorParserPolicy `json:"messagePolicy"`
-	Exceptions     []string           `json:"exceptions"`
-	Methods        []string           `json:"methods"`
-	MethodPrefixes []string           `json:"methodPrefixes"`
-	Version        int64              `json:"version"`
+	Retry          int                `json:"retry"`          // Retry count
+	Interval       int                `json:"interval"`       // Retry interval
+	Timeout        int                `json:"timeout"`        // Total timeout
+	ErrorCodes     []string           `json:"errorCodes"`     // Error codes
+	CodePolicy     *ErrorParserPolicy `json:"codePolicy"`     // Code policy
+	ErrorMessages  []string           `json:"errorMessages"`  // Error messages
+	MessagePolicy  *ErrorParserPolicy `json:"messagePolicy"`  // Message policy
+	Exceptions     []string           `json:"exceptions"`     // Exceptions
+	Methods        []string           `json:"methods"`        // Methods to retry
+	MethodPrefixes []string           `json:"methodPrefixes"` // Method prefixes to retry
+	Version        int64              `json:"version"`        // Version
 }
 
 // Define default values for policy configuration.

@@ -71,6 +71,11 @@ func (a *PolicyInvocation) Create(ctx context.Context, formItem *schema.PolicyIn
 		return nil, err
 	}
 
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyInvocation.Creator = &username
+	}
+
 	err := a.Trans.Exec(ctx, func(ctx context.Context) error {
 		return a.PolicyInvocationDAL.Create(ctx, policyInvocation)
 	})
@@ -110,6 +115,11 @@ func (a *PolicyInvocation) Update(ctx context.Context, id string, formItem *sche
 		return err
 	}
 	policyInvocation.UpdatedAt = time.Now()
+
+	username := util.FromUsername(ctx)
+	if username != "" {
+		policyInvocation.Modifier = &username
+	}
 
 	return a.Trans.Exec(ctx, func(ctx context.Context) error {
 		return a.PolicyInvocationDAL.Update(ctx, policyInvocation)
