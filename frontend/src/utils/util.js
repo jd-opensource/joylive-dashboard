@@ -146,7 +146,7 @@ export const zipObjectPlus = (keys = [], values = [], funcs) => {
 export const env = (key, def = null) => {
     const value = import.meta.env[`VITE_${toUpper(snakeCase(key))}`] || def
     if (['true', 'false'].includes(value)) {
-        return Boolean(value)
+        return value === 'true'
     }
     return value
 }
