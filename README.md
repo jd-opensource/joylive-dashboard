@@ -10,153 +10,157 @@
   <h1>JoyLive-Dashboard</h1>
 </div>
 
-A microservice governance interface operation console serving joylive-agent. 一个服务于joylive-agent的微服务治理界面操作控制台。
+> [中文文档](README-zh.md)
 
-### 监控大盘
-提供微服务实例与整体运行情况的实时监控总览。
+## Introduction
+
+A microservice governance console serving [joylive-agent](https://github.com/jd-opensource/joylive-agent).
+
+### Dashboard
+Real-time monitoring overview of microservice instances and overall system health.
 ![dashboard](docs/image/dashboard.jpg)
 
-### 服务列表
-查看与管理当前接入的所有微服务，支持快捷配置路由与网关。
+### Service List
+View and manage all connected microservices, with quick access to route and gateway configuration.
 ![servicelist](docs/image/servicelist.jpg)
 
-### 服务详情
-深入单个服务的详情，查看多环境、多泳道下的实例注册与健康状态。
+### Service Details
+Drill into individual service details to inspect instance registration and health status across environments and swimlanes.
 ![service_detail](docs/image/service_detail.jpg)
 
-### 熔断策略
-配置针对故障依赖的自动熔断策略，支持各种维度的熔断指标，避免级联雪崩。
+### Circuit Breaker Policies
+Configure automatic circuit-breaking policies for faulty dependencies, with flexible metric dimensions to prevent cascading failures.
 ![circuitBreak](docs/image/circuit_break.jpg)
 
-### 限流策略
-针对流量高峰期提供灵活的服务端与客户端限流控制及保护策略。
+### Rate Limiting Policies
+Flexible server-side and client-side rate limiting controls and protection strategies for traffic spikes.
 ![limit](docs/image/limit.jpg)
 
-### 故障注入
-模拟网络延迟或系统故障异常，增强微服务架构的高可用性演练。
+### Fault Injection
+Simulate network delays or system failures to strengthen high-availability resilience of your microservice architecture.
 ![fault_injection](docs/image/fault_injection.jpg)
 
-## 项目结构
+## Project Structure
 
-本项目采用前后端一体化架构：
+This project uses an integrated frontend-backend architecture:
 
-- **前端**：Vue 3 + Vite + Ant Design Vue
-- **后端**：Go + Gin + GORM
-- **部署**：Docker多阶段构建，单一镜像包含前后端
+- **Frontend**: Vue 3 + Vite + Ant Design Vue
+- **Backend**: Go + Gin + GORM
+- **Deployment**: Multi-stage Docker build, single image containing both frontend and backend
 
 ```
 joylive-dashboard/
-├── frontend/          # 前端Vue项目
-├── internal/          # 后端Go代码
-├── configs/           # 配置文件
-├── cmd/               # CLI命令
-├── main.go            # 程序入口
-├── Makefile           # 构建脚本
-├── Dockerfile         # Docker构建配置
-└── docker-compose.yml # Docker Compose配置
+├── frontend/          # Frontend Vue project
+├── internal/          # Backend Go code
+├── configs/           # Configuration files
+├── cmd/               # CLI commands
+├── main.go            # Application entry point
+├── Makefile           # Build scripts
+├── Dockerfile         # Docker build configuration
+└── docker-compose.yml # Docker Compose configuration
 ```
 
-## 快速开始
+## Quick Start
 
-### 本地开发
+### Local Development
 
-#### 1. 准备工作
+#### 1. Prerequisites
 
-确保你已经安装了以下软件：
+Make sure you have the following installed:
 
 - Go 1.19+
 - Node.js 18+
 - MySQL 5.7+
 - Redis 6.0+
 
-#### 2. 配置数据库
+#### 2. Configure Database
 
-创建数据库 `joylive_dashboard`：
+Create the database `joylive_dashboard`:
 
 ```sql
 CREATE DATABASE joylive_dashboard CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-#### 3. 构建并运行
+#### 3. Build and Run
 
 ```bash
-# 构建前端和后端
+# Build frontend and backend
 make build-all
 
-# 启动服务
+# Start the server
 make serve
 ```
 
-#### 4. 访问
+#### 4. Access
 
-打开浏览器访问 `http://localhost:8040`，默认管理员账号：
+Open your browser and navigate to `http://localhost:8040`. Default admin credentials:
 
-- 用户名：`admin`
-- 密码：`admin`
+- Username: `admin`
+- Password: `admin`
 
-### Docker部署
+### Docker Deployment
 
-#### 1. 构建镜像
+#### 1. Build Image
 
 ```bash
-# 方式一：使用Makefile
+# Option 1: Using Makefile
 make docker-build
 
-# 方式二：使用脚本
+# Option 2: Using script
 ./scripts/deploy.sh v1.0.0
 ```
 
-#### 2. 运行容器
+#### 2. Run Container
 
 ```bash
-# 方式一：使用Docker Compose（推荐）
+# Option 1: Using Docker Compose (recommended)
 docker-compose up -d
 
-# 方式二：手动运行
+# Option 2: Manual run
 docker run -d -p 8040:8040 --name joylive joylivedashboard:latest
 ```
 
-#### 3. 访问应用
+#### 3. Access the Application
 
-打开浏览器访问 `http://localhost:8040`
+Open your browser and navigate to `http://localhost:8040`
 
-## 构建命令
+## Build Commands
 
 ```bash
-# 构建前端
+# Build frontend
 make build-frontend
 
-# 构建后端
+# Build backend
 make build
 
-# 构建前端和后端
+# Build frontend and backend
 make build-all
 
-# 构建Docker镜像
+# Build Docker image
 make docker-build
 
-# 构建并推送镜像
+# Build and push image
 make docker-push
 
-# 清理构建产物
+# Clean build artifacts
 make clean
 ```
 
-## 配置说明
+## Configuration
 
-### 环境配置
+### Environment Configuration
 
-- `frontend/.env.dev` - 开发环境
-- `frontend/.env.prod` - 生产环境
+- `frontend/.env.dev` - Development environment
+- `frontend/.env.prod` - Production environment
 
-### 后端配置
+### Backend Configuration
 
-配置文件位于 `configs/` 目录：
+Configuration files are located in the `configs/` directory:
 
-- `dev/` - 开发环境配置
-- `prod/` - 生产环境配置
+- `dev/` - Development environment configuration
+- `prod/` - Production environment configuration
 
-## 部署架构
+## Deployment Architecture
 
 ```
 ┌─────────────────────────────────────┐
@@ -176,17 +180,17 @@ make clean
             Port 8040
 ```
 
-## 常见问题
+## FAQ
 
-### Q: 如何修改前端API地址？
+### Q: How do I change the frontend API endpoint?
 
-修改 `frontend/.env.prod` 中的 `VITE_API_HTTP` 配置，然后重新构建。
+Modify `VITE_API_HTTP` in `frontend/.env.prod`, then rebuild.
 
-### Q: 如何持久化数据？
+### Q: How do I persist data?
 
-使用Docker Compose时，数据会自动挂载到 `./data` 目录。
+When using Docker Compose, data is automatically mounted to the `./data` directory.
 
-### Q: 如何查看日志？
+### Q: How do I view logs?
 
 ```bash
 # Docker Compose
@@ -196,9 +200,9 @@ docker-compose logs -f joylive
 docker logs -f joylive
 ```
 
-## 开发指南
+## Development Guide
 
-### 前端开发
+### Frontend Development
 
 ```bash
 cd frontend
@@ -206,22 +210,28 @@ npm install
 npm run dev
 ```
 
-### 后端开发
+### Backend Development
 
 ```bash
 make start
 ```
 
-### 代码生成
+### Code Generation
 
 ```bash
-# 生成Swagger文档
+# Generate Swagger docs
 make swagger
 
-# 生成Wire依赖注入
+# Generate Wire dependency injection
 make wire
 ```
 
-## 许可证
+## Related Projects
 
-本项目采用 Apache 许可证，详情请查看 [LICENSE](LICENSE) 文件。
+1. [joylive-injector](https://github.com/jd-opensource/joylive-injector) — Automatically injects `joylive-agent` in cloud-native environments
+
+2. [joylive-agent](https://github.com/jd-opensource/joylive-agent) — A Java microservice governance data-plane agent based on bytecode enhancement
+
+## License
+
+This project is licensed under the Apache License. See the [LICENSE](LICENSE) file for details.
