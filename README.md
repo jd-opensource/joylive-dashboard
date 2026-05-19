@@ -228,9 +228,11 @@ make wire
 
 ## Related Projects
 
-1. [joylive-injector](https://github.com/jd-opensource/joylive-injector) — Automatically injects `joylive-agent` in cloud-native environments
+1. [joylive-injector](https://github.com/jd-opensource/joylive-injector) — A component to automatically inject `joylive-agent` in cloud-native environments.
 
-2. [joylive-agent](https://github.com/jd-opensource/joylive-agent) — A Java microservice governance data-plane agent based on bytecode enhancement
+2. [joylive-agent](https://github.com/jd-opensource/joylive-agent) — A Java microservice governance data-plane agent based on bytecode enhancement.
+
+3. [joylive-control-plane](https://github.com/jd-opensource/joylive-control-plane) — A microservice governance policy for `joylive-agent` to distribute control surface.
 
 ## License
 

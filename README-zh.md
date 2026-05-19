@@ -228,9 +228,11 @@ make wire
 
 ## 关联项目
 
-1. [joylive-injector](https://github.com/jd-opensource/joylive-injector)，用于云原生场景自动注入`joylive-agent`
+1. [joylive-injector](https://github.com/jd-opensource/joylive-injector) - 一个用于云原生场景自动注入`joylive-agent`的组件。
 
-2. [joylive-agent](https://github.com/jd-opensource/joylive-agent), 基于字节码增强的Java微服务治理数据面Agent
+2. [joylive-agent](https://github.com/jd-opensource/joylive-agent) - 一个基于字节码增强的Java微服务治理数据面Agent。
+
+3. [joylive-control-plane](https://github.com/jd-opensource/joylive-control-plane) - 一个服务于`joylive-agent`的微服务治理策略下发控制面。
 
 ## 许可证
 
