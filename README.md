@@ -12,11 +12,29 @@
 
 A microservice governance interface operation console serving joylive-agent. 一个服务于joylive-agent的微服务治理界面操作控制台。
 
+### 监控大盘
+提供微服务实例与整体运行情况的实时监控总览。
 ![dashboard](docs/image/dashboard.jpg)
 
+### 服务列表
+查看与管理当前接入的所有微服务，支持快捷配置路由与网关。
 ![servicelist](docs/image/servicelist.jpg)
 
+### 服务详情
+深入单个服务的详情，查看多环境、多泳道下的实例注册与健康状态。
+![service_detail](docs/image/service_detail.jpg)
+
+### 熔断策略
+配置针对故障依赖的自动熔断策略，支持各种维度的熔断指标，避免级联雪崩。
 ![circuitBreak](docs/image/circuit_break.jpg)
+
+### 限流策略
+针对流量高峰期提供灵活的服务端与客户端限流控制及保护策略。
+![limit](docs/image/limit.jpg)
+
+### 故障注入
+模拟网络延迟或系统故障异常，增强微服务架构的高可用性演练。
+![fault_injection](docs/image/fault_injection.jpg)
 
 ## 项目结构
 

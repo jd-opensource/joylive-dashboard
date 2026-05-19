@@ -39,3 +39,4 @@ gen/
 # ai
 .claude/
 Agents.md
+.joycode/
