@@ -40,3 +40,4 @@ gen/
 .claude/
 Agents.md
 .joycode/
+release/

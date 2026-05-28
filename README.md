@@ -11,6 +11,9 @@
 </div>
 
 > [中文文档](README-zh.md)
+>
+> 🌐 **Live Demo**: [http://152.70.241.41:8040](http://152.70.241.41:8040)
+> 👤 **Default Credentials**: `admin` / `admin`
 
 ## Introduction
 

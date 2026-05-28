@@ -1,4 +1,4 @@
-.PHONY: start build build-frontend build-all build-cross-all clean
+.PHONY: start build build-frontend build-all build-cross-all clean pack-arm64
 
 NOW = $(shell date -u '+%Y%m%d%I%M%S')
 
@@ -49,6 +49,10 @@ build-windows-amd64:
 
 build-cross-all: build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64
 	@echo "All cross-platform binaries built."
+
+pack-arm64:
+	@chmod +x scripts/deploy_pack.sh
+	@./scripts/deploy_pack.sh
 
 # go install github.com/google/wire/cmd/wire@latest
 wire:
