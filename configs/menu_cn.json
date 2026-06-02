@@ -18,7 +18,7 @@
             {
                 "code": "loadbalanceList",
                 "name": "负载均衡",
-                "sequence": 90,
+                "sequence": 50,
                 "type": "page",
                 "path": "/policy/loadbalance",
                 "status": "enabled",
@@ -84,7 +84,7 @@
             {
                 "code": "permissionList",
                 "name": "服务鉴权",
-                "sequence": 80,
+                "sequence": 90,
                 "type": "page",
                 "path": "/policy/permission",
                 "status": "enabled",
@@ -150,7 +150,7 @@
             {
                 "code": "faultList",
                 "name": "故障注入",
-                "sequence": 70,
+                "sequence": 40,
                 "type": "page",
                 "path": "/policy/fault",
                 "status": "enabled",
@@ -294,7 +294,7 @@
             {
                 "code": "limitList",
                 "name": "服务限流",
-                "sequence": 50,
+                "sequence": 80,
                 "type": "page",
                 "path": "/policy/limit",
                 "status": "enabled",
@@ -360,7 +360,7 @@
             {
                 "code": "invocationList",
                 "name": "调用容错",
-                "sequence": 40,
+                "sequence": 70,
                 "type": "page",
                 "path": "/policy/invocation",
                 "status": "enabled",

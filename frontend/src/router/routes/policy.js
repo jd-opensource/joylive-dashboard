@@ -14,44 +14,11 @@ export default [
         },
         children: [
             {
-                path: 'loadbalance',
-                name: 'loadbalanceList',
-                component: 'policy/loadbalance.vue',
-                meta: {
-                    title: '负载均衡策略',
-                    isMenu: true,
-                    keepAlive: true,
-                    permission: '*',
-                },
-            },
-            {
                 path: 'permission',
                 name: 'permissionList',
                 component: 'policy/permission.vue',
                 meta: {
                     title: '服务鉴权策略',
-                    isMenu: true,
-                    keepAlive: true,
-                    permission: '*',
-                },
-            },
-            {
-                path: 'fault',
-                name: 'faultList',
-                component: 'policy/fault.vue',
-                meta: {
-                    title: '故障注入策略',
-                    isMenu: true,
-                    keepAlive: true,
-                    permission: '*',
-                },
-            },
-            {
-                path: 'route',
-                name: 'routeList',
-                component: 'policy/tagRoute.vue',
-                meta: {
-                    title: '标签路由策略',
                     isMenu: true,
                     keepAlive: true,
                     permission: '*',
@@ -74,6 +41,39 @@ export default [
                 component: 'policy/invocation.vue',
                 meta: {
                     title: '调用容错策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
+            {
+                path: 'route',
+                name: 'routeList',
+                component: 'policy/tagRoute.vue',
+                meta: {
+                    title: '标签路由策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
+            {
+                path: 'loadbalance',
+                name: 'loadbalanceList',
+                component: 'policy/loadbalance.vue',
+                meta: {
+                    title: '负载均衡策略',
+                    isMenu: true,
+                    keepAlive: true,
+                    permission: '*',
+                },
+            },
+            {
+                path: 'fault',
+                name: 'faultList',
+                component: 'policy/fault.vue',
+                meta: {
+                    title: '故障注入策略',
                     isMenu: true,
                     keepAlive: true,
                     permission: '*',

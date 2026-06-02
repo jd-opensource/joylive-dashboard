@@ -213,28 +213,28 @@ const counts = reactive({
 })
 
 const policyCounts = reactive({
-    loadbalance: 0,
-    route: 0,
-    limit: 0,
-    circuitBreak: 0,
     permission: 0,
-    auth: 0,
-    fault: 0,
+    limit: 0,
     invocation: 0,
+    route: 0,
+    loadbalance: 0,
+    fault: 0,
+    circuitBreak: 0,
+    auth: 0,
 })
 
 const POLICY_META = [
-    { key: 'loadbalance', fetch: apis.policy.getLoadbalanceList },
-    { key: 'route', fetch: apis.policy.getRouteList },
-    { key: 'limit', fetch: apis.policy.getLimitList },
-    { key: 'circuitBreak', fetch: apis.policy.getCircuitBreakList },
     { key: 'permission', fetch: apis.policy.getPermissionList },
-    { key: 'auth', fetch: apis.policy.getAuthList },
-    { key: 'fault', fetch: apis.policy.getFaultList },
+    { key: 'limit', fetch: apis.policy.getLimitList },
     { key: 'invocation', fetch: apis.policy.getInvocationList },
+    { key: 'route', fetch: apis.policy.getRouteList },
+    { key: 'loadbalance', fetch: apis.policy.getLoadbalanceList },
+    { key: 'fault', fetch: apis.policy.getFaultList },
+    { key: 'circuitBreak', fetch: apis.policy.getCircuitBreakList },
+    { key: 'auth', fetch: apis.policy.getAuthList },
 ]
 
-const COLORS = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4']
+const COLORS = ['#73c0de', '#fac858', '#9a60b4', '#91cc75', '#5470c6', '#fc8452', '#ee6666', '#3ba272']
 
 onMounted(async () => {
     const params = { current: 1, pageSize: 1 }
