@@ -148,7 +148,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useAppStore } from '@/store'
 import useMultiTab from './hooks/useMultiTab'
 import useMenu from './hooks/useMenu'
@@ -171,6 +171,31 @@ const { sideMenuList, topMenuList } = useMenu()
 const { config } = storeToRefs(appStore)
 
 const configDialogRef = ref()
+
+// 应用主题到DOM
+const applyTheme = (theme) => {
+    if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        document.body.setAttribute('data-theme', 'dark')
+    } else {
+        document.documentElement.removeAttribute('data-theme')
+        document.body.removeAttribute('data-theme')
+    }
+}
+
+// 监听主题变化
+watch(
+    () => config.value.theme,
+    (newTheme) => {
+        applyTheme(newTheme)
+    },
+    { immediate: true }
+)
+
+// 组件挂载时应用主题
+onMounted(() => {
+    applyTheme(config.value.theme)
+})
 </script>
 
 <style lang="less" scoped>

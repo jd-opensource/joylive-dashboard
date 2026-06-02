@@ -354,10 +354,37 @@ function goTo(path) {
     font-size: 32px;
     color: #1890ff;
     margin-bottom: 8px;
+    transition: color 0.3s;
 }
 
 .quick-link-text {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.65);
+    transition: color 0.3s;
+}
+
+// 暗黑模式适配
+html[data-theme='dark'],
+:root[data-theme='dark'],
+body[data-theme='dark'] {
+    .stat-card {
+        &:hover {
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    .quick-link-card {
+        &:hover {
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    .quick-link-icon {
+        color: #40a9ff;
+    }
+
+    .quick-link-text {
+        color: rgba(255, 255, 255, 0.85);
+    }
 }
 </style>

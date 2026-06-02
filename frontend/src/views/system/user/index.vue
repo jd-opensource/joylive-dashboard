@@ -1,67 +1,79 @@
 <template>
-    <x-search-bar class="mb-8-2">
-        <template #default="{ gutter, colSpan }">
-            <a-form
-                :label-col="{ style: { width: '100px' } }"
-                :model="searchFormData"
-                layout="inline">
-                <a-row :gutter="gutter">
-                    <a-col v-bind="colSpan">
-                        <a-form-item
-                            :label="$t('pages.system.user.form.username')"
-                            name="username">
-                            <a-input
-                                :placeholder="$t('pages.system.user.form.username.placeholder')"
-                                v-model:value="searchFormData.username"></a-input>
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col v-bind="colSpan">
-                        <a-form-item name="name">
-                            <template #label>
-                                {{ $t('pages.system.user.form.name') }}
-                                <a-tooltip :title="$t('pages.system.user.form.name')">
-                                    <question-circle-outlined class="ml-4-1 color-placeholder" />
-                                </a-tooltip>
-                            </template>
-                            <a-input
-                                :placeholder="$t('pages.system.user.form.name.placeholder')"
-                                v-model:value="searchFormData.name"></a-input>
-                        </a-form-item>
-                    </a-col>
-
-                    <a-col
-                        class="align-right"
-                        v-bind="colSpan">
-                        <a-space>
-                            <a-button @click="handleResetSearch">{{ $t('button.reset') }}</a-button>
-                            <a-button
-                                ghost
-                                type="primary"
-                                @click="handleSearch">
-                                {{ $t('button.search') }}
-                            </a-button>
-                        </a-space>
-                    </a-col>
-                </a-row>
-            </a-form>
-        </template>
-    </x-search-bar>
     <a-row
         :gutter="8"
         :wrap="false">
         <a-col flex="auto">
             <a-card type="flex">
-                <x-action-bar class="mb-8-2">
-                    <a-button
-                        type="primary"
-                        @click="$refs.editDialogRef.handleCreate()">
-                        <template #icon>
-                            <plus-outlined></plus-outlined>
-                        </template>
-                        {{ $t('pages.system.user.add') }}
-                    </a-button>
-                </x-action-bar>
+                <a-row
+                    :gutter="16"
+                    align="middle"
+                    class="mb-8-2">
+                    <a-col flex="none">
+                        <a-button
+                            type="primary"
+                            @click="$refs.editDialogRef.handleCreate()">
+                            <template #icon>
+                                <plus-outlined></plus-outlined>
+                            </template>
+                            {{ $t('pages.system.user.add') }}
+                        </a-button>
+                    </a-col>
+                    <a-col flex="auto"></a-col>
+                    <a-col flex="none">
+                        <a-form
+                            :model="searchFormData"
+                            layout="inline">
+                            <a-form-item
+                                :label="$t('pages.system.user.form.username')"
+                                name="username"
+                                style="margin-bottom: 0">
+                                <a-input
+                                    :placeholder="$t('pages.system.user.form.username.placeholder')"
+                                    v-model:value="searchFormData.username"
+                                    style="width: 200px"
+                                    @pressEnter="handleSearch"></a-input>
+                            </a-form-item>
+                            <a-form-item
+                                name="name"
+                                style="margin-bottom: 0">
+                                <template #label>
+                                    {{ $t('pages.system.user.form.name') }}
+                                    <a-tooltip :title="$t('pages.system.user.form.name')">
+                                        <question-circle-outlined class="ml-4-1 color-placeholder" />
+                                    </a-tooltip>
+                                </template>
+                                <a-input
+                                    :placeholder="$t('pages.system.user.form.name.placeholder')"
+                                    v-model:value="searchFormData.name"
+                                    style="width: 200px"
+                                    @pressEnter="handleSearch"></a-input>
+                            </a-form-item>
+                            <a-form-item style="margin-bottom: 0">
+                                <a-space :size="8">
+                                    <a-tooltip :title="$t('button.reset')">
+                                        <a-button
+                                            shape="circle"
+                                            @click="handleResetSearch">
+                                            <template #icon>
+                                                <redo-outlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                    <a-tooltip :title="$t('button.search')">
+                                        <a-button
+                                            type="primary"
+                                            shape="circle"
+                                            @click="handleSearch">
+                                            <template #icon>
+                                                <search-outlined />
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                </a-space>
+                            </a-form-item>
+                        </a-form>
+                    </a-col>
+                </a-row>
                 <a-table
                     :columns="columns"
                     :data-source="listData"
@@ -74,13 +86,13 @@
                             <!--状态-->
                             <a-tag
                                 v-if="statusUserTypeEnum.is('activated', record.status)"
-                                color="processing">
+                                color="green">
                                 {{ statusUserTypeEnum.getDesc(record.status) }}
                             </a-tag>
                             <!--状态-->
                             <a-tag
                                 v-if="statusUserTypeEnum.is('freezed', record.status)"
-                                color="processing">
+                                color="default">
                                 {{ statusUserTypeEnum.getDesc(record.status) }}
                             </a-tag>
                         </template>
@@ -92,13 +104,15 @@
                             <x-action-button @click="$refs.editDialogRef.handleEdit(record)">
                                 <a-tooltip>
                                     <template #title> {{ $t('pages.system.user.edit') }}</template>
-                                    <edit-outlined /> </a-tooltip
-                            ></x-action-button>
+                                    <edit-outlined />
+                                </a-tooltip>
+                            </x-action-button>
                             <x-action-button @click="handleDelete(record)">
                                 <a-tooltip>
                                     <template #title>{{ $t('pages.system.delete') }}</template>
-                                    <delete-outlined style="color: #ff4d4f" /> </a-tooltip
-                            ></x-action-button>
+                                    <delete-outlined style="color: #ff4d4f" />
+                                </a-tooltip>
+                            </x-action-button>
                         </template>
                     </template>
                 </a-table>
@@ -121,7 +135,14 @@ import { statusUserTypeEnum } from '@/enums/system'
 import { usePagination } from '@/hooks'
 
 import EditDialog from './components/EditDialog.vue'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    SearchOutlined,
+    RedoOutlined,
+    QuestionCircleOutlined,
+} from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 defineOptions({
     name: 'systemUser',
@@ -129,12 +150,12 @@ defineOptions({
 const { t } = useI18n() // 解构出t方法
 const columns = [
     { title: t('pages.system.user.form.username'), dataIndex: 'username', width: 120 },
-    { title: t('pages.system.user.form.name'), dataIndex: 'name', key: 'name', width: 100 },
-    { title: t('pages.system.user.form.phone'), dataIndex: 'phone', width: 120 },
-    { title: t('pages.system.user.form.email'), dataIndex: 'email', width: 100 },
-    { title: t('pages.system.user.form.status'), dataIndex: 'status', key: 'statusType', width: 60 },
-    { title: t('pages.system.user.form.created_at'), key: 'created_at', fixed: 'right', width: 120 },
-    { title: t('button.action'), key: 'action', fixed: 'right', width: 100 },
+    { title: t('pages.system.user.form.name'), dataIndex: 'name', key: 'name', width: 120 },
+    { title: t('pages.system.user.form.phone'), dataIndex: 'phone', width: 140 },
+    { title: t('pages.system.user.form.email'), dataIndex: 'email', width: 180 },
+    { title: t('pages.system.user.form.status'), dataIndex: 'status', key: 'statusType', width: 100 },
+    { title: t('pages.system.user.form.created_at'), key: 'created_at', fixed: 'right', width: 180 },
+    { title: t('button.action'), key: 'action', fixed: 'right', width: 120 },
 ]
 
 const { listData, loading, showLoading, hideLoading, paginationState, resetPagination, searchFormData } =
@@ -232,4 +253,67 @@ async function onOk() {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+@import '@/styles/variables.less';
+
+// 搜索栏和操作按钮行
+:deep(.ant-form-inline) {
+    .ant-form-item {
+        margin-right: 16px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// 操作按钮 - 添加悬停效果
+:deep(.x-action-button) {
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+    }
+}
+
+// 状态标签 - 轻微优化圆角
+:deep(.ant-tag) {
+    border-radius: 4px;
+}
+
+// 搜索按钮 - 添加轻微过渡
+:deep(.ant-btn) {
+    transition: all 0.2s ease;
+}
+
+// 表格单元格 - 优化间距
+:deep(.ant-table) {
+    .ant-table-tbody > tr > td {
+        padding: 12px 16px;
+    }
+
+    .ant-table-thead > tr > th {
+        padding: 12px 16px;
+        font-weight: 600;
+    }
+}
+
+// 搜索栏分隔线
+.mb-8-2 {
+    padding-bottom: 16px;
+    /* removed border-bottom for dark mode */
+    margin-bottom: 16px;
+}
+
+// 暗黑模式适配
+html[data-theme='dark'],
+:root[data-theme='dark'],
+body[data-theme='dark'] {
+    :deep(.x-action-button) {
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+    }
+}
+</style>

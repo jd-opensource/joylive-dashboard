@@ -55,8 +55,10 @@
 <script setup>
 import { assets } from '@/utils/util'
 import { config as conf, config } from '@/config'
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { TranslationOutlined } from '@ant-design/icons-vue'
+import { useAppStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 import storage from '@/utils/storage'
 import { useI18n } from 'vue-i18n'
@@ -84,6 +86,35 @@ const langData = ref({
     },
 })
 
+// 获取主题配置
+const appStore = useAppStore()
+const { config: appConfig } = storeToRefs(appStore)
+
+// 应用主题到DOM
+const applyTheme = (theme) => {
+    if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        document.body.setAttribute('data-theme', 'dark')
+    } else {
+        document.documentElement.removeAttribute('data-theme')
+        document.body.removeAttribute('data-theme')
+    }
+}
+
+// 监听主题变化
+watch(
+    () => appConfig.value.theme,
+    (newTheme) => {
+        applyTheme(newTheme)
+    },
+    { immediate: true }
+)
+
+// 组件挂载时应用主题
+onMounted(() => {
+    applyTheme(appConfig.value.theme)
+})
+
 /**
  * 切换语言
  */
@@ -104,6 +135,7 @@ function handleLang(lang) {
         background-position: center 110px;
         background-size: 100%;
         display: flex;
+        transition: background-color 0.3s ease;
     }
 
     &-aside {
@@ -113,6 +145,7 @@ function handleLang(lang) {
         flex-direction: column;
         background: #235bda url('@/assets/login_aside_bg.jpg') no-repeat left top / 100% auto;
         position: relative;
+        transition: background 0.3s ease;
 
         .aside {
             &-header {
@@ -124,6 +157,7 @@ function handleLang(lang) {
                     font-size: 20px;
                     font-weight: 500;
                     color: #fff;
+                    transition: color 0.3s ease;
                 }
             }
 
@@ -134,14 +168,17 @@ function handleLang(lang) {
 
                 img {
                     width: 80%;
+                    transition: opacity 0.3s ease;
                 }
 
                 h3 {
                     color: #fff;
+                    transition: color 0.3s ease;
                 }
 
                 p {
                     color: rgba(255, 255, 255, 0.85);
+                    transition: color 0.3s ease;
                 }
             }
 
@@ -149,6 +186,7 @@ function handleLang(lang) {
                 color: rgba(255, 255, 255, 0.65);
                 font-size: 12px;
                 padding: 48px;
+                transition: color 0.3s ease;
             }
         }
     }
@@ -159,6 +197,7 @@ function handleLang(lang) {
         align-items: center;
         justify-content: center;
         padding: 64px 0 144px;
+        transition: background-color 0.3s ease;
     }
 
     &-content {
@@ -171,10 +210,59 @@ function handleLang(lang) {
         align-items: center;
         font-size: 30px;
         font-weight: 500;
+        transition: color 0.3s ease;
     }
 
     &-desc {
         margin: 8px 0 24px;
+        transition: color 0.3s ease;
+    }
+}
+
+.basic-header__right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+// 暗黑模式适配
+html[data-theme='dark'],
+:root[data-theme='dark'],
+body[data-theme='dark'] {
+    background-color: #141414;
+
+    .user-layout {
+        &-container {
+            background-color: #141414;
+        }
+
+        &-aside {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)
+                url('@/assets/login_aside_bg.jpg') no-repeat left top / 100% auto;
+            background-blend-mode: soft-light;
+
+            .aside {
+                &-body {
+                    img {
+                        opacity: 0.9;
+                        filter: brightness(0.95);
+                    }
+                }
+            }
+        }
+
+        &-main {
+            background-color: #141414;
+        }
+
+        &-header {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        &-desc {
+            color: rgba(255, 255, 255, 0.65);
+        }
     }
 }
 </style>
