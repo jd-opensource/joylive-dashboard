@@ -8,6 +8,26 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0" />
   <title></title>
+  <style>
+    /* 预设暗黑模式背景，防止白色闪烁 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    /* 默认亮色模式 */
+    body {
+      background: #ffffff;
+    }
+
+    /* 暗黑模式 - 通过媒体查询自动适应 */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #141414;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -29,6 +49,7 @@
         align-items: center;
         flex-direction: column;
         background: #ffffff;
+        color: rgba(0, 0, 0, .85);
       }
 
       .app-loading__loader {
@@ -58,14 +79,45 @@
 
       .app-loading__title {
         font-size: 18px;
-        color: rgba(0, 0, 0, .85);
+        color: inherit;
         margin-top: 30px;
       }
 
       .app-loading__desc {
         font-size: 14px;
-        color: rgba(0, 0, 0, .65);
+        color: inherit;
         margin-top: 8px;
+        opacity: 0.65;
+      }
+
+      /* 暗黑模式样式 */
+      .app-loading--dark {
+        background: #141414;
+        color: rgba(255, 255, 255, .85);
+      }
+
+      .app-loading--dark .app-loading__loader {
+        border-top-color: rgba(255, 255, 255, .65);
+      }
+
+      .app-loading--dark .app-loading__loader:before {
+        border-color: rgba(255, 255, 255, .25);
+      }
+
+      /* 系统暗黑模式自动适应 */
+      @media (prefers-color-scheme: dark) {
+        .app-loading {
+          background: #141414;
+          color: rgba(255, 255, 255, .85);
+        }
+
+        .app-loading .app-loading__loader {
+          border-top-color: rgba(255, 255, 255, .65);
+        }
+
+        .app-loading .app-loading__loader:before {
+          border-color: rgba(255, 255, 255, .25);
+        }
       }
 
       @keyframes loader {
@@ -78,6 +130,33 @@
         }
       }
     </style>
+    <script>
+      // 立即读取主题配置并应用
+      (function() {
+        try {
+          // 从sessionStorage读取配置
+          // Vite会在构建时替换%VITE_STORAGE_NAMESPACE%
+          var storageNamespace = '%VITE_STORAGE_NAMESPACE%' || 'joylive_';
+          var configKey = storageNamespace + 'config';
+          var storedConfig = sessionStorage.getItem(configKey);
+
+          if (storedConfig) {
+            var config = JSON.parse(storedConfig);
+            if (config.theme === 'dark') {
+              // 同时设置body和loading的暗黑模式
+              document.body.style.background = '#141414';
+              var loadingEl = document.querySelector('.app-loading');
+              if (loadingEl) {
+                loadingEl.classList.add('app-loading--dark');
+              }
+            }
+          }
+        } catch (e) {
+          // 如果读取失败，使用CSS媒体查询作为后备方案
+          console.log('Failed to load theme config, using system preference');
+        }
+      })();
+    </script>
   </div>
   <script src="/libs/tinymce/tinymce.min.js"></script>
   <script type="module"

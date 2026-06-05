@@ -893,6 +893,7 @@ defineExpose({
     border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 6px;
     padding: 16px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 }
 
 .match-method-header {
@@ -993,6 +994,7 @@ defineExpose({
     border: 1px solid rgba(128, 128, 128, 0.2);
     border-radius: 6px;
     padding: 16px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 }
 
 .limit-rules-header {
@@ -1046,6 +1048,7 @@ defineExpose({
 
 .limit-scheme-section {
     padding: 0;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 }
 
 .scheme-row {
@@ -1122,5 +1125,56 @@ defineExpose({
 .scheme-unit {
     opacity: 0.6;
     font-size: 13px;
+}
+</style>
+
+<style lang="less">
+html[data-theme='dark'] {
+    .match-method-section,
+    .limit-rules-section,
+    .limit-scheme-section {
+        color: rgba(255, 255, 255, 0.85) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .match-method-label {
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    .conditions-header,
+    .limit-rules-header {
+        color: rgba(255, 255, 255, 0.85) !important;
+        border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+
+        div {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+    }
+
+    .scheme-label {
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    .threshold-unit,
+    .scheme-unit {
+        color: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    .scheme-btn {
+        color: rgba(255, 255, 255, 0.65) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        background: transparent !important;
+
+        &.active {
+            color: #1890ff !important;
+            border-color: #1890ff !important;
+            background: rgba(24, 144, 255, 0.2) !important;
+        }
+
+        &:hover:not(.active) {
+            color: #1890ff !important;
+            border-color: #1890ff !important;
+        }
+    }
 }
 </style>

@@ -1,199 +1,194 @@
 <template>
-    <a-row
-        :gutter="8"
-        :wrap="false">
-        <a-col flex="auto">
-            <a-card type="flex">
-                <a-row
-                    :gutter="16"
-                    align="middle"
-                    class="mb-8-2">
-                    <a-col flex="none">
-                        <a-radio-group
-                            v-model:value="activeTab"
-                            button-style="solid"
-                            @change="onTabChange">
-                            <a-radio-button value="provider">
-                                {{ $t('pages.service.tab.provider') }}
-                            </a-radio-button>
-                            <a-radio-button value="consumer">
-                                {{ $t('pages.service.tab.consumer') }}
-                            </a-radio-button>
-                            <a-radio-button value="all">
-                                {{ $t('pages.service.tab.all') }}
-                            </a-radio-button>
-                        </a-radio-group>
-                    </a-col>
-                    <a-col flex="none">
-                        <a-button
-                            v-if="activeTab === 'provider'"
-                            v-action="'add'"
-                            type="primary"
-                            @click="$refs.editDialogRef.handleCreate()">
-                            <template #icon>
-                                <plus-outlined></plus-outlined>
-                            </template>
-                            {{ $t('pages.service.create') }}
-                        </a-button>
-                    </a-col>
-                    <a-col flex="auto"></a-col>
-                    <a-col flex="none">
-                        <a-form
-                            :model="searchFormData"
-                            layout="inline">
-                            <a-form-item
-                                :label="$t('pages.service.form.space_code')"
-                                name="space_code"
-                                style="margin-bottom: 0">
-                                <a-select
-                                    :placeholder="$t('pages.service.form.space_code.placeholder')"
-                                    v-model:value="searchFormData.space_code"
-                                    show-search
-                                    :filter-option="filterSpaceOption"
-                                    @change="onSpaceChange"
-                                    style="width: 200px">
-                                    <a-select-option
-                                        v-for="item in spaceOptions"
-                                        :key="item.code"
-                                        :value="item.code">
-                                        {{ item.name }} ({{ item.code }})
-                                    </a-select-option>
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item
-                                :label="$t('pages.service.form.name')"
-                                name="name"
-                                style="margin-bottom: 0">
-                                <a-input
-                                    :placeholder="$t('pages.service.form.name.placeholder')"
-                                    v-model:value="searchFormData.name"
-                                    style="width: 200px"
-                                    @pressEnter="handleSearch"></a-input>
-                            </a-form-item>
-                            <a-form-item style="margin-bottom: 0">
-                                <a-space :size="8">
-                                    <a-tooltip :title="$t('button.reset')">
-                                        <a-button
-                                            shape="circle"
-                                            @click="handleResetSearch">
-                                            <template #icon>
-                                                <redo-outlined />
-                                            </template>
-                                        </a-button>
-                                    </a-tooltip>
-                                    <a-tooltip :title="$t('button.search')">
-                                        <a-button
-                                            type="primary"
-                                            shape="circle"
-                                            @click="handleSearch">
-                                            <template #icon>
-                                                <search-outlined />
-                                            </template>
-                                        </a-button>
-                                    </a-tooltip>
-                                </a-space>
-                            </a-form-item>
-                        </a-form>
-                    </a-col>
-                </a-row>
-                <a-table
-                    :columns="columns"
-                    :data-source="listData"
-                    :loading="loading"
-                    :pagination="paginationState"
-                    :scroll="{ x: 1260 }"
-                    @change="onTableChange">
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="'name' === column.key">
-                            <a
-                                v-if="activeTab === 'provider'"
-                                @click="goToDetail(record)">
-                                {{ record.name }}
-                            </a>
-                            <span v-else>{{ record.name }}</span>
+    <div class="service-page">
+        <a-card
+            type="flex"
+            class="service-card">
+            <a-row
+                :gutter="16"
+                align="middle"
+                class="mb-8-2">
+                <a-col flex="none">
+                    <a-radio-group
+                        v-model:value="activeTab"
+                        button-style="solid"
+                        @change="onTabChange">
+                        <a-radio-button value="provider">
+                            {{ $t('pages.service.tab.provider') }}
+                        </a-radio-button>
+                        <a-radio-button value="consumer">
+                            {{ $t('pages.service.tab.consumer') }}
+                        </a-radio-button>
+                        <a-radio-button value="all">
+                            {{ $t('pages.service.tab.all') }}
+                        </a-radio-button>
+                    </a-radio-group>
+                </a-col>
+                <a-col flex="none">
+                    <a-button
+                        v-if="activeTab === 'provider'"
+                        v-action="'add'"
+                        type="primary"
+                        @click="$refs.editDialogRef.handleCreate()">
+                        <template #icon>
+                            <plus-outlined></plus-outlined>
                         </template>
-                        <template v-if="'created_at' === column.key">
-                            {{ formatUtcDateTime(record.created_at) }}
-                        </template>
-                        <template v-if="'registration_type' === column.key">
-                            {{ registrationTypeMap[record.registration_type] || record.registration_type }}
-                        </template>
-                        <template v-if="'application_service_status' === column.key">
-                            <a-tag :color="statusColorMap[record.application_service_status]">
-                                {{
-                                    statusTextMap[record.application_service_status] ||
-                                    record.application_service_status
-                                }}
-                            </a-tag>
-                        </template>
-
-                        <template v-if="'action' === column.key">
-                            <template v-if="activeTab === 'all'">
-                                <x-action-button @click="$refs.applyDialogRef.handleApply(record)">
-                                    <a-tooltip>
-                                        <template #title> {{ $t('pages.service.apply') }}</template>
-                                        <import-outlined />
-                                    </a-tooltip>
-                                </x-action-button>
-                            </template>
-                            <template v-else>
-                                <x-action-button
-                                    v-if="activeTab !== 'consumer'"
-                                    @click="$refs.editDialogRef.handleEdit(record)">
-                                    <a-tooltip>
-                                        <template #title> {{ $t('pages.service.edit') }}</template>
-                                        <edit-outlined />
-                                    </a-tooltip>
-                                </x-action-button>
-                                <x-action-button
-                                    v-if="activeTab === 'provider'"
-                                    @click="$refs.wizardDialogRef.show(record)">
-                                    <a-tooltip>
-                                        <template #title>接入向导</template>
-                                        <api-outlined />
-                                    </a-tooltip>
-                                </x-action-button>
-                                <x-action-button
-                                    v-if="activeTab === 'provider'"
-                                    @click="handleToggleAuth(record)">
-                                    <a-tooltip>
-                                        <template #title>
-                                            {{
-                                                isAuthorized(record)
-                                                    ? $t('pages.service.auth.disable')
-                                                    : $t('pages.service.auth.enable')
-                                            }}
+                        {{ $t('pages.service.create') }}
+                    </a-button>
+                </a-col>
+                <a-col flex="auto"></a-col>
+                <a-col flex="none">
+                    <a-form
+                        :model="searchFormData"
+                        layout="inline">
+                        <a-form-item
+                            :label="$t('pages.service.form.space_code')"
+                            name="space_code"
+                            style="margin-bottom: 0">
+                            <a-select
+                                :placeholder="$t('pages.service.form.space_code.placeholder')"
+                                v-model:value="searchFormData.space_code"
+                                show-search
+                                :filter-option="filterSpaceOption"
+                                @change="onSpaceChange"
+                                style="width: 200px">
+                                <a-select-option
+                                    v-for="item in spaceOptions"
+                                    :key="item.code"
+                                    :value="item.code">
+                                    {{ item.name }} ({{ item.code }})
+                                </a-select-option>
+                            </a-select>
+                        </a-form-item>
+                        <a-form-item
+                            :label="$t('pages.service.form.name')"
+                            name="name"
+                            style="margin-bottom: 0">
+                            <a-input
+                                :placeholder="$t('pages.service.form.name.placeholder')"
+                                v-model:value="searchFormData.name"
+                                style="width: 200px"
+                                @pressEnter="handleSearch"></a-input>
+                        </a-form-item>
+                        <a-form-item style="margin-bottom: 0">
+                            <a-space :size="8">
+                                <a-tooltip :title="$t('button.reset')">
+                                    <a-button
+                                        shape="circle"
+                                        @click="handleResetSearch">
+                                        <template #icon>
+                                            <redo-outlined />
                                         </template>
-                                        <lock-outlined v-if="!isAuthorized(record)" />
-                                        <unlock-outlined
-                                            v-else
-                                            style="color: #52c41a" />
-                                    </a-tooltip>
-                                </x-action-button>
-                                <x-action-button @click="handleRemove(record)">
-                                    <a-tooltip>
-                                        <template #title> {{ $t('pages.system.delete') }}</template>
-                                        <delete-outlined style="color: #ff4d4f" />
-                                    </a-tooltip>
-                                </x-action-button>
-                            </template>
+                                    </a-button>
+                                </a-tooltip>
+                                <a-tooltip :title="$t('button.search')">
+                                    <a-button
+                                        type="primary"
+                                        shape="circle"
+                                        @click="handleSearch">
+                                        <template #icon>
+                                            <search-outlined />
+                                        </template>
+                                    </a-button>
+                                </a-tooltip>
+                            </a-space>
+                        </a-form-item>
+                    </a-form>
+                </a-col>
+            </a-row>
+            <a-table
+                :columns="columns"
+                :data-source="listData"
+                :loading="loading"
+                :pagination="paginationState"
+                :scroll="{ x: 'max-content' }"
+                @change="onTableChange">
+                <template #bodyCell="{ column, record }">
+                    <template v-if="'name' === column.key">
+                        <a
+                            v-if="activeTab === 'provider'"
+                            @click="goToDetail(record)">
+                            {{ record.name }}
+                        </a>
+                        <span v-else>{{ record.name }}</span>
+                    </template>
+                    <template v-if="'created_at' === column.key">
+                        {{ formatUtcDateTime(record.created_at) }}
+                    </template>
+                    <template v-if="'registration_type' === column.key">
+                        {{ registrationTypeMap[record.registration_type] || record.registration_type }}
+                    </template>
+                    <template v-if="'application_service_status' === column.key">
+                        <a-tag :color="statusColorMap[record.application_service_status]">
+                            {{ statusTextMap[record.application_service_status] || record.application_service_status }}
+                        </a-tag>
+                    </template>
+
+                    <template v-if="'action' === column.key">
+                        <template v-if="activeTab === 'all'">
+                            <x-action-button @click="$refs.applyDialogRef.handleApply(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.service.apply') }}</template>
+                                    <import-outlined />
+                                </a-tooltip>
+                            </x-action-button>
+                        </template>
+                        <template v-else>
+                            <x-action-button
+                                v-if="activeTab !== 'consumer'"
+                                @click="$refs.editDialogRef.handleEdit(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.service.edit') }}</template>
+                                    <edit-outlined />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button
+                                v-if="activeTab === 'provider'"
+                                @click="$refs.wizardDialogRef.show(record)">
+                                <a-tooltip>
+                                    <template #title>接入向导</template>
+                                    <api-outlined />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button
+                                v-if="activeTab === 'provider'"
+                                @click="handleToggleAuth(record)">
+                                <a-tooltip>
+                                    <template #title>
+                                        {{
+                                            isAuthorized(record)
+                                                ? $t('pages.service.auth.disable')
+                                                : $t('pages.service.auth.enable')
+                                        }}
+                                    </template>
+                                    <lock-outlined v-if="!isAuthorized(record)" />
+                                    <unlock-outlined
+                                        v-else
+                                        style="color: #52c41a" />
+                                </a-tooltip>
+                            </x-action-button>
+                            <x-action-button @click="handleRemove(record)">
+                                <a-tooltip>
+                                    <template #title> {{ $t('pages.system.delete') }}</template>
+                                    <delete-outlined style="color: #ff4d4f" />
+                                </a-tooltip>
+                            </x-action-button>
                         </template>
                     </template>
-                </a-table>
-            </a-card>
-        </a-col>
-    </a-row>
+                </template>
+            </a-table>
+        </a-card>
 
-    <edit-dialog
-        ref="editDialogRef"
-        :space-options="spaceOptions"
-        :application-options="applicationOptions"
-        @ok="onOk"></edit-dialog>
-    <apply-dialog
-        ref="applyDialogRef"
-        :application-options="applicationOptions"
-        @ok="onOk"></apply-dialog>
-    <wizard-dialog ref="wizardDialogRef"></wizard-dialog>
+        <edit-dialog
+            ref="editDialogRef"
+            :space-options="spaceOptions"
+            :application-options="applicationOptions"
+            @ok="onOk"></edit-dialog>
+        <apply-dialog
+            ref="applyDialogRef"
+            :application-options="applicationOptions"
+            @ok="onOk"></apply-dialog>
+        <wizard-dialog ref="wizardDialogRef"></wizard-dialog>
+    </div>
 </template>
 
 <script setup>
@@ -511,5 +506,35 @@ async function onOk() {
     padding-bottom: 16px;
     /* removed border-bottom for dark mode */
     margin-bottom: 16px;
+}
+
+.service-page {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.service-card {
+    min-width: 0;
+    overflow: hidden;
+
+    &::-webkit-scrollbar,
+    :deep(*::-webkit-scrollbar) {
+        width: 8px;
+        height: 8px;
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb,
+    :deep(*::-webkit-scrollbar-thumb) {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10em;
+    }
+
+    :global(html[data-theme='dark']) & {
+        &::-webkit-scrollbar-thumb,
+        :deep(*::-webkit-scrollbar-thumb) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
 }
 </style>

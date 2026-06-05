@@ -1,100 +1,98 @@
 <template>
-    <a-row
-        :gutter="8"
-        :wrap="false">
-        <a-col flex="auto">
-            <a-card type="flex">
-                <a-row
-                    :gutter="16"
-                    align="middle"
-                    class="mb-8-2">
-                    <a-col flex="none">
-                        <a-button
-                            v-action="'add'"
-                            type="primary"
-                            @click="$refs.editDialogRef.handleCreate()">
-                            <template #icon>
-                                <plus-outlined></plus-outlined>
-                            </template>
-                            {{ $t('pages.application.add') }}
-                        </a-button>
-                    </a-col>
-                    <a-col flex="auto"></a-col>
-                    <a-col flex="none">
-                        <a-form
-                            :model="searchFormData"
-                            layout="inline">
-                            <a-form-item
-                                :label="$t('pages.application.form.name')"
-                                name="name"
-                                style="margin-bottom: 0">
-                                <a-input
-                                    :placeholder="$t('pages.application.form.name.placeholder')"
-                                    v-model:value="searchFormData.name"
-                                    style="width: 200px"
-                                    @pressEnter="handleSearch"></a-input>
-                            </a-form-item>
-                            <a-form-item style="margin-bottom: 0">
-                                <a-space :size="8">
-                                    <a-tooltip :title="$t('button.reset')">
-                                        <a-button
-                                            shape="circle"
-                                            @click="handleResetSearch">
-                                            <template #icon>
-                                                <redo-outlined />
-                                            </template>
-                                        </a-button>
-                                    </a-tooltip>
-                                    <a-tooltip :title="$t('button.search')">
-                                        <a-button
-                                            type="primary"
-                                            shape="circle"
-                                            @click="handleSearch">
-                                            <template #icon>
-                                                <search-outlined />
-                                            </template>
-                                        </a-button>
-                                    </a-tooltip>
-                                </a-space>
-                            </a-form-item>
-                        </a-form>
-                    </a-col>
-                </a-row>
-                <a-table
-                    :columns="columns"
-                    :data-source="listData"
-                    :loading="loading"
-                    :pagination="paginationState"
-                    :scroll="{ x: 1000 }"
-                    @change="onTableChange">
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="'created_at' === column.key">
-                            {{ formatUtcDateTime(record.created_at) }}
+    <div class="application-page">
+        <a-card
+            type="flex"
+            class="application-card">
+            <a-row
+                :gutter="16"
+                align="middle"
+                class="mb-8-2">
+                <a-col flex="none">
+                    <a-button
+                        v-action="'add'"
+                        type="primary"
+                        @click="$refs.editDialogRef.handleCreate()">
+                        <template #icon>
+                            <plus-outlined></plus-outlined>
                         </template>
-
-                        <template v-if="'action' === column.key">
-                            <x-action-button @click="$refs.editDialogRef.handleEdit(record)">
-                                <a-tooltip>
-                                    <template #title> {{ $t('pages.application.edit') }}</template>
-                                    <edit-outlined />
+                        {{ $t('pages.application.add') }}
+                    </a-button>
+                </a-col>
+                <a-col flex="auto"></a-col>
+                <a-col flex="none">
+                    <a-form
+                        :model="searchFormData"
+                        layout="inline">
+                        <a-form-item
+                            :label="$t('pages.application.form.name')"
+                            name="name"
+                            style="margin-bottom: 0">
+                            <a-input
+                                :placeholder="$t('pages.application.form.name.placeholder')"
+                                v-model:value="searchFormData.name"
+                                style="width: 200px"
+                                @pressEnter="handleSearch"></a-input>
+                        </a-form-item>
+                        <a-form-item style="margin-bottom: 0">
+                            <a-space :size="8">
+                                <a-tooltip :title="$t('button.reset')">
+                                    <a-button
+                                        shape="circle"
+                                        @click="handleResetSearch">
+                                        <template #icon>
+                                            <redo-outlined />
+                                        </template>
+                                    </a-button>
                                 </a-tooltip>
-                            </x-action-button>
-                            <x-action-button @click="handleRemove(record)">
-                                <a-tooltip>
-                                    <template #title> {{ $t('pages.system.delete') }}</template>
-                                    <delete-outlined style="color: #ff4d4f" />
+                                <a-tooltip :title="$t('button.search')">
+                                    <a-button
+                                        type="primary"
+                                        shape="circle"
+                                        @click="handleSearch">
+                                        <template #icon>
+                                            <search-outlined />
+                                        </template>
+                                    </a-button>
                                 </a-tooltip>
-                            </x-action-button>
-                        </template>
+                            </a-space>
+                        </a-form-item>
+                    </a-form>
+                </a-col>
+            </a-row>
+            <a-table
+                :columns="columns"
+                :data-source="listData"
+                :loading="loading"
+                :pagination="paginationState"
+                :scroll="{ x: 'max-content' }"
+                @change="onTableChange">
+                <template #bodyCell="{ column, record }">
+                    <template v-if="'created_at' === column.key">
+                        {{ formatUtcDateTime(record.created_at) }}
                     </template>
-                </a-table>
-            </a-card>
-        </a-col>
-    </a-row>
 
-    <edit-dialog
-        ref="editDialogRef"
-        @ok="onOk"></edit-dialog>
+                    <template v-if="'action' === column.key">
+                        <x-action-button @click="$refs.editDialogRef.handleEdit(record)">
+                            <a-tooltip>
+                                <template #title> {{ $t('pages.application.edit') }}</template>
+                                <edit-outlined />
+                            </a-tooltip>
+                        </x-action-button>
+                        <x-action-button @click="handleRemove(record)">
+                            <a-tooltip>
+                                <template #title> {{ $t('pages.system.delete') }}</template>
+                                <delete-outlined style="color: #ff4d4f" />
+                            </a-tooltip>
+                        </x-action-button>
+                    </template>
+                </template>
+            </a-table>
+        </a-card>
+
+        <edit-dialog
+            ref="editDialogRef"
+            @ok="onOk"></edit-dialog>
+    </div>
 </template>
 
 <script setup>
@@ -246,5 +244,35 @@ async function onOk() {
     padding-bottom: 16px;
     /* removed border-bottom for dark mode */
     margin-bottom: 16px;
+}
+
+.application-page {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.application-card {
+    min-width: 0;
+    overflow: hidden;
+
+    &::-webkit-scrollbar,
+    :deep(*::-webkit-scrollbar) {
+        width: 8px;
+        height: 8px;
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb,
+    :deep(*::-webkit-scrollbar-thumb) {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10em;
+    }
+
+    :global(html[data-theme='dark']) & {
+        &::-webkit-scrollbar-thumb,
+        :deep(*::-webkit-scrollbar-thumb) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
 }
 </style>

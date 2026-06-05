@@ -140,10 +140,19 @@
                 v-for="(detail, rIndex) in formData.details"
                 :key="String(rIndex)">
                 <div class="rule-card-header">
-                    <span class="rule-card-title">{{ $t('pages.tagRoute.form.details.rule') + (rIndex + 1) }}</span>
-                    <close-outlined
-                        class="rule-remove-btn"
-                        @click.stop="removeDetail(rIndex)" />
+                    <span class="rule-card-title">
+                        <span class="rule-card-badge">{{ rIndex + 1 }}</span>
+                        {{ $t('pages.tagRoute.form.details.rule') || '路由规则' }}
+                    </span>
+                    <a-button
+                        type="link"
+                        danger
+                        size="small"
+                        class="rule-remove-btn-new"
+                        @click.stop="removeDetail(rIndex)">
+                        <template #icon><delete-outlined /></template>
+                        {{ $t('button.delete') || '删除' }}
+                    </a-button>
                 </div>
                 <div class="rule-card-body">
                     <!-- 匹配条件 -->
@@ -416,8 +425,8 @@ import {
     QuestionCircleOutlined,
     MinusCircleOutlined,
     PlusOutlined,
-    CloseOutlined,
     PlusCircleOutlined,
+    DeleteOutlined,
 } from '@ant-design/icons-vue'
 import { initSpaceCode, setCurrentSpaceCode } from '@/utils/spaceStorage'
 
@@ -766,36 +775,64 @@ defineExpose({
 <style lang="less" scoped>
 .details-section {
     margin-top: 16px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 }
 
 .rule-card {
-    border: 1px solid rgba(128, 128, 128, 0.2);
-    border-radius: 4px;
-    margin-bottom: 16px;
+    border: 1px solid var(--ant-color-border-secondary, rgba(128, 128, 128, 0.15));
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: var(--ant-color-bg-container, #fff);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+    &:hover {
+        border-color: var(--ant-color-primary, #1677ff);
+        box-shadow: 0 4px 16px rgba(22, 119, 255, 0.08);
+    }
 }
 
 .rule-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
-
-    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-    border-radius: 4px 4px 0 0;
+    padding: 12px 20px;
+    background-color: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+    border-bottom: 1px solid var(--ant-color-border-secondary, rgba(128, 128, 128, 0.15));
+    border-radius: 8px 8px 0 0;
 }
 
 .rule-card-title {
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 }
 
-.rule-remove-btn {
-    font-size: 14px;
-    color: #1890ff;
-    cursor: pointer;
+.rule-remove-btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    padding: 0 4px;
+    height: auto;
+}
 
-    &:hover {
-        color: #40a9ff;
-    }
+.rule-card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--ant-color-primary, #1677ff);
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 8px;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(22, 119, 255, 0.2);
 }
 
 .rule-card-body {
@@ -817,6 +854,7 @@ defineExpose({
 
     font-size: 13px;
     font-weight: 500;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 
     &.required::before {
         display: inline-block;
@@ -836,19 +874,22 @@ defineExpose({
 
 .relation-row {
     margin-bottom: 12px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 }
 
 .rule-table {
-    border: 1px solid rgba(128, 128, 128, 0.2);
-    border-radius: 4px;
+    border: 1px solid var(--ant-color-border-secondary, rgba(128, 128, 128, 0.15));
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .rule-table-header {
     display: flex;
-    padding: 8px 12px;
-
-    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-    font-weight: 500;
+    padding: 10px 16px;
+    background-color: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+    border-bottom: 1px solid var(--ant-color-border-secondary, rgba(128, 128, 128, 0.15));
+    font-weight: 600;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 
     gap: 12px;
 }
@@ -856,8 +897,8 @@ defineExpose({
 .rule-table-row {
     display: flex;
     align-items: center;
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--ant-color-border-secondary, rgba(128, 128, 128, 0.15));
     gap: 12px;
 
     &:last-child {
@@ -907,9 +948,15 @@ defineExpose({
 
 .dest-box {
     flex: 1;
-    border: 1px solid rgba(128, 128, 128, 0.2);
-    border-radius: 4px;
-    padding: 12px;
+    border: 1px solid var(--ant-color-border-secondary, rgba(128, 128, 128, 0.15));
+    border-radius: 6px;
+    padding: 16px;
+    background-color: var(--ant-color-fill-alter, rgba(0, 0, 0, 0.01));
+    transition: border-color 0.2s;
+
+    &:hover {
+        border-color: var(--ant-color-primary-border, #91caff);
+    }
 }
 
 .dest-conditions-table {
@@ -945,6 +992,7 @@ defineExpose({
     display: flex;
     align-items: center;
     margin-top: 12px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
 
     .required::before {
         display: inline-block;
@@ -966,5 +1014,66 @@ defineExpose({
 .add-rule-btn {
     padding-left: 0;
     margin-top: 8px;
+}
+</style>
+
+<style lang="less">
+html[data-theme='dark'] {
+    .rule-card {
+        background-color: #141414 !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+
+        .rule-card-header {
+            background-color: #1d1d1d !important;
+            border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .rule-card-title {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        .rule-field-label {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        .relation-row {
+            color: rgba(255, 255, 255, 0.85) !important;
+
+            span {
+                color: rgba(255, 255, 255, 0.85) !important;
+            }
+        }
+
+        .rule-table {
+            border-color: rgba(255, 255, 255, 0.15) !important;
+
+            .rule-table-header {
+                background-color: #1d1d1d !important;
+                color: rgba(255, 255, 255, 0.85) !important;
+                border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+
+                div {
+                    color: rgba(255, 255, 255, 0.85) !important;
+                }
+            }
+
+            .rule-table-row {
+                border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+            }
+        }
+
+        .dest-box {
+            background-color: #1d1d1d !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .dest-weight-row {
+            color: rgba(255, 255, 255, 0.85) !important;
+
+            span {
+                color: rgba(255, 255, 255, 0.85) !important;
+            }
+        }
+    }
 }
 </style>
