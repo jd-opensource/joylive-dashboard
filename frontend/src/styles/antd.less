@@ -53,6 +53,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
 }
 
 // Tree
@@ -107,4 +108,38 @@
             flex-shrink: 0;
         }
     }
+}
+
+// 表单间距微调
+.ant-form-inline {
+    .ant-form-item {
+        margin-right: 16px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// 统一表格边距与表头加粗
+.ant-table {
+    .ant-table-tbody > tr > td {
+        padding: 12px 16px;
+    }
+
+    .ant-table-thead > tr > th {
+        padding: 12px 16px;
+        font-weight: 600;
+    }
+}
+
+// 全局微调 Tag 圆角
+.ant-tag {
+    border-radius: 4px;
+}
+
+// 搜索栏下边距与内边距（原 mb-8-2 局部覆盖）
+.mb-8-2 {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
 }

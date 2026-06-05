@@ -1,8 +1,8 @@
 <template>
-    <div class="circuitBreak-page">
+    <div class="app-page">
         <a-card
             type="flex"
-            class="circuitBreak-card">
+            class="app-card">
             <a-row
                 :gutter="16"
                 align="middle"
@@ -390,81 +390,3 @@ async function onOk() {
     await getPageList()
 }
 </script>
-
-<style lang="less" scoped>
-@import '@/styles/variables.less';
-
-:deep(.ant-form-inline) {
-    .ant-form-item {
-        margin-right: 16px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
-}
-
-:deep(.x-action-button) {
-    transition: all 0.2s ease;
-
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.04);
-        border-radius: 4px;
-    }
-}
-
-:deep(.ant-tag) {
-    border-radius: 4px;
-}
-
-:deep(.ant-btn) {
-    transition: all 0.2s ease;
-}
-
-:deep(.ant-table) {
-    .ant-table-tbody > tr > td {
-        padding: 12px 16px;
-    }
-
-    .ant-table-thead > tr > th {
-        padding: 12px 16px;
-        font-weight: 600;
-    }
-}
-
-.mb-8-2 {
-    padding-bottom: 16px;
-    /* removed border-bottom for dark mode */
-    margin-bottom: 16px;
-}
-
-.circuitBreak-page {
-    width: 100%;
-    min-width: 0;
-    overflow: hidden;
-}
-
-.circuitBreak-card {
-    min-width: 0;
-    overflow: hidden;
-
-    &::-webkit-scrollbar,
-    :deep(*::-webkit-scrollbar) {
-        width: 8px;
-        height: 8px;
-        background: transparent;
-    }
-    &::-webkit-scrollbar-thumb,
-    :deep(*::-webkit-scrollbar-thumb) {
-        background: rgba(0, 0, 0, 0.15);
-        border-radius: 10em;
-    }
-
-    :global(html[data-theme='dark']) & {
-        &::-webkit-scrollbar-thumb,
-        :deep(*::-webkit-scrollbar-thumb) {
-            background: rgba(255, 255, 255, 0.2);
-        }
-    }
-}
-</style>
