@@ -17,8 +17,15 @@ var (
 )
 
 func MarshalToString(v interface{}) *string {
-	if v == nil || reflect.ValueOf(v).IsNil() {
+	if v == nil {
 		return nil
+	}
+	val := reflect.ValueOf(v)
+	switch val.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Ptr, reflect.UnsafePointer, reflect.Interface, reflect.Slice:
+		if val.IsNil() {
+			return nil
+		}
 	}
 	s, err := jsoniter.MarshalToString(v)
 	if err != nil {
