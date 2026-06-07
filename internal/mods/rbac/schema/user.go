@@ -24,6 +24,7 @@ type User struct {
 	Phone     string    `json:"phone" gorm:"size:32;"`         // Phone number of user
 	Email     string    `json:"email" gorm:"size:128;"`        // Email of user
 	Remark    string    `json:"remark" gorm:"size:1024;"`      // Remark of user
+	Tenant    string    `json:"tenant" gorm:"size:255;index"`  // Tenant
 	Status    string    `json:"status" gorm:"size:20;index"`   // Status of user (activated, freezed)
 	CreatedAt time.Time `json:"created_at" gorm:"index;"`      // Create time
 	UpdatedAt time.Time `json:"updated_at" gorm:"index;"`      // Update time
@@ -72,6 +73,7 @@ type UserForm struct {
 	Phone    string    `json:"phone" binding:"max=32"`                            // Phone number of user
 	Email    string    `json:"email" binding:"max=128"`                           // Email of user
 	Remark   string    `json:"remark" binding:"max=1024"`                         // Remark of user
+	Tenant   string    `json:"tenant" binding:"max=255"`                          // Tenant
 	Status   string    `json:"status" binding:"required,oneof=activated freezed"` // Status of user (activated, freezed)
 	Roles    UserRoles `json:"roles" binding:"required"`                          // Roles of user
 }
@@ -91,6 +93,7 @@ func (a *UserForm) FillTo(user *User) error {
 	user.Phone = a.Phone
 	user.Email = a.Email
 	user.Remark = a.Remark
+	user.Tenant = a.Tenant
 	user.Status = a.Status
 
 	if pass := a.Password; pass != "" {

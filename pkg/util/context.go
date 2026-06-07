@@ -111,7 +111,9 @@ func FromIsRootUser(ctx context.Context) bool {
 
 // Set user cache object
 type UserCache struct {
-	RoleIDs []string `json:"rids"`
+	RoleIDs  []string `json:"rids"`
+	Username string   `json:"username"`
+	Tenant   string   `json:"tenant"`
 }
 
 func ParseUserCache(s string) UserCache {

@@ -61,13 +61,15 @@ func (a *Login) ParseUserID(c *gin.Context) (string, error) {
 		return "", err
 	} else if ok {
 		userCache := util.ParseUserCache(userCacheVal)
+		ctx = util.NewUsername(ctx, userCache.Username)
+		ctx = util.NewTenant(ctx, userCache.Tenant)
 		c.Request = c.Request.WithContext(util.NewUserCache(ctx, userCache))
 		return userID, nil
 	}
 
 	// Check user status, if not activated, force to logout
 	user, err := a.UserDAL.Get(ctx, userID, schema.UserQueryOptions{
-		QueryOptions: util.QueryOptions{SelectFields: []string{"username", "status"}},
+		QueryOptions: util.QueryOptions{SelectFields: []string{"username", "status", "tenant"}},
 	})
 	if err != nil {
 		return "", err
@@ -76,6 +78,7 @@ func (a *Login) ParseUserID(c *gin.Context) (string, error) {
 	}
 
 	ctx = util.NewUsername(ctx, user.Username)
+	ctx = util.NewTenant(ctx, user.Tenant)
 
 	roleIDs, err := a.UserBIZ.GetRoleIDs(ctx, userID)
 	if err != nil {
@@ -83,7 +86,9 @@ func (a *Login) ParseUserID(c *gin.Context) (string, error) {
 	}
 
 	userCache := util.UserCache{
-		RoleIDs: roleIDs,
+		RoleIDs:  roleIDs,
+		Username: user.Username,
+		Tenant:   user.Tenant,
 	}
 	err = a.Cache.Set(ctx, config.CacheNSForUser, userID, userCache.String())
 	if err != nil {
@@ -165,7 +170,7 @@ func (a *Login) Login(ctx context.Context, formItem *schema.LoginForm) (*schema.
 	// get user info
 	user, err := a.UserDAL.GetByUsername(ctx, formItem.Username, schema.UserQueryOptions{
 		QueryOptions: util.QueryOptions{
-			SelectFields: []string{"id", "password", "status"},
+			SelectFields: []string{"id", "password", "status", "tenant"},
 		},
 	})
 	if err != nil {
@@ -190,7 +195,11 @@ func (a *Login) Login(ctx context.Context, formItem *schema.LoginForm) (*schema.
 		return nil, err
 	}
 
-	userCache := util.UserCache{RoleIDs: roleIDs}
+	userCache := util.UserCache{
+		RoleIDs:  roleIDs,
+		Username: formItem.Username,
+		Tenant:   user.Tenant,
+	}
 	err = a.Cache.Set(ctx, config.CacheNSForUser, userID, userCache.String(),
 		time.Duration(config.C.Dictionary.UserCacheExp)*time.Hour)
 	if err != nil {

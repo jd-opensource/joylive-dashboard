@@ -129,10 +129,43 @@ func (a *Casbinx) load(ctx context.Context) error {
 	}
 
 	if len(policies) > 0 {
-		e.ClearPolicy()
-		_, _ = e.AddPolicies(policies)
-		if err := e.SavePolicy(); err != nil {
-			logging.Context(ctx).Error("Failed to save casbin policy", zap.Error(err))
+		err := a.DB.Transaction(func(tx *gorm.DB) error {
+			if err := tx.Exec("DELETE FROM casbin_rule").Error; err != nil {
+				return err
+			}
+
+			var rules []CasbinRule
+			seen := make(map[string]bool)
+			for _, p := range policies {
+				if len(p) >= 4 {
+					key := p[0] + "-" + p[1] + "-" + p[2] + "-" + p[3]
+					if seen[key] {
+						continue
+					}
+					seen[key] = true
+					rules = append(rules, CasbinRule{
+						Ptype: p[0],
+						V0:    p[1],
+						V1:    p[2],
+						V2:    p[3],
+					})
+				}
+			}
+
+			if len(rules) > 0 {
+				if err := tx.CreateInBatches(rules, 500).Error; err != nil {
+					return err
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			logging.Context(ctx).Error("Failed to save casbin policy to db", zap.Error(err))
+			return err
+		}
+
+		if err := e.LoadPolicy(); err != nil {
+			logging.Context(ctx).Error("Failed to reload casbin policy", zap.Error(err))
 			return err
 		}
 	}
@@ -228,4 +261,19 @@ func (a *Casbinx) Release(ctx context.Context) error {
 		a.ticker.Stop()
 	}
 	return nil
+}
+
+type CasbinRule struct {
+	ID    int64  `gorm:"column:id;primaryKey;autoIncrement"`
+	Ptype string `gorm:"column:ptype"`
+	V0    string `gorm:"column:v0"`
+	V1    string `gorm:"column:v1"`
+	V2    string `gorm:"column:v2"`
+	V3    string `gorm:"column:v3"`
+	V4    string `gorm:"column:v4"`
+	V5    string `gorm:"column:v5"`
+}
+
+func (CasbinRule) TableName() string {
+	return "casbin_rule"
 }
