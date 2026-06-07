@@ -16,19 +16,40 @@
             :label-col="{ style: { width: '100px' } }"
             :wrapper-col="{ flex: 1 }">
             <a-form-item
-                :label="$t('pages.member.form.user')"
-                name="user">
-                <a-input
-                    :placeholder="$t('pages.member.form.user.placeholder')"
-                    v-model:value="formData.user"
-                    :disabled="modal.type === 'edit'" />
-            </a-form-item>
-            <a-form-item
                 :label="$t('pages.member.form.tenant')"
                 name="tenant">
-                <a-input
+                <a-select
+                    v-model:value="formData.tenant"
+                    show-search
+                    :disabled="modal.type === 'edit'"
                     :placeholder="$t('pages.member.form.tenant.placeholder')"
-                    v-model:value="formData.tenant" />
+                    :filter-option="filterSpaceOption">
+                    <a-select-option
+                        v-for="item in spaceOptions"
+                        :key="item.value"
+                        :value="item.value"
+                        :label="item.label">
+                        {{ item.label }}
+                    </a-select-option>
+                </a-select>
+            </a-form-item>
+            <a-form-item
+                :label="$t('pages.member.form.user')"
+                name="user">
+                <a-select
+                    v-model:value="formData.user"
+                    show-search
+                    :disabled="modal.type === 'edit'"
+                    :placeholder="$t('pages.member.form.user.placeholder')"
+                    :filter-option="filterUserOption">
+                    <a-select-option
+                        v-for="item in userOptions"
+                        :key="item.value"
+                        :value="item.value"
+                        :label="item.label">
+                        {{ item.label }}
+                    </a-select-option>
+                </a-select>
             </a-form-item>
             <a-form-item
                 :label="$t('pages.member.form.role')"
@@ -36,15 +57,17 @@
                 <a-select
                     :placeholder="$t('pages.member.form.role.placeholder')"
                     v-model:value="formData.role">
-                    <a-select-option value="owner">owner</a-select-option>
                     <a-select-option value="admin">admin</a-select-option>
+                    <a-select-option value="user">user</a-select-option>
                     <a-select-option value="viewer">viewer</a-select-option>
                 </a-select>
             </a-form-item>
             <a-form-item
                 :label="$t('pages.member.form.permission')"
                 name="permission">
-                <a-checkbox-group v-model:value="formData.permissions">
+                <a-checkbox-group
+                    v-model:value="formData.permissions"
+                    disabled>
                     <a-checkbox value="read">{{ $t('pages.member.form.permission.read') }}</a-checkbox>
                     <a-checkbox value="write">{{ $t('pages.member.form.permission.write') }}</a-checkbox>
                     <a-checkbox value="delete">{{ $t('pages.member.form.permission.delete') }}</a-checkbox>
@@ -56,7 +79,7 @@
 
 <script setup>
 import { cloneDeep } from 'lodash-es'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { config } from '@/config'
 import apis from '@/apis'
 import { useForm, useModal } from '@/hooks'
@@ -72,6 +95,71 @@ const { formRecord, formData, formRef, formRules, resetForm } = useForm()
 const { t } = useI18n()
 const cancelText = ref(t('button.cancel'))
 const okText = ref(t('button.confirm'))
+
+const userOptions = ref([])
+const spaceOptions = ref([])
+
+async function loadUsers() {
+    try {
+        const result = await apis.users.getUsersList({ pageSize: 100, current: 1 }).catch(() => null)
+        const list = []
+        if (result && config('http.code.success') === result.success && result.data) {
+            list.push(
+                ...result.data.map((user) => ({
+                    label: user.name ? `${user.name} (${user.username})` : user.username,
+                    value: user.username,
+                }))
+            )
+        }
+        userOptions.value = list
+    } catch (e) {
+        console.error('加载成员列表失败:', e)
+    }
+}
+
+async function loadSpaces() {
+    try {
+        const result = await apis.space.getSpaceList({ pageSize: 100, current: 1 }).catch(() => null)
+        const list = []
+        if (result && config('http.code.success') === result.success && result.data) {
+            list.push(
+                ...result.data.map((space) => ({
+                    label: space.name ? `${space.name} (${space.code})` : space.code,
+                    value: space.code,
+                }))
+            )
+        }
+        spaceOptions.value = list
+    } catch (e) {
+        console.error('加载空间列表失败:', e)
+    }
+}
+
+function filterUserOption(input, option) {
+    const label = option.label || ''
+    return label.toLowerCase().includes(input.toLowerCase())
+}
+
+function filterSpaceOption(input, option) {
+    const label = option.label || ''
+    return label.toLowerCase().includes(input.toLowerCase())
+}
+
+loadUsers()
+loadSpaces()
+
+watch(
+    () => formData.value.role,
+    (newRole) => {
+        if (newRole === 'admin') {
+            formData.value.permissions = ['read', 'write', 'delete']
+        } else if (newRole === 'user') {
+            formData.value.permissions = ['read', 'write']
+        } else if (newRole === 'viewer') {
+            formData.value.permissions = ['read']
+        }
+    }
+)
 
 const permToBits = { read: 1, write: 2, delete: 4 }
 const bitsToPerms = (bits) => {
@@ -94,7 +182,12 @@ function handleCreate() {
         type: 'create',
         title: t('pages.member.add'),
     })
-    formData.value = { permissions: ['read'] }
+    formData.value = {
+        user: undefined,
+        tenant: undefined,
+        role: undefined,
+        permissions: ['read'],
+    }
 }
 
 async function handleEdit(record = {}) {
@@ -121,7 +214,7 @@ function handleOk() {
                     user: values.user,
                     tenant: values.tenant,
                     role: values.role,
-                    permission: permsToBits(values.permissions || []),
+                    permission: permsToBits(formData.value.permissions || []),
                 }
                 let result = null
                 switch (modal.value.type) {

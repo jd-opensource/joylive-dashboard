@@ -225,17 +225,17 @@
                     <template #bodyCell="{ column, record }">
                         <template v-if="'permission' === column.key">
                             <a-tag
-                                v-if="record.permission & 1"
+                                v-if="hasPermission(record.permission, 1)"
                                 color="green"
                                 >{{ $t('pages.member.form.permission.read') }}</a-tag
                             >
                             <a-tag
-                                v-if="record.permission & 2"
+                                v-if="hasPermission(record.permission, 2)"
                                 color="blue"
                                 >{{ $t('pages.member.form.permission.write') }}</a-tag
                             >
                             <a-tag
-                                v-if="record.permission & 4"
+                                v-if="hasPermission(record.permission, 4)"
                                 color="red"
                                 >{{ $t('pages.member.form.permission.delete') }}</a-tag
                             >
@@ -396,6 +396,10 @@ import MemberEditDialog from './MemberEditDialog.vue'
 defineOptions({
     name: 'serviceDetail',
 })
+
+const hasPermission = (permission, bit) => {
+    return (Number(permission) & bit) === bit
+}
 
 const route = useRoute()
 const { t } = useI18n()
